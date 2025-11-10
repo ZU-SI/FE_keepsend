@@ -1,10 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import styles from "./globalHeader.module.css";
 
-export default function GlobalHeader() {
+interface Props {
+  onClickService?: () => void;
+  onClickSolution?: () => void;
+  activePrimary?: "service" | "solution" | null;
+}
+
+export default function GlobalHeader({
+  onClickService,
+  onClickSolution,
+  activePrimary = null,
+}: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleServiceClick = (e: MouseEvent) => {
+    e.preventDefault();
+    onClickService?.();
+  };
+  const handleSolutionClick = (e: MouseEvent) => {
+    e.preventDefault();
+    onClickSolution?.();
+  };
 
   return (
     <nav className={styles.navigation}>
@@ -16,10 +35,26 @@ export default function GlobalHeader() {
 
         {/* Desktop Menu */}
         <div className={styles.navigation__menu}>
-          <a href="#services" className={styles.navigation__link}>
+          <a
+            href="#services"
+            onClick={handleServiceClick}
+            className={`${styles.navigation__link} ${
+              activePrimary === "service"
+                ? styles["navigation__link--active"]
+                : ""
+            }`}
+          >
             물류 서비스
           </a>
-          <a href="#solutions" className={styles.navigation__link}>
+          <a
+            href="#solutions"
+            onClick={handleSolutionClick}
+            className={`${styles.navigation__link} ${
+              activePrimary === "solution"
+                ? styles["navigation__link--active"]
+                : ""
+            }`}
+          >
             IT 솔루션
           </a>
           <a href="#news" className={styles.navigation__link}>
@@ -57,10 +92,18 @@ export default function GlobalHeader() {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className={styles.navigation__mobile}>
-          <a href="#services" className={styles["navigation__mobile-link"]}>
+          <a
+            href="#services"
+            onClick={handleServiceClick}
+            className={styles["navigation__mobile-link"]}
+          >
             물류 서비스
           </a>
-          <a href="#solutions" className={styles["navigation__mobile-link"]}>
+          <a
+            href="#solutions"
+            onClick={handleSolutionClick}
+            className={styles["navigation__mobile-link"]}
+          >
             IT 솔루션
           </a>
           <a href="#news" className={styles["navigation__mobile-link"]}>

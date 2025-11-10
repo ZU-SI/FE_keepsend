@@ -73,6 +73,12 @@
   color: #22d3ee;
 }
 
+/* Modifier: active link */
+.navigation__link--active {
+  color: #22d3ee;
+  font-weight: 600;
+}
+
 /* ============================================
    CTA Button
    ============================================ */

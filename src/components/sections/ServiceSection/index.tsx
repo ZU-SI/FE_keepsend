@@ -59,18 +59,9 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
     const getViewportBottom = () => getViewportTop() + window.innerHeight;
 
     const getContainerBounds = () => {
-      const first = sectionRefs.current[0];
-      const last = sectionRefs.current[sectionRefs.current.length - 1];
-      if (!first || !last) {
-        const rect = container.getBoundingClientRect();
-        const top = rect.top + getScrollY();
-        const bottom = top + rect.height;
-        return { top, bottom };
-      }
-      const firstRect = first.getBoundingClientRect();
-      const lastRect = last.getBoundingClientRect();
-      const top = firstRect.top + getScrollY();
-      const bottom = lastRect.top + getScrollY() + lastRect.height;
+      const rect = container.getBoundingClientRect();
+      const top = rect.top + getScrollY();
+      const bottom = top + rect.height;
       return { top, bottom };
     };
 

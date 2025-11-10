@@ -6,7 +6,7 @@ import ServiceSection from "@/components/sections/ServiceSection";
 import SolutionSection from "@/components/sections/SolutionSection";
 import gsap from "gsap";
 import ScrollToPlugin from "gsap/ScrollToPlugin";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -18,6 +18,12 @@ export default function Home() {
     wheelAccumPx: 0,
     lastSnapTs: 0,
   });
+  const activePrimaryRef = useRef<"service" | "solution" | null>(null);
+  const [, /* unused local to trigger re-render */ _setTick] = (function () {
+    // lightweight rerender trigger without importing useState twice
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return (React as any).useState?.(0) ?? [0, () => {}];
+  })();
 
   useEffect(() => {
     const container = containerRef.current;
@@ -171,25 +177,98 @@ export default function Home() {
       });
     };
 
+    const updateActivePrimary = () => {
+      const sections = getSections();
+      if (sections.length === 0) return;
+      const scrollY = getScrollY();
+      const containerTop = getContainerTop();
+      const viewportCenter = scrollY + window.innerHeight / 2;
+      let bestIndex = 0;
+      let bestDist = Number.POSITIVE_INFINITY;
+      sections.forEach((el, i) => {
+        const top = containerTop + getSectionOffsets()[i];
+        const mid = top + el.getBoundingClientRect().height / 2;
+        const d = Math.abs(mid - viewportCenter);
+        if (d < bestDist) {
+          bestDist = d;
+          bestIndex = i;
+        }
+      });
+      const el = sections[bestIndex];
+      const isService = el.hasAttribute("data-service-id");
+      const isSolution = el.hasAttribute("data-solution-id");
+      const nextActive: "service" | "solution" | null = isService
+        ? "service"
+        : isSolution
+        ? "solution"
+        : null;
+      if (activePrimaryRef.current !== nextActive) {
+        activePrimaryRef.current = nextActive;
+        _setTick((v: number) => v + 1);
+      }
+    };
+
     const handleResize = () => {
       const sections = getSections();
       if (sections.length === 0) return;
       const offsets = getSectionOffsets();
       const target = getContainerTop() + offsets[stateRef.current.currentIndex];
       gsap.set(window, { scrollTo: target });
+      updateActivePrimary();
     };
 
     window.addEventListener("wheel", handleWheel, { passive: false });
     window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", updateActivePrimary, { passive: true });
+    updateActivePrimary();
     return () => {
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", updateActivePrimary);
     };
   }, []);
 
+  const scrollToSectionIndex = (targetIndex: number) => {
+    const container = containerRef.current;
+    if (!container) return;
+    const sections = Array.from(
+      container.querySelectorAll<HTMLElement>("[data-scroll-section]")
+    );
+    if (targetIndex < 0 || targetIndex >= sections.length) return;
+    const getScrollY = () => window.scrollY || window.pageYOffset || 0;
+    const rect = sections[targetIndex].getBoundingClientRect();
+    const targetY = rect.top + getScrollY();
+    gsap.to(window, { scrollTo: targetY, duration: 0.8, ease: "power2.inOut" });
+  };
+
+  const handleNavService = () => {
+    // find first service section by attribute
+    const container = containerRef.current;
+    if (!container) return;
+    const sections = Array.from(
+      container.querySelectorAll<HTMLElement>("[data-scroll-section]")
+    );
+    const idx = sections.findIndex((el) => el.hasAttribute("data-service-id"));
+    if (idx >= 0) scrollToSectionIndex(idx);
+  };
+
+  const handleNavSolution = () => {
+    const container = containerRef.current;
+    if (!container) return;
+    const sections = Array.from(
+      container.querySelectorAll<HTMLElement>("[data-scroll-section]")
+    );
+    const idx = sections.findIndex((el) => el.hasAttribute("data-solution-id"));
+    if (idx >= 0) scrollToSectionIndex(idx);
+  };
+
   return (
     <main ref={containerRef}>
-      <GlobalHeader />
+      <GlobalHeader
+        onClickService={handleNavService}
+        onClickSolution={handleNavSolution}
+        activePrimary={activePrimaryRef.current}
+      />
       <BannerSection startIdx={0} />
       <ServiceSection startIdx={3} />
       <SolutionSection startIdx={11} />

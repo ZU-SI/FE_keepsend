@@ -2,6 +2,8 @@
 
 import GlobalHeader from "@/components/layouts/GlobalHeader";
 import BannerSection from "@/components/sections/BannerSection";
+import ServiceSection from "@/components/sections/ServiceSection";
+import SolutionSection from "@/components/sections/SolutionSection";
 import gsap from "gsap";
 import ScrollToPlugin from "gsap/ScrollToPlugin";
 import { useEffect, useRef } from "react";
@@ -13,6 +15,8 @@ export default function Home() {
   const stateRef = useRef({
     isAnimating: false,
     currentIndex: 0,
+    wheelAccumPx: 0,
+    lastSnapTs: 0,
   });
 
   useEffect(() => {
@@ -75,20 +79,25 @@ export default function Home() {
 
       const direction = e.deltaY > 0 ? 1 : -1;
 
-      // recompute current index from scroll position to stay in sync with variable heights
+      // recompute current index using viewport center for robustness across mixed heights
       const offsetsForIndex = getSectionOffsets();
       const containerTop = getContainerTop();
+      const viewportCenter = scrollY + window.innerHeight / 2;
       let currentIndex = 0;
+      let bestDist = Number.POSITIVE_INFINITY;
       for (let i = 0; i < offsetsForIndex.length; i++) {
-        if (scrollY >= containerTop + offsetsForIndex[i] - 2) {
+        const topI = containerTop + offsetsForIndex[i];
+        const el = sections[i];
+        const heightI = el.getBoundingClientRect().height;
+        const midI = topI + heightI / 2;
+        const dist = Math.abs(midI - viewportCenter);
+        if (dist < bestDist) {
+          bestDist = dist;
           currentIndex = i;
-        } else {
-          break;
         }
       }
       state.currentIndex = currentIndex;
 
-      const nextIndex = clampIndex(currentIndex + direction, total - 1);
       const currentTop = containerTop + offsetsForIndex[currentIndex];
       const currentEl = sections[currentIndex];
       const currentHeight = currentEl.getBoundingClientRect().height;
@@ -115,22 +124,41 @@ export default function Home() {
         }
       }
 
+      // Normalize wheel bursts to a single-step snap
+      const deltaModeScale =
+        e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1;
+      state.wheelAccumPx += e.deltaY * deltaModeScale;
+      const snapThresholdPx = Math.max(0.22 * window.innerHeight, 140);
+      const now = Date.now();
+      const minSnapIntervalMs = 180;
+      if (
+        now - state.lastSnapTs < minSnapIntervalMs &&
+        Math.abs(state.wheelAccumPx) < snapThresholdPx
+      ) {
+        e.preventDefault();
+        return;
+      }
+      if (Math.abs(state.wheelAccumPx) < snapThresholdPx) {
+        e.preventDefault();
+        return;
+      }
+      const stepDir = state.wheelAccumPx > 0 ? 1 : -1;
+      state.wheelAccumPx = 0;
+      const snapToIndex = clampIndex(currentIndex + stepDir, total - 1);
+
       // compute target for snapping
       const sectionOffsets = getSectionOffsets();
-      const targetY = getContainerTop() + sectionOffsets[nextIndex];
+      const targetY = getContainerTop() + sectionOffsets[snapToIndex];
 
-      // release beyond edges but snap to edge if not aligned
-      if (currentIndex === 0 && direction < 0) return;
-      if (currentIndex === total - 1 && direction > 0) return;
-
-      if (nextIndex === state.currentIndex) {
+      if (snapToIndex === state.currentIndex) {
         e.preventDefault();
         return;
       }
 
       e.preventDefault();
       state.isAnimating = true;
-      state.currentIndex = nextIndex;
+      state.currentIndex = snapToIndex;
+      state.lastSnapTs = now;
       gsap.to(window, {
         scrollTo: targetY,
         duration: 0.9,
@@ -163,20 +191,8 @@ export default function Home() {
     <main ref={containerRef}>
       <GlobalHeader />
       <BannerSection startIdx={0} />
-      <div
-        style={{ width: "100%", height: "250vh" }}
-        data-scroll-section
-        data-section-index={3}
-      >
-        COMMON1
-      </div>
-      <div
-        style={{ width: "100%", height: "100vh" }}
-        data-scroll-section
-        data-section-index={4}
-      >
-        COMMON2
-      </div>
+      <ServiceSection startIdx={3} />
+      <SolutionSection startIdx={11} />
     </main>
   );
 }

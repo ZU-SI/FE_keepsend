@@ -1,3 +1,9 @@
+import NewsSection from "@/app/news/_components/NewsSection";
+
 export default function News() {
-  return <div>news</div>;
+  return (
+    <main>
+      <NewsSection />
+    </main>
+  );
 }

@@ -1,0 +1,141 @@
+@use "../cofigs/vars" as v;
+
+/* ============================================
+   Block: navigation
+   ============================================ */
+
+.header {
+  position: fixed;
+  top: 0;
+  z-index: v.$z-navigation;
+  width: 100%;
+  background-color: rgba(v.$black, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid v.$slate-800;
+
+  &__container {
+    width: 100%;
+    max-width: 1240px;
+    height: 65px;
+    margin: 0 auto;
+    padding: v.$spacing-sm v.$spacing-lg;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__logo {
+    // background: v.$gradient-cyan;
+    // -webkit-background-clip: text;
+    // -webkit-text-fill-color: transparent;
+    // background-clip: text;
+    // color: transparent;
+    text-decoration: none;
+  }
+  &__menu {
+    display: none;
+    align-items: center;
+    gap: v.$spacing-2xl;
+
+    @media (min-width: v.$breakpoint-md) {
+      display: flex;
+    }
+  }
+
+  &__link {
+    font-size: 1rem;
+    font-weight: 500;
+    color: v.$gray-300;
+    text-decoration: none;
+    transition: color v.$transition-default;
+    background-color: transparent;
+    border: 0;
+
+    &:hover {
+      color: v.$cyan-400;
+    }
+
+    &--active {
+      color: v.$cyan-400;
+      font-weight: 600;
+    }
+  }
+
+  &__cta {
+    display: none;
+
+    @media (min-width: v.$breakpoint-md) {
+      display: block;
+    }
+  }
+
+  &__button {
+    background-color: v.$cyan-500;
+    color: v.$black;
+    font-weight: 600;
+    padding: 0.625rem v.$spacing-md;
+    border-radius: v.$border-radius-full;
+    border: none;
+    cursor: pointer;
+    transition: all v.$transition-default;
+    font-size: 0.875rem;
+
+    &:hover {
+      background-color: v.$cyan-600;
+    }
+
+    &:focus {
+      outline: 2px solid v.$cyan-500;
+      outline-offset: 2px;
+    }
+
+    &--mobile {
+      width: 180px;
+      margin: auto;
+    }
+  }
+
+  &__hamburger {
+    display: block;
+    color: v.$cyan-400;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: v.$spacing-sm;
+
+    @media (min-width: v.$breakpoint-md) {
+      display: none;
+    }
+  }
+
+  &__hamburger-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &__mobile {
+    background-color: v.$black;
+    border-top: 1px solid v.$slate-800;
+    padding: v.$spacing-md v.$spacing-xl;
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-md;
+
+    @media (min-width: v.$breakpoint-md) {
+      display: none;
+    }
+  }
+
+  &__mobile-link {
+    display: block;
+    font-size: 0.875rem;
+    color: v.$gray-300;
+    text-decoration: none;
+    transition: color v.$transition-default;
+    padding: v.$spacing-sm 0;
+
+    &:hover {
+      color: v.$cyan-400;
+    }
+  }
+}

@@ -1,8 +1,8 @@
 "use client";
 
-import BannerSection from "@/components/sections/BannerSection";
-import ServiceSection from "@/components/sections/ServiceSection";
-import SolutionSection from "@/components/sections/SolutionSection";
+import BannerSection from "@/app/(home)/_components/BannerSection";
+import ServiceSection from "@/app/(home)/_components/ServiceSection";
+import SolutionSection from "@/app/(home)/_components/SolutionSection";
 import gsap from "gsap";
 import ScrollToPlugin from "gsap/ScrollToPlugin";
 import React, { useEffect, useRef } from "react";
@@ -21,7 +21,7 @@ export default function Home() {
   const [, /* unused local to trigger re-render */ _setTick] = (function () {
     // lightweight rerender trigger without importing useState twice
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return (React as any).useState?.(0) ?? [0, () => {}];
+    return React.useState?.(0) ?? [0, () => {}];
   })();
 
   useEffect(() => {

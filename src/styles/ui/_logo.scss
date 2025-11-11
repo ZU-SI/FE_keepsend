@@ -1,0 +1,16 @@
+@use "../cofigs/vars" as v;
+
+.typo-logo {
+  font-family: 'suit';
+  display: flex;
+  letter-spacing: -1.5px;
+  font-weight: 900;
+  font-size: 1.5rem;
+
+  .white {
+    color: white;
+  }
+  .primary {
+    color: v.$primary;
+  }
+}

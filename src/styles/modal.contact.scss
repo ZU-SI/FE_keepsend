@@ -1,0 +1,440 @@
+@use "./vars" as v;
+
+/* ============================================
+   Contact Modal Component (BEM)
+   ============================================ */
+
+/* Block: contact */
+.contact {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(v.$black, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: v.$z-navigation;
+  overflow-y: auto;
+
+  /* Element: wrapper */
+  &__wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: v.$spacing-2xl v.$spacing-lg;
+    padding-top: 5rem;
+  }
+
+  /* Element: container */
+  &__container {
+    width: 100%;
+    max-width: 800px;
+    background-color: v.$black;
+    border-radius: v.$radius-sm;
+    border: 1px solid v.$slate-800;
+  }
+
+  /* ============================================
+     Header
+     ============================================ */
+
+  /* Element: header */
+  &__header {
+    position: sticky;
+    top: 0;
+    background-color: rgba(v.$black, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid v.$slate-800;
+    padding: v.$spacing-xl;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+  }
+
+  /* Element: title */
+  &__title {
+    font-size: v.$spacing-xl;
+    font-weight: 700;
+    color: v.$white;
+    margin: 0;
+  }
+
+  /* Element: close-button */
+  &__close-button {
+    padding: 0.25rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    transition: background-color v.$transition-default;
+
+    &:hover {
+      background-color: v.$slate-800;
+    }
+  }
+
+  /* Element: close-icon */
+  &__close-icon {
+    width: v.$spacing-xl;
+    height: v.$spacing-xl;
+    color: v.$muted-foreground;
+  }
+
+  /* ============================================
+     Form
+     ============================================ */
+
+  /* Element: form */
+  &__form {
+    padding: v.$spacing-xl;
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-2xl;
+
+    @include v.desktop {
+      padding: 3rem;
+    }
+  }
+
+  /* ============================================
+     Section
+     ============================================ */
+
+  /* Element: section */
+  &__section {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Element: section-title */
+  &__section-title {
+    font-size: v.$spacing-lg;
+    font-weight: 700;
+    color: v.$white;
+    margin-bottom: v.$spacing-xl;
+  }
+
+  /* Element: grid */
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: v.$spacing-lg;
+    background-color: #fafafa; // Note: Color not in variables
+    border-radius: v.$radius-sm;
+    padding: v.$spacing-xl;
+
+    @include v.desktop {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* ============================================
+     Field
+     ============================================ */
+
+  /* Element: field */
+  &__field {
+    display: flex;
+    flex-direction: column;
+
+    /* Modifier: full width */
+    &--full {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* Element: label */
+  &__label {
+    display: block;
+    font-size: 0.875rem;
+    color: v.$gray-300;
+    margin-bottom: v.$spacing-sm;
+
+    /* Modifier: light label (for light backgrounds) */
+    &--light {
+      display: block;
+      font-size: 0.875rem;
+      color: #374151; // Note: Color not in variables
+      margin-bottom: v.$spacing-sm;
+    }
+  }
+
+  /* Element: required */
+  &__required {
+    color: v.$cyan-500;
+  }
+
+  /* ============================================
+     Select with Custom Input
+     ============================================ */
+
+  /* Element: select-group */
+  &__select-group {
+    display: flex;
+    gap: v.$spacing-sm;
+    align-items: stretch;
+  }
+
+  /* Element: select */
+  &__select {
+    flex: 1;
+    padding: 0 0.75rem;
+    height: 2.25rem;
+    background-color: #fafafa; // Note: Color not in variables
+    border: 1px solid #334155; // Note: Color not in variables
+    border-radius: v.$radius-sm;
+    color: v.$black;
+    font-size: 0.875rem;
+    transition: border-color v.$transition-default;
+
+    &:focus {
+      outline: none;
+      border-color: v.$cyan-500;
+    }
+  }
+
+  /* ============================================
+     Input Fields
+     ============================================ */
+
+  /* Element: input */
+  &__input {
+    flex: 1;
+    padding: 0 0.75rem;
+    height: 2.25rem;
+    background-color: #fafafa; // Note: Color not in variables
+    border: 1px solid #334155; // Note: Color not in variables
+    border-radius: v.$radius-sm;
+    color: v.$black;
+    font-size: 0.875rem;
+    transition: border-color v.$transition-default;
+
+    &::placeholder {
+      color: #6b7280; // Note: Color not in variables
+    }
+
+    &:focus {
+      outline: none;
+      border-color: v.$cyan-500;
+    }
+
+    /* Modifier: light input (for light backgrounds) */
+    &--light {
+      width: 100%;
+      padding: 0 0.75rem;
+      height: 2.25rem;
+      background-color: v.$white;
+      border: 1px solid v.$gray-300;
+      border-radius: v.$radius-sm;
+      color: v.$black;
+      font-size: 0.875rem;
+      transition: border-color v.$transition-default;
+
+      &::placeholder {
+        color: #6b7280; // Note: Color not in variables
+      }
+
+      &:focus {
+        outline: none;
+        border-color: v.$cyan-500;
+      }
+    }
+  }
+
+  /* ============================================
+     Textarea
+     ============================================ */
+
+  /* Element: textarea */
+  &__textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #fafafa; // Note: Color not in variables
+    border: 1px solid #334155; // Note: Color not in variables
+    border-radius: v.$radius-sm;
+    color: v.$black;
+    font-size: 0.875rem;
+    transition: border-color v.$transition-default;
+    resize: none;
+    font-family: inherit;
+
+    &::placeholder {
+      color: #6b7280; // Note: Color not in variables
+    }
+
+    &:focus {
+      outline: none;
+      border-color: v.$cyan-500;
+    }
+
+    /* Modifier: light textarea */
+    &--light {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: v.$white;
+      border: 1px solid v.$gray-300;
+      border-radius: v.$radius-sm;
+      color: v.$black;
+      font-size: 0.875rem;
+      transition: border-color v.$transition-default;
+      resize: none;
+      font-family: inherit;
+
+      &::placeholder {
+        color: #6b7280; // Note: Color not in variables
+      }
+
+      &:focus {
+        outline: none;
+        border-color: v.$cyan-500;
+      }
+    }
+  }
+
+  /* ============================================
+     Info Section
+     ============================================ */
+
+  /* Element: info */
+  &__info {
+    background-color: rgba(v.$slate-800, 0.5);
+    border: 1px solid #334155; // Note: Color not in variables
+    border-radius: v.$radius-sm;
+    padding: v.$spacing-md;
+  }
+
+  /* Element: info-text */
+  &__info-text {
+    font-size: 0.875rem;
+    color: v.$gray-300;
+    margin: 0;
+  }
+
+  /* ============================================
+     Actions (Buttons)
+     ============================================ */
+
+  /* Element: actions */
+  &__actions {
+    display: flex;
+    gap: v.$spacing-md;
+  }
+
+  /* Element: button */
+  &__button {
+    flex: 1;
+    padding: 0.75rem v.$spacing-xl;
+    font-weight: 600;
+    border-radius: v.$border-radius-full;
+    border: none;
+    cursor: pointer;
+    transition: all v.$transition-default;
+    font-size: 1rem;
+
+    /* Modifier: primary button */
+    &--primary {
+      background-color: v.$cyan-500;
+      color: v.$black;
+
+      &:hover {
+        background-color: v.$cyan-600;
+        box-shadow: 0 10px 25px rgba(v.$cyan-500, 0.3);
+      }
+    }
+
+    /* Modifier: secondary button */
+    &--secondary {
+      background-color: v.$slate-800;
+      color: v.$white;
+
+      &:hover {
+        background-color: #334155; // Note: Color not in variables
+      }
+    }
+  }
+}
+
+/* ============================================
+   Confirmation Dialog
+   ============================================ */
+
+/* Block: confirm */
+.confirm {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(v.$black, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: v.$z-navigation;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: v.$spacing-lg;
+
+  /* Element: container */
+  &__container {
+    background-color: v.$black;
+    border: 1px solid v.$slate-800;
+    border-radius: v.$radius-sm;
+    padding: v.$spacing-xl;
+    max-width: 24rem;
+    width: 100%;
+  }
+
+  /* Element: title */
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: v.$white;
+    margin-bottom: v.$spacing-md;
+  }
+
+  /* Element: message */
+  &__message {
+    color: v.$gray-300;
+    margin-bottom: v.$spacing-xl;
+    font-size: 0.875rem;
+  }
+
+  /* Element: actions */
+  &__actions {
+    display: flex;
+    gap: v.$spacing-md;
+  }
+
+  /* Element: button */
+  &__button {
+    flex: 1;
+    padding: v.$spacing-sm v.$spacing-md;
+    font-weight: 600;
+    border-radius: v.$radius-sm;
+    border: none;
+    cursor: pointer;
+    transition: all v.$transition-default;
+    font-size: 0.875rem;
+
+    /* Modifier: primary */
+    &--primary {
+      background-color: v.$cyan-500;
+      color: v.$black;
+
+      &:hover {
+        background-color: v.$cyan-600;
+      }
+    }
+
+    /* Modifier: secondary */
+    &--secondary {
+      background-color: v.$slate-800;
+      color: v.$white;
+
+      &:hover {
+        background-color: #334155; // Note: Color not in variables
+      }
+    }
+  }
+}

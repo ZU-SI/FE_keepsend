@@ -1,0 +1,411 @@
+@use "../cofigs/vars" as v;
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   Services Section Component (BEM)
+   ============================================ */
+
+/* New Block: s-sections */
+.s-sections {
+  width: 100%;
+}
+
+/* Block: s-section */
+.s-section {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 4rem 1rem;
+
+  @media (min-width: 640px) {
+    padding: 5rem 1.5rem;
+  }
+
+  @include v.desktop {
+    padding: 8rem 3rem;
+  }
+
+  /* Element: container */
+  &__container {
+    position: relative;
+    background-color: v.$background;
+  }
+
+  /* ============================================
+     Fixed Menu
+     ============================================ */
+
+  /* Element: menu-wrapper */
+  &__menu-wrapper {
+    position: fixed;
+    right: 0.75rem;
+    top: 6rem;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    z-index: 40;
+    pointer-events: none;
+
+    @include v.desktop {
+      right: v.$spacing-xl;
+      top: 8rem;
+    }
+  }
+
+  /* Element: menu */
+  &__menu {
+    pointer-events: auto;
+    background-color: rgba(v.$black, 0.4);
+    backdrop-filter: blur(12px);
+    border-radius: 0.75rem;
+    padding: v.$spacing-md;
+
+    @include v.desktop {
+      padding: v.$spacing-xl;
+    }
+  }
+
+  /* Element: menu-header */
+  &__menu-header {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: v.$spacing-md;
+    margin-left: v.$spacing-sm;
+
+    @include v.desktop {
+      font-size: 1.25rem;
+      margin-bottom: v.$spacing-xl;
+    }
+  }
+
+  /* Element: menu-title */
+  &__menu-title {
+    background: v.$gradient-cyan;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Element: menu-nav */
+  &__menu-nav {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-sm;
+  }
+
+  /* Element: menu-button */
+  &__menu-button {
+    height: 36px;
+    padding: 0 0.75rem;
+    border-radius: v.$border-radius-full;
+    font-weight: 500;
+    font-size: 0.75rem;
+    transition: all v.$transition-default;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    border: none;
+    cursor: pointer;
+
+    @include v.desktop {
+      padding: 0 v.$spacing-md;
+      font-size: 0.875rem;
+    }
+
+    /* Modifier: active */
+    &--active {
+      background-color: v.$cyan-500;
+      color: v.$black;
+      font-weight: 600;
+    }
+
+    /* Modifier: inactive */
+    &--inactive {
+      background-color: rgba(v.$slate-800, 0.6);
+      color: v.$gray-300;
+
+      &:hover {
+        background-color: #334155; // Note: Color not in variables
+        color: #f3f4f6; // Note: Color not in variables
+      }
+    }
+  }
+
+  /* ============================================
+     Service Sections
+     ============================================ */
+
+  /* Element: content */
+  &__content {
+    max-width: 1040px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* Element: animation */
+  &__animation {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  /* ============================================
+     Service Header
+     ============================================ */
+
+  /* Element: header */
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: v.$spacing-xl;
+
+    @media (min-width: 640px) {
+      gap: v.$spacing-md;
+    }
+
+    @include v.desktop {
+      gap: v.$spacing-xl;
+      margin-bottom: v.$spacing-2xl;
+    }
+  }
+
+  /* Element: icon */
+  &__icon {
+    font-size: 2.25rem;
+    flex-shrink: 0;
+    line-height: 1;
+
+    @media (min-width: 640px) {
+      font-size: 3rem;
+    }
+
+    @include v.desktop {
+      font-size: 3.75rem;
+    }
+  }
+
+  /* Element: title-group */
+  &__title-group {
+    flex: 1;
+  }
+
+  /* Element: title */
+  &__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: v.$white;
+
+    @media (min-width: 640px) {
+      font-size: 1.875rem;
+    }
+
+    @include v.desktop {
+      font-size: 2.25rem;
+      margin-bottom: v.$spacing-sm;
+    }
+  }
+
+  /* Element: subtitle */
+  &__subtitle {
+    color: v.$muted-foreground;
+    font-size: 0.75rem;
+
+    @media (min-width: 640px) {
+      font-size: 0.875rem;
+    }
+
+    @include v.desktop {
+      font-size: 1.125rem;
+    }
+  }
+
+  /* ============================================
+     Service Description
+     ============================================ */
+
+  /* Element: description */
+  &__description {
+    color: v.$gray-300;
+    font-size: 0.875rem;
+    line-height: 1.625;
+    margin-bottom: v.$spacing-xl;
+    max-width: 42rem;
+
+    @media (min-width: 640px) {
+      font-size: 1rem;
+    }
+
+    @include v.desktop {
+      font-size: 1.125rem;
+      margin-bottom: v.$spacing-2xl;
+    }
+  }
+
+  /* ============================================
+     Feature Cards
+     ============================================ */
+
+  /* Element: features */
+  &__features {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin-bottom: v.$spacing-xl;
+
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include v.desktop {
+      gap: v.$spacing-md;
+      margin-bottom: v.$spacing-2xl;
+    }
+  }
+
+  /* Element: feature-card */
+  &__feature-card {
+    background-color: rgba(#0f172a, 0.5); // Note: Color not in variables
+    border: 1px solid v.$slate-800;
+    padding: v.$spacing-md;
+    border-radius: v.$radius-lg;
+    transition: border-color v.$transition-default;
+
+    @include v.desktop {
+      padding: v.$spacing-xl;
+    }
+
+    &:hover {
+      border-color: rgba(v.$cyan-500, 0.5);
+    }
+  }
+
+  /* Element: feature-header */
+  &__feature-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: v.$spacing-sm;
+
+    @include v.desktop {
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  /* Element: feature-dot */
+  &__feature-dot {
+    width: v.$spacing-sm;
+    height: v.$spacing-sm;
+    border-radius: v.$border-radius-full;
+    background-color: v.$cyan-400;
+  }
+
+  /* Element: feature-title */
+  &__feature-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: v.$white;
+
+    @include v.desktop {
+      font-size: 1rem;
+    }
+  }
+
+  /* Element: feature-description */
+  &__feature-description {
+    font-size: 0.75rem;
+    color: v.$muted-foreground;
+
+    @include v.desktop {
+      font-size: 0.875rem;
+    }
+  }
+
+  /* ============================================
+     CTA Section
+     ============================================ */
+
+  /* Element: cta */
+  &__cta {
+    background: linear-gradient(
+      to right,
+      rgba(v.$cyan-500, 0.1) 0%,
+      rgba(#3b82f6, 0.1) 100% // Note: Color not in variables
+    );
+    border: 1px solid rgba(v.$cyan-500, 0.2);
+    border-radius: 0.75rem;
+    padding: v.$spacing-md;
+
+    @include v.desktop {
+      padding: v.$spacing-2xl;
+    }
+  }
+
+  /* Element: cta-title */
+  &__cta-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: v.$white;
+
+    @include v.desktop {
+      font-size: 1.25rem;
+      margin-bottom: v.$spacing-sm;
+    }
+  }
+
+  /* Element: cta-description */
+  &__cta-description {
+    color: v.$muted-foreground;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+
+    @include v.desktop {
+      margin-bottom: v.$spacing-md;
+      font-size: 1rem;
+    }
+  }
+
+  /* Element: cta-button */
+  &__cta-button {
+    background-color: v.$cyan-500;
+    color: v.$black;
+    font-weight: 600;
+    padding: v.$spacing-sm v.$spacing-md;
+    border-radius: v.$border-radius-full;
+    border: none;
+    cursor: pointer;
+    transition: background-color v.$transition-default;
+    font-size: 0.875rem;
+
+    @include v.desktop {
+      padding: v.$spacing-sm v.$spacing-xl;
+      font-size: 1rem;
+    }
+
+    &:hover {
+      background-color: v.$cyan-600;
+    }
+
+    &:focus {
+      outline: 2px solid v.$cyan-500;
+      outline-offset: 2px;
+    }
+  }
+}

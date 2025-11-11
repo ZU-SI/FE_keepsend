@@ -1,0 +1,192 @@
+@use "../cofigs/vars" as v;
+/* ============================================
+   Hero Banners Component 
+   ============================================ */
+
+/* Block: hero-banners */
+.hero-banners {
+  width: 100%;
+
+  /* Element: section */
+  &__section {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Element: background */
+  &__background {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0.1;
+
+    /* Modifier: gradient variants */
+    &--gradient-1 {
+      background: linear-gradient(
+        to bottom right,
+        #2563eb 0%,
+        // Note: Color not in variables
+        v.$cyan-500 50%,
+        #60a5fa 100% // Note: Color not in variables
+      );
+    }
+
+    &--gradient-2 {
+      background: linear-gradient(
+        to bottom right,
+        v.$cyan-500 0%,
+        #3b82f6 50%,
+        // Note: Color not in variables
+        #4f46e5 100% // Note: Color not in variables
+      );
+    }
+
+    &--gradient-3 {
+      background: linear-gradient(
+        to bottom right,
+        #4f46e5 0%,
+        // Note: Color not in variables
+        #a855f7 50%,
+        // Note: Color not in variables
+        #60a5fa 100% // Note: Color not in variables
+      );
+    }
+  }
+
+  /* Element: grid-pattern */
+  &__grid-pattern {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: linear-gradient(
+        rgba(v.$accent, 0.25) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, rgba(v.$accent, 0.25) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: 1;
+  }
+
+  /* Element: content */
+  &__content {
+    position: relative;
+    z-index: 10;
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 v.$spacing-lg;
+    text-align: center;
+  }
+
+  /* Element: subtitle */
+  &__subtitle {
+    color: v.$cyan-400;
+    font-size: 0.875rem;
+    font-family: v.$font-mono;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: v.$spacing-md;
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  /* Element: title */
+  &__title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: v.$spacing-xl;
+    color: v.$white;
+    animation: fadeInUp 0.8s ease-out 0.1s forwards;
+    opacity: 0;
+
+    @include v.desktop {
+      font-size: 4rem;
+    }
+  }
+
+  /* Element: description */
+  &__description {
+    font-size: 1.125rem;
+    color: v.$gray-300;
+    margin-bottom: v.$spacing-2xl;
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.75;
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+    opacity: 0;
+
+    @include v.desktop {
+      font-size: 1.25rem;
+    }
+  }
+
+  /* Element: actions */
+  &__actions {
+    display: flex;
+    gap: v.$spacing-md;
+    justify-content: center;
+    animation: fadeInUp 0.8s ease-out 0.3s forwards;
+    opacity: 0;
+  }
+
+  /* Element: button */
+  &__button {
+    padding: 0.625rem v.$spacing-2xl;
+    border-radius: v.$border-radius-full;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all v.$transition-default;
+    border: none;
+    outline: none;
+
+    &:focus {
+      outline: 2px solid v.$cyan-500;
+      outline-offset: 2px;
+    }
+
+    /* Modifier: primary button */
+    &--primary {
+      background-color: v.$cyan-500;
+      color: v.$black;
+
+      &:hover {
+        background-color: v.$cyan-600;
+      }
+    }
+
+    /* Modifier: outline button */
+    &--outline {
+      background-color: transparent;
+      color: v.$cyan-400;
+      border: 1px solid v.$cyan-500;
+
+      &:hover {
+        background-color: rgba(v.$cyan-500, 0.1);
+      }
+    }
+  }
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

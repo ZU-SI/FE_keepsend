@@ -27,6 +27,17 @@ export default function Home() {
   })();
   const isModalOpen = useAtomValue(contactModalOpenAtom);
 
+  // 이벤트 핸들러 참조 저장을 위한 ref 추가
+  const eventHandlersRef = useRef<{
+    handleWheel: ((e: WheelEvent) => void) | null;
+    handleResize: (() => void) | null;
+    updateActivePrimary: (() => void) | null;
+  }>({
+    handleWheel: null,
+    handleResize: null,
+    updateActivePrimary: null,
+  });
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -67,6 +78,14 @@ export default function Home() {
       Math.max(0, Math.min(index, max));
 
     const handleWheel = (e: WheelEvent) => {
+      // 모달이 열려 있으면 스크롤 제어를 하지 않음
+      if (isModalOpen) {
+        const modalElement = document.querySelector('.contact__form');
+        if (modalElement && modalElement.contains(e.target as Node)) {
+          return; // 모달 내부에서의 스크롤은 자연스럽게 처리
+        }
+      }
+
       const state = stateRef.current;
       if (state.isAnimating) {
         e.preventDefault();
@@ -180,6 +199,9 @@ export default function Home() {
     };
 
     const updateActivePrimary = () => {
+      // 모달이 열려 있으면 활성화 업데이트를 건너뛰기
+      if (isModalOpen) return;
+
       const sections = getSections();
       if (sections.length === 0) return;
       const scrollY = getScrollY();
@@ -211,6 +233,9 @@ export default function Home() {
     };
 
     const handleResize = () => {
+      // 모달이 열려 있으면 크기 조정 시 스크롤 재설정을 건너뛰기
+      if (isModalOpen) return;
+
       const sections = getSections();
       if (sections.length === 0) return;
       const offsets = getSectionOffsets();
@@ -219,16 +244,54 @@ export default function Home() {
       updateActivePrimary();
     };
 
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("scroll", updateActivePrimary, { passive: true });
+    // 이벤트 핸들러를 ref에 저장
+    eventHandlersRef.current = {
+      handleWheel,
+      handleResize,
+      updateActivePrimary,
+    };
+
+    // 이벤트 리스너 등록
+    const attachEventListeners = () => {
+      if (!isModalOpen) {
+        window.addEventListener("wheel", handleWheel, { passive: false });
+        window.addEventListener("resize", handleResize);
+        window.addEventListener("scroll", updateActivePrimary, { passive: true });
+      }
+    };
+
+    // 초기 이벤트 리스너 등록
+    attachEventListeners();
+    
+    // 초기 활성 상태 업데이트
     updateActivePrimary();
+    
     return () => {
+      // 이벤트 리스너 정리
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("scroll", updateActivePrimary);
     };
-  }, []);
+  }, []); // 의존성 배열에서 isModalOpen 제거
+
+  // 모달 상태에 따라 이벤트 리스너를 추가/제거하는 별도의 useEffect
+  useEffect(() => {
+    const { handleWheel, handleResize, updateActivePrimary } = eventHandlersRef.current;
+    
+    if (!handleWheel || !handleResize || !updateActivePrimary) return;
+    
+    if (isModalOpen) {
+      // 모달이 열리면 이벤트 리스너를 제거
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", updateActivePrimary);
+    } else {
+      // 모달이 닫히면 이벤트 리스너를 다시 등록
+      window.addEventListener("wheel", handleWheel, { passive: false });
+      window.addEventListener("resize", handleResize);
+      window.addEventListener("scroll", updateActivePrimary, { passive: true });
+    }
+  }, [isModalOpen]); // 모달 상태가 변경될 때만 실행
 
   return (
     <main ref={containerRef}>

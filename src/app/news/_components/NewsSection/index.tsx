@@ -193,12 +193,14 @@ export default function NewsSection() {
       {selectedArticle && (
         <div
           className="n-modal"
-          onClick={() => setSelectedArticle(null)}
+          onClick={(e) => {
+            if((e.target as HTMLElement).closest('#news-details')) return;
+            setSelectedArticle(null)
+          }}
           onKeyDown={(e) => e.key === "Escape" && setSelectedArticle(null)}
-          // onClick={(e) => e.stopPropagation()}
         >
           
-            <div className="n-modal__container">
+            <div className="n-modal__container" id="news-details">
               {/* Header */}
               <div className="n-modal__header">
                 <button

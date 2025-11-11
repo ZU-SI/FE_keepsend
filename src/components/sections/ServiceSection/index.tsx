@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { activeMenuAtom } from "@/store/atoms";
+import { useSectionObserver } from "@/utils/interaction";
+import { useSetAtom } from "jotai";
+import { RefObject, useRef } from "react";
 import ServiceB2bOne from "./services/ServiceB2bOne";
 import ServiceB2bThree from "./services/ServiceB2bThree";
 import ServiceB2bTwo from "./services/ServiceB2bTwo";
@@ -11,28 +14,13 @@ import ServicePartner from "./services/ServicePartner";
 import ServiceProcess from "./services/ServiceProcess";
 import styles from "./serviceSection.module.css";
 
-// explicit section ordering and ids
-const sectionOrder = [
-  "intro",
-  "b2b-1",
-  "b2b-2",
-  "b2b-3",
-  "process",
-  "center",
-  "partner",
-  "consulting",
-];
-
 interface ServiceSectionProps {
   startIdx: number;
 }
 
 export default function ServiceSection({ startIdx }: ServiceSectionProps) {
-  const [activeMenuId, setActiveMenuId] = useState<string>("b2b");
-  const [showMenu, setShowMenu] = useState(false);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const sectionRefs = useRef<HTMLElement[]>([]);
-  // Define menu groups → can map one menu to multiple sections
+  const containerRef = useRef<HTMLDivElement>(null);
+  const setActiveMenu = useSetAtom(activeMenuAtom);
   const menuGroups = [
     { id: "b2b", titleKo: "B2B", sectionIds: ["b2b-1", "b2b-2", "b2b-3"] },
     { id: "process", titleKo: "프로세스", sectionIds: ["process"] },
@@ -40,82 +28,26 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
     { id: "partner", titleKo: "파트너", sectionIds: ["partner"] },
     { id: "consulting", titleKo: "컨설팅", sectionIds: ["consulting"] },
   ];
-  const sectionIdToMenuId = Object.fromEntries(
-    menuGroups.flatMap((g) => g.sectionIds.map((sid) => [sid, g.id]))
+  const { showMenu, activeMenuId, sectionRefs } = useSectionObserver(
+    containerRef as RefObject<HTMLElement>,
+    {
+      sectionSelector: "[data-scroll-section][data-service-id]",
+      idAttribute: "data-service-id",
+      menuGroups,
+      onComeIn: () => {
+        setActiveMenu("service");
+      },
+      onGoOut: () => {
+        setActiveMenu(null);
+      },
+    }
   );
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    // collect section elements within this component
-    sectionRefs.current = Array.from(
-      container.querySelectorAll<HTMLElement>(
-        "[data-scroll-section][data-service-id]"
-      )
-    );
-
-    const getScrollY = () => window.scrollY || window.pageYOffset || 0;
-    const getViewportTop = () => getScrollY();
-    const getViewportBottom = () => getViewportTop() + window.innerHeight;
-
-    const getContainerBounds = () => {
-      const rect = container.getBoundingClientRect();
-      const top = rect.top + getScrollY();
-      const bottom = top + rect.height;
-      return { top, bottom };
-    };
-
-    const findActiveService = () => {
-      // pick section whose middle is nearest to viewport center
-      const viewportCenter = getViewportTop() + window.innerHeight / 2;
-      let bestId: string | undefined = undefined;
-      let bestDist = Number.POSITIVE_INFINITY;
-      sectionRefs.current.forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        const top = rect.top + getScrollY();
-        const middle = top + rect.height / 2;
-        const dist = Math.abs(middle - viewportCenter);
-        if (dist < bestDist) {
-          bestDist = dist;
-          bestId = el.dataset.serviceId || bestId;
-        }
-      });
-      return bestId;
-    };
-
-    const handleScroll = () => {
-      const { top, bottom } = getContainerBounds();
-      const vpTop = getViewportTop();
-      const vpBottom = getViewportBottom();
-      const overlaps = !(vpBottom <= top || vpTop >= bottom);
-      setShowMenu(overlaps);
-
-      if (overlaps) {
-        const id = findActiveService();
-        if (id) {
-          const menuId = sectionIdToMenuId[id] || id;
-          setActiveMenuId(menuId);
-        }
-      }
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-    };
-  }, [sectionIdToMenuId]);
-
-  // activeMenuId validity ensured by scroll handler; no extra effect needed
-
   const handleMenuClick = (menuId: string) => {
-    // find the first section mapped to this menu
     const targetSectionId =
       menuGroups.find((g) => g.id === menuId)?.sectionIds[0] ?? menuId;
     const el = sectionRefs.current.find(
-      (e) => e.dataset.serviceId === targetSectionId
+      (e) => e.getAttribute("data-service-id") === targetSectionId
     );
     if (!el) return;
     const rect = el.getBoundingClientRect();
@@ -124,7 +56,11 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
   };
 
   return (
-    <div ref={containerRef} className={styles["sv-section__container"]}>
+    <div
+      id="service"
+      ref={containerRef}
+      className={styles["sv-section__container"]}
+    >
       {showMenu && (
         <div className={styles["sv-section__menu-wrapper"]}>
           <div className={styles["sv-section__menu"]}>

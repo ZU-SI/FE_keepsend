@@ -1,6 +1,5 @@
 "use client";
 
-import GlobalHeader from "@/components/layouts/GlobalHeader";
 import BannerSection from "@/components/sections/BannerSection";
 import ServiceSection from "@/components/sections/ServiceSection";
 import SolutionSection from "@/components/sections/SolutionSection";
@@ -228,47 +227,8 @@ export default function Home() {
     };
   }, []);
 
-  const scrollToSectionIndex = (targetIndex: number) => {
-    const container = containerRef.current;
-    if (!container) return;
-    const sections = Array.from(
-      container.querySelectorAll<HTMLElement>("[data-scroll-section]")
-    );
-    if (targetIndex < 0 || targetIndex >= sections.length) return;
-    const getScrollY = () => window.scrollY || window.pageYOffset || 0;
-    const rect = sections[targetIndex].getBoundingClientRect();
-    const targetY = rect.top + getScrollY();
-    gsap.to(window, { scrollTo: targetY, duration: 0.8, ease: "power2.inOut" });
-  };
-
-  const handleNavService = () => {
-    // find first service section by attribute
-    const container = containerRef.current;
-    if (!container) return;
-    const sections = Array.from(
-      container.querySelectorAll<HTMLElement>("[data-scroll-section]")
-    );
-    const idx = sections.findIndex((el) => el.hasAttribute("data-service-id"));
-    if (idx >= 0) scrollToSectionIndex(idx);
-  };
-
-  const handleNavSolution = () => {
-    const container = containerRef.current;
-    if (!container) return;
-    const sections = Array.from(
-      container.querySelectorAll<HTMLElement>("[data-scroll-section]")
-    );
-    const idx = sections.findIndex((el) => el.hasAttribute("data-solution-id"));
-    if (idx >= 0) scrollToSectionIndex(idx);
-  };
-
   return (
     <main ref={containerRef}>
-      <GlobalHeader
-        onClickService={handleNavService}
-        onClickSolution={handleNavSolution}
-        activePrimary={activePrimaryRef.current}
-      />
       <BannerSection startIdx={0} />
       <ServiceSection startIdx={3} />
       <SolutionSection startIdx={11} />

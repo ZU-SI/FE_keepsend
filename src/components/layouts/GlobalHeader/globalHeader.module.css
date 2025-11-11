@@ -67,6 +67,8 @@
   color: #d1d5db;
   text-decoration: none;
   transition: color 0.3s ease;
+  background-color: transparent;
+  border: 0;
 }
 
 .navigation__link:hover {

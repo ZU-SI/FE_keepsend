@@ -1,28 +1,31 @@
 "use client";
 
+import { activeMenuAtom } from "@/store/atoms";
+import gsap from "gsap";
+import ScrollToPlugin from "gsap/ScrollToPlugin";
+import { useAtomValue } from "jotai";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { MouseEvent, useState } from "react";
 import styles from "./globalHeader.module.css";
 
-interface Props {
-  onClickService?: () => void;
-  onClickSolution?: () => void;
-  activePrimary?: "service" | "solution" | null;
-}
+gsap.registerPlugin(ScrollToPlugin);
 
-export default function GlobalHeader({
-  onClickService,
-  onClickSolution,
-  activePrimary = null,
-}: Props) {
+export default function GlobalHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const activePrimary = useAtomValue(activeMenuAtom);
 
   const handleServiceClick = (e: MouseEvent) => {
     e.preventDefault();
-    onClickService?.();
+    if (!window) return;
+    window.location.href = `${window.location.origin}/#service`;
   };
+
   const handleSolutionClick = (e: MouseEvent) => {
     e.preventDefault();
-    onClickSolution?.();
+    if (!window) return;
+    window.location.href = `${window.location.origin}/#solution`;
   };
 
   return (
@@ -35,8 +38,8 @@ export default function GlobalHeader({
 
         {/* Desktop Menu */}
         <div className={styles.navigation__menu}>
-          <a
-            href="#services"
+          <button
+            type="button"
             onClick={handleServiceClick}
             className={`${styles.navigation__link} ${
               activePrimary === "service"
@@ -45,9 +48,9 @@ export default function GlobalHeader({
             }`}
           >
             물류 서비스
-          </a>
-          <a
-            href="#solutions"
+          </button>
+          <button
+            type="button"
             onClick={handleSolutionClick}
             className={`${styles.navigation__link} ${
               activePrimary === "solution"
@@ -56,10 +59,15 @@ export default function GlobalHeader({
             }`}
           >
             IT 솔루션
-          </a>
-          <a href="#news" className={styles.navigation__link}>
+          </button>
+          <Link
+            href="/news"
+            className={`${styles.navigation__link} ${
+              pathname === "/news" ? styles["navigation__link--active"] : ""
+            }`}
+          >
             소식
-          </a>
+          </Link>
         </div>
 
         {/* CTA Button */}
@@ -106,9 +114,9 @@ export default function GlobalHeader({
           >
             IT 솔루션
           </a>
-          <a href="#news" className={styles["navigation__mobile-link"]}>
+          <Link href="/news" className={styles["navigation__mobile-link"]}>
             소식
-          </a>
+          </Link>
           <button
             className={`${styles.navigation__button} ${styles["navigation__button--mobile"]}`}
           >

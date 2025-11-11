@@ -1,100 +1,48 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useRef } from "react";
 import styles from "../ServiceSection/serviceSection.module.css";
 
+import { activeMenuAtom } from "@/store/atoms";
+import { useSectionObserver } from "@/utils/interaction";
+import { useSetAtom } from "jotai";
+import SolutionAIPlatform from "./solutions/SolutionAIPlatform";
 import SolutionIntro from "./solutions/SolutionIntro";
 import SolutionLogisticsIT from "./solutions/SolutionLogisticsIT";
 import SolutionSettlement from "./solutions/SolutionSettlement";
-import SolutionAIPlatform from "./solutions/SolutionAIPlatform";
 
 interface SolutionSectionProps {
   startIdx: number;
 }
 
-const solutionMenu = [
-  // Intro는 메뉴에서 제외 (소개는 버튼 없이 sticky 메뉴만 노출)
-  { id: "logistics-it", titleKo: "물류 IT" },
-  { id: "settlement", titleKo: "정산 시스템" },
-  { id: "ai-platform", titleKo: "AI 플랫폼" },
-];
-
 export default function SolutionSection({ startIdx }: SolutionSectionProps) {
-  const [showMenu, setShowMenu] = useState(false);
-  const [activeMenuId, setActiveMenuId] = useState<string>("logistics-it");
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const sectionRefs = useRef<HTMLElement[]>([]);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    sectionRefs.current = Array.from(
-      container.querySelectorAll<HTMLElement>("[data-scroll-section][data-solution-id]")
-    );
-
-    const getScrollY = () => window.scrollY || window.pageYOffset || 0;
-    const getViewportTop = () => getScrollY();
-    const getViewportBottom = () => getViewportTop() + window.innerHeight;
-
-    const getContainerBounds = () => {
-      const first = sectionRefs.current[0];
-      const last = sectionRefs.current[sectionRefs.current.length - 1];
-      if (!first || !last) {
-        const rect = container.getBoundingClientRect();
-        const top = rect.top + getScrollY();
-        const bottom = top + rect.height;
-        return { top, bottom };
-      }
-      const firstRect = first.getBoundingClientRect();
-      const lastRect = last.getBoundingClientRect();
-      const top = firstRect.top + getScrollY();
-      const bottom = lastRect.top + getScrollY() + lastRect.height;
-      return { top, bottom };
-    };
-
-    const findActive = () => {
-      const center = getViewportTop() + window.innerHeight / 2;
-      let best: string | undefined;
-      let bestDist = Number.POSITIVE_INFINITY;
-      sectionRefs.current.forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        const mid = rect.top + getScrollY() + rect.height / 2;
-        const d = Math.abs(mid - center);
-        if (d < bestDist) {
-          bestDist = d;
-          best = el.dataset.solutionId || best;
-        }
-      });
-      return best;
-    };
-
-    const handleScroll = () => {
-      const { top, bottom } = getContainerBounds();
-      const vt = getViewportTop();
-      const vb = getViewportBottom();
-      const overlaps = !(vb <= top || vt >= bottom);
-      setShowMenu(overlaps);
-      if (overlaps) {
-        const id = findActive();
-        // 소개 섹션일 때는 하이라이트 변경 없이 유지
-        if (id && id !== "solution-intro") {
-          setActiveMenuId(id);
-        }
-      }
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-    };
-  }, []);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const setActiveMenu = useSetAtom(activeMenuAtom);
+  const menuGroups = [
+    // Intro는 메뉴에서 제외 (소개는 버튼 없이 sticky 메뉴만 노출)
+    { id: "logistics-it", titleKo: "물류 IT", sectionIds: ["logistics-it"] },
+    { id: "settlement", titleKo: "정산 시스템", sectionIds: ["settlement"] },
+    { id: "ai-platform", titleKo: "AI 플랫폼", sectionIds: ["ai-platform"] },
+  ];
+  const { showMenu, activeMenuId, sectionRefs } = useSectionObserver(
+    containerRef as RefObject<HTMLElement>,
+    {
+      sectionSelector: "[data-scroll-section][data-solution-id]",
+      idAttribute: "data-solution-id",
+      menuGroups,
+      onComeIn: () => {
+        setActiveMenu("solution");
+      },
+      onGoOut: () => {
+        setActiveMenu(null);
+      },
+    }
+  );
 
   const handleMenuClick = (id: string) => {
-    const el = sectionRefs.current.find((e) => e.dataset.solutionId === id);
+    const el = sectionRefs.current.find(
+      (e) => e.getAttribute("data-solution-id") === id
+    );
     if (!el) return;
     const rect = el.getBoundingClientRect();
     const targetY = rect.top + (window.scrollY || window.pageYOffset);
@@ -102,15 +50,21 @@ export default function SolutionSection({ startIdx }: SolutionSectionProps) {
   };
 
   return (
-    <div ref={containerRef} className={styles["sv-section__container"]}>
+    <div
+      ref={containerRef}
+      id="solution"
+      className={styles["sv-section__container"]}
+    >
       {showMenu && (
         <div className={styles["sv-section__menu-wrapper"]}>
           <div className={styles["sv-section__menu"]}>
             <h2 className={styles["sv-section__menu-header"]}>
-              <span className={styles["sv-section__menu-title"]}>Solutions</span>
+              <span className={styles["sv-section__menu-title"]}>
+                Solutions
+              </span>
             </h2>
             <nav className={styles["sv-section__menu-nav"]}>
-              {solutionMenu.map((m) => (
+              {menuGroups.map((m) => (
                 <button
                   key={m.id}
                   onClick={() => handleMenuClick(m.id)}
@@ -171,5 +125,3 @@ export default function SolutionSection({ startIdx }: SolutionSectionProps) {
     </div>
   );
 }
-
-

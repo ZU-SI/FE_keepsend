@@ -195,11 +195,9 @@ export default function NewsSection() {
           className="n-modal"
           onClick={() => setSelectedArticle(null)}
           onKeyDown={(e) => e.key === "Escape" && setSelectedArticle(null)}
+          // onClick={(e) => e.stopPropagation()}
         >
-          <div
-            className="n-modal__wrapper"
-            onClick={(e) => e.stopPropagation()}
-          >
+          
             <div className="n-modal__container">
               {/* Header */}
               <div className="n-modal__header">
@@ -226,45 +224,46 @@ export default function NewsSection() {
 
               {/* Content */}
               <div className="n-modal__content">
-                {/* Meta */}
-                <div className="n-modal__meta">
-                  <span
-                    className={`n-modal__badge ${
-                      selectedArticle.type === "뉴스"
-                        ? "n-modal__badge--news"
-                        : "n-modal__badge--blog"
-                    }`}
-                  >
-                    {selectedArticle.type}
-                  </span>
-                  <span className="n-modal__date">{selectedArticle.date}</span>
-                </div>
+                <div className="contents">                  
+                  {/* Meta */}
+                  <div className="n-modal__meta">
+                    <span
+                      className={`n-modal__badge ${
+                        selectedArticle.type === "뉴스"
+                          ? "n-modal__badge--news"
+                          : "n-modal__badge--blog"
+                      }`}
+                    >
+                      {selectedArticle.type}
+                    </span>
+                    <span className="n-modal__date">{selectedArticle.date}</span>
+                  </div>
 
-                {/* Title */}
-                <h1 className="n-modal__title">{selectedArticle.title}</h1>
+                  {/* Title */}
+                  <h1 className="n-modal__title">{selectedArticle.title}</h1>
 
-                {/* Summary */}
-                <p className="n-modal__summary">{selectedArticle.summary}</p>
+                  {/* Summary */}
+                  <p className="n-modal__summary">{selectedArticle.summary}</p>
 
-                {/* Main Image */}
-                <div className="n-modal__image">
-                  <span className="n-modal__image-text">이미지</span>
-                </div>
+                  {/* Main Image */}
+                  <div className="n-modal__image">
+                    <span className="n-modal__image-text">이미지</span>
+                  </div>
 
-                {/* Content Sections */}
-                <div className="n-modal__sections">
-                  {selectedArticle.content.map((section, idx) => (
-                    <div key={idx} className="n-modal__section">
-                      <h2 className="n-modal__section-heading">
-                        {section.heading}
-                      </h2>
-                      <p className="n-modal__section-text">{section.text}</p>
-                    </div>
-                  ))}
+                  {/* Content Sections */}
+                  <div className="n-modal__sections">
+                    {selectedArticle.content.map((section, idx) => (
+                      <div key={idx} className="n-modal__section">
+                        <h2 className="n-modal__section-heading">
+                          {section.heading}
+                        </h2>
+                        <p className="n-modal__section-text">{section.text}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
         </div>
       )}
     </>

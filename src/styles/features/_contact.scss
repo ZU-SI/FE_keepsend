@@ -11,42 +11,41 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: rgba(v.$black, 0.8);
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(v.$black, 0.3);
   backdrop-filter: blur(4px);
   z-index: v.$z-navigation;
   overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  /* Element: wrapper */
-  &__wrapper {
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: v.$spacing-2xl v.$spacing-lg;
-    padding-top: 5rem;
-  }
 
   /* Element: container */
   &__container {
-    width: 100%;
-    max-width: 800px;
-    background-color: v.$black;
-    border-radius: v.$radius-sm;
-    border: 1px solid v.$slate-800;
+    max-width: v.$breakpoint-md;
+    width: 90vw;
+    border-radius: v.$radius-xl;
+    border: 0px solid v.$border;
+    overflow: hidden;
+    height: v.$breakpoint-md;
+    max-height: 90vh;
   }
 
   /* ============================================
-     Header
+     Header (Dark Theme)
      ============================================ */
 
   /* Element: header */
   &__header {
     position: sticky;
     top: 0;
-    background-color: rgba(v.$black, 0.95);
+    height: 60px;
+    background-color: rgba(v.$background, 0.95);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid v.$slate-800;
-    padding: v.$spacing-xl;
+    border-bottom: 1px solid v.$border;
+    padding: v.$spacing-md v.$spacing-xl;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -55,9 +54,9 @@
 
   /* Element: title */
   &__title {
-    font-size: v.$spacing-xl;
+    font-size: 20px;
     font-weight: 700;
-    color: v.$white;
+    color: v.$foreground;
     margin: 0;
   }
 
@@ -67,11 +66,11 @@
     background: none;
     border: none;
     cursor: pointer;
-    border-radius: 0.25rem;
+    border-radius: v.$radius-sm;
     transition: background-color v.$transition-default;
 
     &:hover {
-      background-color: v.$slate-800;
+      background-color: v.$muted;
     }
   }
 
@@ -80,21 +79,32 @@
     width: v.$spacing-xl;
     height: v.$spacing-xl;
     color: v.$muted-foreground;
+
+    &:hover {
+      color: v.$foreground;
+    }
   }
 
   /* ============================================
-     Form
+     Form (Light Theme)
      ============================================ */
 
   /* Element: form */
   &__form {
-    padding: v.$spacing-xl;
-    display: flex;
-    flex-direction: column;
-    gap: v.$spacing-2xl;
+    height: calc(100% - 65px);
+    overflow-y: auto;
+    background-color: v.$card-light;
+    
+    .contents {
+      height: auto;
+      padding: v.$spacing-xl;
+      display: flex;
+      flex-direction: column;
+      gap: v.$spacing-2xl;
 
-    @include v.desktop {
-      padding: 3rem;
+      @include v.desktop {
+        padding: 2rem;
+      }
     }
   }
 
@@ -112,8 +122,8 @@
   &__section-title {
     font-size: v.$spacing-lg;
     font-weight: 700;
-    color: v.$white;
-    margin-bottom: v.$spacing-xl;
+    color: v.$foreground-light;
+    margin-bottom: v.$spacing-md;
   }
 
   /* Element: grid */
@@ -121,8 +131,8 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: v.$spacing-lg;
-    background-color: #fafafa; // Note: Color not in variables
-    border-radius: v.$radius-sm;
+    background-color: v.$gray-50;
+    border-radius: v.$radius-md;
     padding: v.$spacing-xl;
 
     @include v.desktop {
@@ -131,13 +141,14 @@
   }
 
   /* ============================================
-     Field
+     Field (Layout only - styling from form-fields.scss)
      ============================================ */
 
   /* Element: field */
   &__field {
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
 
     /* Modifier: full width */
     &--full {
@@ -145,153 +156,6 @@
     }
   }
 
-  /* Element: label */
-  &__label {
-    display: block;
-    font-size: 0.875rem;
-    color: v.$gray-300;
-    margin-bottom: v.$spacing-sm;
-
-    /* Modifier: light label (for light backgrounds) */
-    &--light {
-      display: block;
-      font-size: 0.875rem;
-      color: #374151; // Note: Color not in variables
-      margin-bottom: v.$spacing-sm;
-    }
-  }
-
-  /* Element: required */
-  &__required {
-    color: v.$cyan-500;
-  }
-
-  /* ============================================
-     Select with Custom Input
-     ============================================ */
-
-  /* Element: select-group */
-  &__select-group {
-    display: flex;
-    gap: v.$spacing-sm;
-    align-items: stretch;
-  }
-
-  /* Element: select */
-  &__select {
-    flex: 1;
-    padding: 0 0.75rem;
-    height: 2.25rem;
-    background-color: #fafafa; // Note: Color not in variables
-    border: 1px solid #334155; // Note: Color not in variables
-    border-radius: v.$radius-sm;
-    color: v.$black;
-    font-size: 0.875rem;
-    transition: border-color v.$transition-default;
-
-    &:focus {
-      outline: none;
-      border-color: v.$cyan-500;
-    }
-  }
-
-  /* ============================================
-     Input Fields
-     ============================================ */
-
-  /* Element: input */
-  &__input {
-    flex: 1;
-    padding: 0 0.75rem;
-    height: 2.25rem;
-    background-color: #fafafa; // Note: Color not in variables
-    border: 1px solid #334155; // Note: Color not in variables
-    border-radius: v.$radius-sm;
-    color: v.$black;
-    font-size: 0.875rem;
-    transition: border-color v.$transition-default;
-
-    &::placeholder {
-      color: #6b7280; // Note: Color not in variables
-    }
-
-    &:focus {
-      outline: none;
-      border-color: v.$cyan-500;
-    }
-
-    /* Modifier: light input (for light backgrounds) */
-    &--light {
-      width: 100%;
-      padding: 0 0.75rem;
-      height: 2.25rem;
-      background-color: v.$white;
-      border: 1px solid v.$gray-300;
-      border-radius: v.$radius-sm;
-      color: v.$black;
-      font-size: 0.875rem;
-      transition: border-color v.$transition-default;
-
-      &::placeholder {
-        color: #6b7280; // Note: Color not in variables
-      }
-
-      &:focus {
-        outline: none;
-        border-color: v.$cyan-500;
-      }
-    }
-  }
-
-  /* ============================================
-     Textarea
-     ============================================ */
-
-  /* Element: textarea */
-  &__textarea {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #fafafa; // Note: Color not in variables
-    border: 1px solid #334155; // Note: Color not in variables
-    border-radius: v.$radius-sm;
-    color: v.$black;
-    font-size: 0.875rem;
-    transition: border-color v.$transition-default;
-    resize: none;
-    font-family: inherit;
-
-    &::placeholder {
-      color: #6b7280; // Note: Color not in variables
-    }
-
-    &:focus {
-      outline: none;
-      border-color: v.$cyan-500;
-    }
-
-    /* Modifier: light textarea */
-    &--light {
-      width: 100%;
-      padding: 0.75rem;
-      background-color: v.$white;
-      border: 1px solid v.$gray-300;
-      border-radius: v.$radius-sm;
-      color: v.$black;
-      font-size: 0.875rem;
-      transition: border-color v.$transition-default;
-      resize: none;
-      font-family: inherit;
-
-      &::placeholder {
-        color: #6b7280; // Note: Color not in variables
-      }
-
-      &:focus {
-        outline: none;
-        border-color: v.$cyan-500;
-      }
-    }
-  }
 
   /* ============================================
      Info Section
@@ -299,17 +163,18 @@
 
   /* Element: info */
   &__info {
-    background-color: rgba(v.$slate-800, 0.5);
-    border: 1px solid #334155; // Note: Color not in variables
-    border-radius: v.$radius-sm;
+    background-color: v.$gray-100;
+    border: 1px solid v.$border-light;
+    border-radius: v.$radius-md;
     padding: v.$spacing-md;
   }
 
   /* Element: info-text */
   &__info-text {
     font-size: 0.875rem;
-    color: v.$gray-300;
+    color: v.$gray-600;
     margin: 0;
+    line-height: 1.5;
   }
 
   /* ============================================
@@ -320,6 +185,11 @@
   &__actions {
     display: flex;
     gap: v.$spacing-md;
+    flex-direction: column;
+
+    @include v.desktop {
+      flex-direction: row;
+    }
   }
 
   /* Element: button */
@@ -335,22 +205,31 @@
 
     /* Modifier: primary button */
     &--primary {
-      background-color: v.$cyan-500;
-      color: v.$black;
+      background-color: v.$primary;
+      color: v.$primary-foreground;
 
       &:hover {
-        background-color: v.$cyan-600;
-        box-shadow: 0 10px 25px rgba(v.$cyan-500, 0.3);
+        background-color: v.$primary-hover;
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        transform: translateY(-2px);
+      }
+
+      &:active {
+        transform: translateY(0);
       }
     }
 
     /* Modifier: secondary button */
     &--secondary {
-      background-color: v.$slate-800;
-      color: v.$white;
+      background-color: v.$gray-200;
+      color: v.$foreground-light;
 
       &:hover {
-        background-color: #334155; // Note: Color not in variables
+        background-color: v.$gray-300;
+      }
+
+      &:active {
+        background-color: v.$gray-400;
       }
     }
   }
@@ -369,7 +248,7 @@
   left: 0;
   background-color: rgba(v.$black, 0.8);
   backdrop-filter: blur(4px);
-  z-index: v.$z-navigation;
+  z-index: v.$z-navigation + 10;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -377,33 +256,40 @@
 
   /* Element: container */
   &__container {
-    background-color: v.$black;
-    border: 1px solid v.$slate-800;
-    border-radius: v.$radius-sm;
+    background-color: v.$card-light;
+    border: 1px solid v.$border-light;
+    border-radius: v.$radius-lg;
     padding: v.$spacing-xl;
     max-width: 24rem;
     width: 100%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
   }
 
   /* Element: title */
   &__title {
     font-size: 1.125rem;
     font-weight: 700;
-    color: v.$white;
+    color: v.$foreground-light;
     margin-bottom: v.$spacing-md;
   }
 
   /* Element: message */
   &__message {
-    color: v.$gray-300;
+    color: v.$gray-600;
     margin-bottom: v.$spacing-xl;
     font-size: 0.875rem;
+    line-height: 1.5;
   }
 
   /* Element: actions */
   &__actions {
     display: flex;
     gap: v.$spacing-md;
+    flex-direction: column;
+
+    @include v.desktop {
+      flex-direction: row;
+    }
   }
 
   /* Element: button */
@@ -411,7 +297,7 @@
     flex: 1;
     padding: v.$spacing-sm v.$spacing-md;
     font-weight: 600;
-    border-radius: v.$radius-sm;
+    border-radius: v.$radius-md;
     border: none;
     cursor: pointer;
     transition: all v.$transition-default;
@@ -419,22 +305,93 @@
 
     /* Modifier: primary */
     &--primary {
-      background-color: v.$cyan-500;
-      color: v.$black;
+      background-color: v.$primary;
+      color: v.$primary-foreground;
 
       &:hover {
-        background-color: v.$cyan-600;
+        background-color: v.$primary-hover;
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
       }
     }
 
     /* Modifier: secondary */
     &--secondary {
-      background-color: v.$slate-800;
-      color: v.$white;
+      background-color: v.$gray-200;
+      color: v.$foreground-light;
 
       &:hover {
-        background-color: #334155; // Note: Color not in variables
+        background-color: v.$gray-300;
+      }
+
+      &:active {
+        background-color: v.$gray-400;
       }
     }
+
+    /* Modifier: danger (for delete/cancel actions) */
+    &--danger {
+      background-color: v.$destructive;
+      color: v.$destructive-foreground;
+
+      &:hover {
+        background-color: #dc2626;
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+/* ============================================
+   Loading State
+   ============================================ */
+
+.contact__button,
+.confirm__button {
+  &--loading {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 1rem;
+      height: 1rem;
+      top: 50%;
+      left: 50%;
+      margin-left: -0.5rem;
+      margin-top: -0.5rem;
+      border: 2px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: button-loading-spinner 0.6s linear infinite;
+    }
+
+    &.contact__button--primary::after,
+    &.confirm__button--primary::after {
+      border-top-color: v.$primary-foreground;
+    }
+
+    &.contact__button--secondary::after,
+    &.confirm__button--secondary::after {
+      border-top-color: v.$foreground-light;
+    }
+  }
+}
+
+@keyframes button-loading-spinner {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
   }
 }

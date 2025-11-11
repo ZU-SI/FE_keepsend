@@ -1,5 +1,6 @@
 "use client";
 
+import { Label, SelectWithCustom, TextField, Textarea } from "@/components/ui/form";
 import type React from "react";
 import { useState } from "react";
 
@@ -57,61 +58,6 @@ interface ContactModalProps {
   onClose: () => void;
 }
 
-// SelectWithCustom Component
-interface SelectWithCustomProps {
-  label: string;
-  field: string;
-  customField: string;
-  options: string[];
-  value: string;
-  customValue: string;
-  required?: boolean;
-  onChange: (field: string, value: string) => void;
-}
-
-function SelectWithCustom({
-  label,
-  field,
-  customField,
-  options,
-  value,
-  customValue,
-  required = false,
-  onChange,
-}: SelectWithCustomProps) {
-  const showCustomInput = value === "직접 입력";
-
-  return (
-    <div className="contact__field">
-      <label className="contact__label">
-        {label} {required && <span className="contact__required">*</span>}
-      </label>
-      <div className="contact__select-group">
-        <select
-          value={value}
-          onChange={(e) => onChange(field, e.target.value)}
-          className="contact__select"
-        >
-          {options.map((opt) => (
-            <option key={opt} value={opt === "선택해주세요" ? "" : opt}>
-              {opt}
-            </option>
-          ))}
-        </select>
-        {showCustomInput && (
-          <input
-            type="text"
-            value={customValue}
-            onChange={(e) => onChange(customField, e.target.value)}
-            placeholder="입력"
-            className="contact__input"
-          />
-        )}
-      </div>
-    </div>
-  );
-}
-
 export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [formData, setFormData] = useState<ContactFormData>({
     serviceType: "",
@@ -143,7 +89,8 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     setHasUnsavedChanges(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (e: MouseEvent) => {
+    e.stopPropagation();
     if (hasUnsavedChanges) {
       setShowConfirmDialog(true);
     } else {
@@ -238,7 +185,6 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     <>
       {/* Modal Overlay */}
       <div className="contact" onClick={handleClose}>
-        <div className="contact__wrapper" onClick={(e) => e.stopPropagation()}>
           <div className="contact__container">
             {/* Header */}
             <div className="contact__header">
@@ -266,217 +212,211 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
             {/* Form Content */}
             <form onSubmit={handleSubmit} className="contact__form">
-              {/* Section 1: 견적 정보 */}
-              <div className="contact__section">
-                <h3 className="contact__section-title">견적 정보</h3>
-                <div className="contact__grid">
-                  <SelectWithCustom
-                    label="서비스 분류"
-                    field="serviceType"
-                    customField="serviceTypeCustom"
-                    options={SERVICE_OPTIONS}
-                    value={formData.serviceType}
-                    customValue={formData.serviceTypeCustom}
-                    onChange={handleInputChange}
-                  />
+              <div className="contents">
+                {/* Section 1: 견적 정보 */}
+                <div className="contact__section">
+                  <h3 className="contact__section-title">견적 정보</h3>
+                  <div className="contact__grid">
+                    <div className="contact__field">
+                      <fieldset>
+                        <Label text="서비스 분류" />
+                      </fieldset>
+                      <SelectWithCustom
+                        options={SERVICE_OPTIONS}
+                        value={formData.serviceType}
+                        customValue={formData.serviceTypeCustom}
+                        onSelectChange={v => handleInputChange('serviceType', v)}
+                        onCustomChange={v => handleInputChange('serviceTypeCustom', v)}
+                      />
+                    </div>
+                    <div className="contact__field">
+                      <fieldset>
+                        <Label text="상품 유형" />
+                      </fieldset>
+                      <SelectWithCustom
+                        options={PRODUCT_TYPE_OPTIONS}
+                        value={formData.productType}
+                        customValue={formData.productTypeCustom}
+                        onSelectChange={v => handleInputChange('productType', v)}
+                        onCustomChange={v => handleInputChange('productTypeCustom', v)}
+                      />
+                    </div>
+                    <div  className="contact__field">
+                      <fieldset>
+                        <Label text="취급 품목" />
+                      </fieldset>
+                      <SelectWithCustom
+                        options={ITEM_TYPE_OPTIONS}
+                        value={formData.itemType}
+                        customValue={formData.itemTypeCustom}
+                        onSelectChange={v => handleInputChange('itemType', v)}
+                        onCustomChange={v => handleInputChange('itemTypeCustom', v)}
+                      />
+                    </div>
 
-                  <SelectWithCustom
-                    label="상품 유형"
-                    field="productType"
-                    customField="productTypeCustom"
-                    options={PRODUCT_TYPE_OPTIONS}
-                    value={formData.productType}
-                    customValue={formData.productTypeCustom}
-                    onChange={handleInputChange}
-                  />
+                    {/* 수량 */}
+                    <div className="contact__field">
+                      <Label text="수량" />
+                      <TextField
+                        type="text"
+                        value={formData.quantity}
+                        onChange={(v) =>
+                          handleInputChange("quantity", v)
+                        }
+                        placeholder="입력"
+                      />
+                    </div>
 
-                  <SelectWithCustom
-                    label="취급 품목"
-                    field="itemType"
-                    customField="itemTypeCustom"
-                    options={ITEM_TYPE_OPTIONS}
-                    value={formData.itemType}
-                    customValue={formData.itemTypeCustom}
-                    onChange={handleInputChange}
-                  />
+                    {/* 출고량 */}
+                    <div className="contact__field">
+                      <Label text="출고량" />
+                      <TextField
+                        type="text"
+                        value={formData.shipment}
+                        onChange={(v) =>
+                          handleInputChange("shipment", v)
+                        }
+                        placeholder="입력"
+                      />
+                    </div>
 
-                  {/* 수량 */}
-                  <div className="contact__field">
-                    <label className="contact__label--light">수량</label>
-                    <input
-                      type="text"
-                      value={formData.quantity}
-                      onChange={(e) =>
-                        handleInputChange("quantity", e.target.value)
-                      }
-                      placeholder="입력"
-                      className="contact__input--light"
-                    />
-                  </div>
+                    {/* 크기 */}
+                    <div className="contact__field">
+                      <Label text="크기" />
+                      <TextField
+                        type="text"
+                        value={formData.size}
+                        onChange={(v) =>
+                          handleInputChange("size", v)
+                        }
+                        placeholder="입력"
+                      />
+                    </div>
 
-                  {/* 출고량 */}
-                  <div className="contact__field">
-                    <label className="contact__label--light">출고량</label>
-                    <input
-                      type="text"
-                      value={formData.shipment}
-                      onChange={(e) =>
-                        handleInputChange("shipment", e.target.value)
-                      }
-                      placeholder="입력"
-                      className="contact__input--light"
-                    />
-                  </div>
-
-                  {/* 크기 */}
-                  <div className="contact__field">
-                    <label className="contact__label--light">크기</label>
-                    <input
-                      type="text"
-                      value={formData.size}
-                      onChange={(e) =>
-                        handleInputChange("size", e.target.value)
-                      }
-                      placeholder="입력"
-                      className="contact__input--light"
-                    />
-                  </div>
-
-                  {/* 처리방식 */}
-                  <div className={`$"contact__field" $"contact__field--full"`}>
-                    <label className="contact__label--light">처리방식</label>
-                    <textarea
-                      value={formData.processingMethod}
-                      onChange={(e) =>
-                        handleInputChange("processingMethod", e.target.value)
-                      }
-                      placeholder="입력"
-                      rows={3}
-                      className="contact__textarea--light"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Section 2: 회사 정보 */}
-              <div className="contact__section">
-                <h3 className="contact__section-title">회사 정보</h3>
-                <div className="contact__grid">
-                  {/* 회사명 */}
-                  <div className="contact__field">
-                    <label className="contact__label--light">회사명</label>
-                    <input
-                      type="text"
-                      value={formData.companyName}
-                      onChange={(e) =>
-                        handleInputChange("companyName", e.target.value)
-                      }
-                      placeholder="입력"
-                      className="contact__input--light"
-                    />
-                  </div>
-
-                  {/* 담당자명 */}
-                  <div className="contact__field">
-                    <label className="contact__label--light">
-                      담당자명 <span className="contact__required">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.contactPerson}
-                      onChange={(e) =>
-                        handleInputChange("contactPerson", e.target.value)
-                      }
-                      placeholder="입력"
-                      className="contact__input--light"
-                    />
-                  </div>
-
-                  {/* 연락처 */}
-                  <div className="contact__field">
-                    <label className="contact__label--light">
-                      연락처 <span className="contact__required">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) =>
-                        handleInputChange("phone", e.target.value)
-                      }
-                      placeholder="입력"
-                      className="contact__input--light"
-                    />
-                  </div>
-
-                  {/* 이메일 */}
-                  <div className="contact__field">
-                    <label className="contact__label--light">이메일</label>
-                    <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) =>
-                        handleInputChange("email", e.target.value)
-                      }
-                      placeholder="입력"
-                      className="contact__input--light"
-                    />
-                  </div>
-
-                  {/* 문의지역 */}
-                  <div className={`$"contact__field" $"contact__field--full"`}>
-                    <label className="contact__label--light">문의지역</label>
-                    <input
-                      type="text"
-                      value={formData.region}
-                      onChange={(e) =>
-                        handleInputChange("region", e.target.value)
-                      }
-                      placeholder="입력"
-                      className="contact__input--light"
-                    />
+                    {/* 처리방식 */}
+                    <div className="contact__field contact__field--full">
+                      <Label text="처리방식" />
+                      <Textarea
+                        value={formData.processingMethod}
+                        onChange={(v) =>
+                          handleInputChange("processingMethod", v)
+                        }
+                        placeholder="입력"
+                        rows={3}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Section 3: 문의/기타 */}
-              <div className="contact__section">
-                <h3 className="contact__section-title">문의/기타</h3>
-                <label className="contact__label">상세 문의</label>
-                <textarea
-                  value={formData.inquiry}
-                  onChange={(e) => handleInputChange("inquiry", e.target.value)}
-                  placeholder="입력"
-                  rows={5}
-                  className="contact__textarea"
-                />
-              </div>
+                {/* Section 2: 회사 정보 */}
+                <div className="contact__section">
+                  <h3 className="contact__section-title">회사 정보</h3>
+                  <div className="contact__grid">
+                    {/* 회사명 */}
+                    <div className="contact__field">
+                      <Label text="회사명" />
+                      <TextField
+                        type="text"
+                        value={formData.companyName}
+                        onChange={(v) =>
+                          handleInputChange("companyName", v)
+                        }
+                        placeholder="입력"
+                      />
+                    </div>
 
-              {/* Info Text */}
-              <div className="contact__info">
-                <p className="contact__info-text">
-                  전화 상담 가능 &amp; 빠른 답변 예정
-                </p>
-              </div>
+                    {/* 담당자명 */}
+                    <div className="contact__field">
+                      <Label text="담당자명" required />
+                      <TextField
+                        type="text"
+                        value={formData.contactPerson}
+                        onChange={(v) =>
+                          handleInputChange("contactPerson", v)
+                        }
+                        placeholder="입력"
+                      />
+                    </div>
 
-              {/* Submit Button */}
-              <div className="contact__actions">
-                <button
-                  type="button"
-                  onClick={handleClose}
-                  className={`$"contact__button" $"contact__button--secondary"`}
-                >
-                  취소
-                </button>
-                <button
-                  type="submit"
-                  className={`$"contact__button" $"contact__button--primary"`}
-                >
-                  문의 전송
-                </button>
+                    {/* 연락처 */}
+                    <div className="contact__field">
+                      <Label text="연락처" required />
+                      <TextField
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(v) =>
+                          handleInputChange("phone", v)
+                        }
+                        placeholder="입력"
+                      />
+                    </div>
+
+                    {/* 이메일 */}
+                    <div className="contact__field">
+                      <Label text="이메일" />
+                      <TextField
+                        type="email"
+                        value={formData.email}
+                        onChange={(v) =>
+                          handleInputChange("email", v)
+                        }
+                        placeholder="입력"
+                      />
+                    </div>
+
+                    {/* 문의지역 */}
+                    <div className="contact__field contact__field--full">
+                      <Label text="문의지역" />
+                      <TextField
+                        type="text"
+                        value={formData.region}
+                        onChange={(v) =>
+                          handleInputChange("region", v)
+                        }
+                        placeholder="입력"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 3: 문의/기타 */}
+                <div className="contact__section">
+                  <h3 className="contact__section-title">문의/기타</h3>
+                  <Label text="상세 문의" />
+                  <Textarea
+                    value={formData.inquiry}
+                    onChange={(v) => handleInputChange("inquiry", v)}
+                    placeholder="입력"
+                    rows={5}
+                  />
+                </div>
+
+                {/* Info Text */}
+                <div className="contact__info">
+                  <p className="contact__info-text">
+                    전화 상담 가능 &amp; 빠른 답변 예정
+                  </p>
+                </div>
+
+                {/* Submit Button */}
+                <div className="contact__actions">
+                  <button
+                    type="button"
+                    onClick={handleClose}
+                    className={`contact__button contact__button--secondary`}
+                  >
+                    취소
+                  </button>
+                  <button
+                    type="submit"
+                    className={`contact__button contact__button--primary`}
+                  >
+                    문의 전송
+                  </button>
+                </div>
               </div>
             </form>
           </div>
-        </div>
       </div>
 
       {/* Confirmation Dialog */}

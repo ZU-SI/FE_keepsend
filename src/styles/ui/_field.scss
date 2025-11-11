@@ -1,0 +1,405 @@
+@use "../cofigs/vars" as v;
+
+/* ============================================
+   Form Fields Styling (Light & Dark Theme)
+   ============================================ */
+
+/* ============================================
+   Label
+   ============================================ */
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: v.$foreground-light; // Dark text for light backgrounds
+
+  &--default {
+    color: v.$foreground-light;
+  }
+
+  &--light {
+    color: v.$gray-600;
+    font-weight: 400;
+    font-size: 0.8125rem;
+  }
+
+  &--dark {
+    color: v.$foreground; // White text for dark backgrounds
+  }
+
+  &__required {
+    color: v.$destructive;
+    margin-left: 0.25rem;
+  }
+}
+
+/* ============================================
+   Input (Light Theme Default)
+   ============================================ */
+
+.input {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  border: 1px solid v.$border-light;
+  border-radius: v.$radius-md;
+  background-color: v.$white;
+  color: v.$foreground-light;
+  transition: all v.$transition-default;
+
+  &::placeholder {
+    color: v.$gray-400;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: v.$primary;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  &:disabled {
+    background-color: v.$gray-100;
+    color: v.$gray-400;
+    cursor: not-allowed;
+  }
+
+  /* Size variants */
+  &--default {
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+  }
+
+  &--light {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8125rem;
+    background-color: v.$gray-50;
+    border-color: v.$border-light;
+  }
+
+  /* Dark theme variant */
+  &--dark {
+    background-color: v.$input;
+    border-color: v.$border;
+    color: v.$foreground;
+
+    &::placeholder {
+      color: v.$muted-foreground;
+    }
+
+    &:focus {
+      border-color: v.$primary;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+  }
+
+  /* Error state */
+  &--error {
+    border-color: v.$destructive;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+  }
+
+  /* Success state */
+  &--success {
+    border-color: #10b981;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+  }
+}
+
+/* ============================================
+   Textarea (Light Theme Default)
+   ============================================ */
+
+.textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-family: v.$font-sans;
+  border: 1px solid v.$border-light;
+  border-radius: v.$radius-md;
+  background-color: v.$white;
+  color: v.$foreground-light;
+  resize: vertical;
+  min-height: 6rem;
+  transition: all v.$transition-default;
+
+  &::placeholder {
+    color: v.$gray-400;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: v.$primary;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  &:disabled {
+    background-color: v.$gray-100;
+    color: v.$gray-400;
+    cursor: not-allowed;
+  }
+
+  /* Size variants */
+  &--default {
+    padding: 1rem;
+    font-size: 0.9375rem;
+  }
+
+  &--light {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8125rem;
+    background-color: v.$gray-50;
+    border-color: v.$border-light;
+  }
+
+  /* Dark theme variant */
+  &--dark {
+    background-color: v.$input;
+    border-color: v.$border;
+    color: v.$foreground;
+
+    &::placeholder {
+      color: v.$muted-foreground;
+    }
+
+    &:focus {
+      border-color: v.$primary;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+  }
+
+  /* Error state */
+  &--error {
+    border-color: v.$destructive;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+  }
+}
+
+/* ============================================
+   Select (Light Theme Default)
+   ============================================ */
+
+.select {
+  width: 100%;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  border: 1px solid v.$border-light;
+  border-radius: v.$radius-md;
+  background-color: v.$white;
+  color: v.$foreground-light;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230f172a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.25rem;
+  padding-right: 2.5rem;
+  transition: all v.$transition-default;
+
+  &:focus {
+    outline: none;
+    border-color: v.$primary;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  &:disabled {
+    background-color: v.$gray-100;
+    color: v.$gray-400;
+    cursor: not-allowed;
+  }
+
+  /* Size variants */
+  &--default {
+    padding: 0.75rem 1rem 0.75rem 1rem;
+    font-size: 0.9375rem;
+    padding-right: 2.75rem;
+  }
+
+  &--light {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8125rem;
+    background-color: v.$gray-50;
+    border-color: v.$border-light;
+    padding-right: 2.25rem;
+  }
+
+  /* Dark theme variant */
+  &--dark {
+    background-color: v.$input;
+    border-color: v.$border;
+    color: v.$foreground;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+
+    &:focus {
+      border-color: v.$primary;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+  }
+
+  /* Error state */
+  &--error {
+    border-color: v.$destructive;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+  }
+}
+
+.select-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ============================================
+   Checkbox & Radio (Light Theme)
+   ============================================ */
+
+.checkbox,
+.radio {
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 1px solid v.$border-light;
+  border-radius: v.$radius-sm;
+  background-color: v.$white;
+  cursor: pointer;
+  transition: all v.$transition-default;
+
+  &:checked {
+    background-color: v.$primary;
+    border-color: v.$primary;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  &--dark {
+    background-color: v.$input;
+    border-color: v.$border;
+
+    &:checked {
+      background-color: v.$primary;
+      border-color: v.$primary;
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+  }
+}
+
+.radio {
+  border-radius: v.$border-radius-full;
+}
+
+/* ============================================
+   Field Wrapper
+   ============================================ */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &--full {
+    grid-column: 1 / -1;
+  }
+
+  &--inline {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+  }
+}
+
+/* ============================================
+   Helper Text
+   ============================================ */
+
+.helper-text {
+  font-size: 0.75rem;
+  color: v.$gray-500;
+  margin-top: 0.25rem;
+
+  &--error {
+    color: v.$destructive;
+  }
+
+  &--success {
+    color: #10b981;
+  }
+
+  &--dark {
+    color: v.$muted-foreground;
+  }
+}
+
+/* ============================================
+   Input Group (for icons, buttons, etc.)
+   ============================================ */
+
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  &__icon {
+    position: absolute;
+    left: 0.75rem;
+    color: v.$gray-400;
+    width: 1.25rem;
+    height: 1.25rem;
+    pointer-events: none;
+
+    &--dark {
+      color: v.$muted-foreground;
+    }
+  }
+
+  &__input {
+    padding-left: 2.5rem;
+
+    &--icon-right {
+      padding-right: 2.5rem;
+      padding-left: 1rem;
+    }
+  }
+
+  &__icon--right {
+    left: auto;
+    right: 0.75rem;
+  }
+}
+
+/* ============================================
+   Field Error State
+   ============================================ */
+
+.field-error {
+  .label {
+    color: v.$destructive;
+  }
+
+  .input,
+  .textarea,
+  .select {
+    border-color: v.$destructive;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+  }
+}

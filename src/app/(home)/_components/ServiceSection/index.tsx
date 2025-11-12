@@ -136,8 +136,8 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-scroll-section
         data-section-index={startIdx + 5}
         data-service-id={"center"}
-        className="s-section"
-        style={{ height: "100vh" }}
+        className="s-section service-center"
+        style={{ height: "fit-content" }}
       >
         <ServiceCenter id="center" index={startIdx + 5} />
       </div>
@@ -146,8 +146,8 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-scroll-section
         data-section-index={startIdx + 6}
         data-service-id={"partner"}
-        className="s-section"
-        style={{ height: "100vh" }}
+        className="s-section service-partner"
+        style={{ height: "fit-content" }}
       >
         <ServicePartner id="partner" index={startIdx + 6} />
       </div>
@@ -156,7 +156,7 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-scroll-section
         data-section-index={startIdx + 7}
         data-service-id={"consulting"}
-        className="s-section"
+        className="s-section service-cs"
         style={{ height: "100vh" }}
       >
         <ServiceConsulting id="consulting" index={startIdx + 7} />

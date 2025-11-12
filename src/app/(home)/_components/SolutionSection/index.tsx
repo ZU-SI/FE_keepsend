@@ -109,8 +109,8 @@ export default function SolutionSection({ startIdx }: SolutionSectionProps) {
         data-scroll-section
         data-section-index={startIdx + 3}
         data-solution-id={"ai-platform"}
-        className="s-section"
-        style={{ height: "100vh" }}
+        className="s-section solution-ai"
+        style={{ height: "fit-content" }}
       >
         <SolutionAIPlatform id="ai-platform" index={startIdx + 3} />
       </div>

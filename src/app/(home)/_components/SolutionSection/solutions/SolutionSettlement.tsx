@@ -47,7 +47,7 @@ export default function SolutionSettlement({ id, index }: Props) {
   };
 
   return (
-    <div className="s-section__content solution-stm">
+    <div className="s-section__content">
       <div className="s-section__animation">
         <div className="s-section__header">
           <div className="s-section__title-group">

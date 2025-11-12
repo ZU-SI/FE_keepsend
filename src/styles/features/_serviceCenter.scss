@@ -1,0 +1,379 @@
+@use "../cofigs/vars" as v;
+
+.service-center {
+  position: relative;
+  width: 100%;
+  padding: v.$spacing-xl v.$spacing-md;
+  background-color: v.$background-light;
+  color: v.$foreground-light;
+
+  @include v.desktop {
+    padding: v.$spacing-2xl v.$spacing-xl;
+  }
+
+  &__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-2xl;
+
+    @include v.desktop {
+      gap: v.$spacing-2xl * 2;
+    }
+  }
+
+  // 헤더 스타일
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: v.$spacing-md;
+    max-width: 800px;
+    margin: 0 auto;
+
+    @include v.desktop {
+      gap: v.$spacing-lg;
+    }
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: v.$primary;
+    position: relative;
+    padding-bottom: v.$spacing-md;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    @include v.desktop {
+      font-size: 1rem;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 3px;
+      background-color: v.$primary;
+      border-radius: v.$radius-sm;
+    }
+  }
+
+  &__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: v.$foreground-light;
+    line-height: 1.3;
+
+    @include v.desktop {
+      font-size: 2.25rem;
+    }
+  }
+
+  &__description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: v.$muted-foreground-light;
+    margin-top: v.$spacing-sm;
+
+    @include v.desktop {
+      font-size: 1.125rem;
+    }
+  }
+
+  // 컨텐츠 영역
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: v.$spacing-xl;
+
+    @include v.desktop {
+      grid-template-columns: 1fr 1fr;
+      gap: v.$spacing-2xl;
+    }
+  }
+
+  // 지도 영역
+  &__map-container {
+    position: relative;
+    border-radius: v.$radius;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    background-color: v.$card-light;
+    border: 1px solid v.$border-light;
+    height: 350px;
+
+    @include v.desktop {
+      height: auto;
+    }
+  }
+
+  &__map {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    @include v.desktop {
+      min-height: 600px;
+    }
+  }
+
+  &__map-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  // 센터 리스트 영역
+  &__list-container {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-lg;
+
+    @include v.desktop {
+      gap: v.$spacing-xl;
+    }
+  }
+
+  // 필터 버튼
+  &__filter {
+    display: flex;
+    gap: v.$spacing-sm;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @include v.desktop {
+      justify-content: flex-start;
+    }
+  }
+
+  &__filter-btn {
+    padding: v.$spacing-sm v.$spacing-md;
+    border-radius: v.$border-radius-full;
+    border: 1px solid v.$border-light;
+    background-color: v.$card-light;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: v.$muted-foreground-light;
+    transition: all v.$transition-default;
+    cursor: pointer;
+
+    @include v.desktop {
+      font-size: 0.875rem;
+      padding: v.$spacing-sm v.$spacing-lg;
+    }
+
+    &:hover {
+      background-color: v.$muted-light;
+    }
+
+    &.active {
+      background-color: v.$primary;
+      color: v.$white;
+      border-color: v.$primary;
+    }
+  }
+
+  // 센터 리스트
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-md;
+
+    @include v.desktop {
+      gap: v.$spacing-lg;
+    }
+  }
+
+  &__list-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: v.$spacing-md;
+
+    @include v.desktop {
+      grid-template-columns: 1fr 1fr;
+      gap: v.$spacing-lg;
+    }
+  }
+
+  &__list-item {
+    display: flex;
+    gap: v.$spacing-md;
+    padding: v.$spacing-lg;
+    border-radius: v.$radius;
+    background-color: v.$card-light;
+    border: 1px solid v.$border-light;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform v.$transition-default, box-shadow v.$transition-default, border-color v.$transition-default;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      border-color: rgba(v.$primary, 0.3);
+
+      .service-center__center-icon {
+        background-color: v.$primary;
+      }
+    }
+
+    @include v.desktop {
+      padding: v.$spacing-xl;
+    }
+  }
+
+  &__center-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: v.$primary-hover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background-color v.$transition-default;
+
+    @include v.desktop {
+      width: 44px;
+      height: 44px;
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+
+      @include v.desktop {
+        width: 24px;
+        height: 24px;
+      }
+
+      path {
+        fill: v.$white;
+      }
+    }
+  }
+
+  &__center-info {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-sm;
+
+    @include v.desktop {
+      gap: v.$spacing-md;
+    }
+  }
+
+  &__center-name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: v.$foreground-light;
+
+    @include v.desktop {
+      font-size: 1.0625rem;
+    }
+  }
+
+  &__center-address {
+    font-size: 0.8125rem;
+    color: v.$muted-foreground-light;
+    line-height: 1.5;
+
+    @include v.desktop {
+      font-size: 0.875rem;
+    }
+  }
+
+  &__center-phone {
+    font-size: 0.8125rem;
+    color: v.$primary;
+    font-weight: 500;
+
+    @include v.desktop {
+      font-size: 0.875rem;
+    }
+  }
+
+  // 페이지네이션
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: v.$spacing-sm;
+    margin-top: v.$spacing-xl;
+  }
+
+  &__pagination-arrow {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: v.$radius-sm;
+    border: 1px solid v.$border-light;
+    background-color: v.$card-light;
+    color: v.$muted-foreground-light;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all v.$transition-default;
+
+    @include v.desktop {
+      width: 36px;
+      height: 36px;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: v.$muted-light;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__pagination-btn {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: v.$radius-sm;
+    border: 1px solid v.$border-light;
+    background-color: v.$card-light;
+    color: v.$muted-foreground-light;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    transition: all v.$transition-default;
+
+    @include v.desktop {
+      width: 36px;
+      height: 36px;
+      font-size: 0.875rem;
+    }
+
+    &:hover {
+      background-color: v.$muted-light;
+    }
+
+    &.active {
+      background-color: v.$primary;
+      color: v.$white;
+      border-color: v.$primary;
+    }
+  }
+
+  // 애니메이션
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+    100% {
+      transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+  }
+}

@@ -54,16 +54,16 @@
   &__menu-wrapper {
     position: fixed;
     right: 0.75rem;
-    top: 6rem;
+    top: 50%;
     height: auto;
     display: flex;
     flex-direction: column;
     z-index: 40;
     pointer-events: none;
+    transform: translateY(-50%);
 
     @include v.desktop {
       right: v.$spacing-xl;
-      top: 8rem;
     }
   }
 
@@ -157,11 +157,13 @@
     max-width: 1040px;
     margin: 0 auto;
     width: 100%;
+
   }
 
   /* Element: animation */
   &__animation {
     animation: fadeInUp 0.8s ease-out forwards;
+    height: 100%;
   }
 
   /* ============================================

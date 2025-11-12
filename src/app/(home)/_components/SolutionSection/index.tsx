@@ -79,7 +79,7 @@ export default function SolutionSection({ startIdx }: SolutionSectionProps) {
         data-scroll-section
         data-section-index={startIdx}
         data-solution-id={"solution-intro"}
-        className="s-section"
+        className="s-section solution-intro"
         style={{ height: "60vh" }}
       >
         <SolutionIntro id="solution-intro" index={startIdx} />
@@ -89,7 +89,7 @@ export default function SolutionSection({ startIdx }: SolutionSectionProps) {
         data-scroll-section
         data-section-index={startIdx + 1}
         data-solution-id={"logistics-it"}
-        className="s-section"
+        className="s-section solution-logistics"
         style={{ height: "100vh" }}
       >
         <SolutionLogisticsIT id="logistics-it" index={startIdx + 1} />
@@ -99,7 +99,7 @@ export default function SolutionSection({ startIdx }: SolutionSectionProps) {
         data-scroll-section
         data-section-index={startIdx + 2}
         data-solution-id={"settlement"}
-        className="s-section"
+        className="s-section solution-stm"
         style={{ height: "100vh" }}
       >
         <SolutionSettlement id="settlement" index={startIdx + 2} />

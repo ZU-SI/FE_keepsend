@@ -1,24 +1,188 @@
-interface Props {
+import React, { useEffect, useRef, useState } from 'react';
+
+interface ServiceProcessProps {
   id: string;
   index: number;
 }
 
-export default function ServiceProcess({ id, index }: Props) {
+interface ProcessStep {
+  id: number;
+  title: string;
+  description: string;
+}
+
+const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
+  const [visibleSteps, setVisibleSteps] = useState<number[]>([]);
+  const [visibleLines, setVisibleLines] = useState<number[]>([]);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const processSteps: ProcessStep[] = [
+    {
+      id: 1,
+      title: '수요 분석 및 계약 체결',
+      description: '비즈니스 모델 기반 최적화된 물류 설계 시작!'
+    },
+    {
+      id: 2,
+      title: '입고 예약 및 상품 등록',
+      description: '입고부터 출고까지 정확한 입고서비스 운영'
+    },
+    {
+      id: 3,
+      title: '보관 및 재고 운영 관리',
+      description: '안전하고 안정적인 최적화된 보관 환경 제공'
+    },
+    {
+      id: 4,
+      title: '주문 접수 및 출고 계획 수립',
+      description: '데이터 기반의 출고 다중 출고 방식 적용'
+    },
+    {
+      id: 5,
+      title: '피킹 및 출고 준비',
+      description: '데이터 지면화 출고 대응 출고 시스템 적용'
+    },
+    {
+      id: 6,
+      title: '배송 및 물품 관리',
+      description: '신속하고 투명한 배송추적 즉각 신뢰 관리'
+    },
+    {
+      id: 7,
+      title: '회수 및 반품 처리',
+      description: '원스탑형 역물류체계 WAB 업무 및 보관'
+    },
+    {
+      id: 8,
+      title: '성과 분석 및 CS 관리',
+      description: '정확한 데이터 관리로 신뢰 성과 향상'
+    }
+  ];
+
+  // 화면에 보이는지 감지하는 함수
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          startAnimation();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.2, // 20% 이상 보이면 애니메이션 시작
+      }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
+
+  // 애니메이션 시작 함수
+  const startAnimation = () => {
+    // 각 단계를 순차적으로 보이게 함
+    processSteps.forEach((step, idx) => {
+      setTimeout(() => {
+        setVisibleSteps((prev) => [...prev, step.id]);
+
+        // 라인 애니메이션 (마지막 단계는 라인이 없음)
+        if (idx < processSteps.length - 1) {
+          setTimeout(() => {
+            setVisibleLines((prev) => [...prev, step.id]);
+          }, 300); // 각 단계가 나타난 후 300ms 후에 라인 표시
+        }
+      }, idx * 600); // 각 단계마다 600ms 간격
+    });
+  };
+
   return (
-    <div className="s-section__content">
-      <div className="s-section__animation">
-        <div className="s-section__header">
-          <div className="s-section__title-group">
-            <h3 className="s-section__title">프로세스</h3>
-            <p className="s-section__subtitle">
-              자동화와 최적화 (index: {index})
-            </p>
+    <section className="service-process" id={id} ref={sectionRef}>
+      <div className="service-process__container">
+        <div className="service-process__header">
+          <span className="service-process__label">KEEPSEND 프로세스</span>
+          <h2 className="service-process__title">당신의 브랜드가 닿는 길, 그 안의 모든 과정</h2>
+          <p className="service-process__description">
+            담메라닷 검증된 관리 체계로, 신뢰받는 B2B 퍼포먼스를 완성합니다.
+          </p>
+        </div>
+
+        <div className="service-process__flow">
+          <div className="service-process__row service-process__row--first">
+            {processSteps.slice(0, 4).map((step, idx) => (
+              <React.Fragment key={step.id}>
+                <div
+                  className={`service-process__step ${visibleSteps.includes(step.id) ? 'visible' : ''}`}
+                >
+                  <div className="service-process__step-circle">
+                    <span className="service-process__step-number">{step.id}</span>
+                  </div>
+                  <div className="service-process__step-content">
+                    <h3 className="service-process__step-title">{step.title}</h3>
+                    <p className="service-process__step-description">{step.description}</p>
+                  </div>
+                </div>
+                {idx < 3 && (
+                  <div
+                    className={`service-process__line service-process__line--horizontal ${visibleLines.includes(step.id) ? 'visible' : ''}`}
+                  >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M12 5L19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+
+          {/* 수직 연결선 (위쪽) - 4에서 5로 가는 화살표 */}
+          <div
+            className={`service-process__line service-process__line--vertical service-process__line--top ${visibleLines.includes(4) ? 'visible' : ''}`}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 19V5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M5 12L12 5L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+
+          <div className="service-process__row service-process__row--second">
+            {processSteps.slice(4, 8).reverse().map((step, idx) => (
+              <React.Fragment key={step.id}>
+                <div
+                  className={`service-process__step ${visibleSteps.includes(step.id) ? 'visible' : ''}`}
+                >
+                  <div className="service-process__step-circle">
+                    <span className="service-process__step-number">{step.id}</span>
+                  </div>
+                  <div className="service-process__step-content">
+                    <h3 className="service-process__step-title">{step.title}</h3>
+                    <p className="service-process__step-description">{step.description}</p>
+                  </div>
+                </div>
+                {idx < 3 && (
+                  <div
+                    className={`service-process__line service-process__line--horizontal service-process__line--reverse ${visibleLines.includes(step.id) ? 'visible' : ''}`}
+                  >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19 12H5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
           </div>
         </div>
-        <p className="s-section__description">
-          자동화된 프로세스를 통해 운영 전반의 효율성을 높입니다.
-        </p>
       </div>
-    </div>
+    </section>
   );
-}
+};
+
+export default ServiceProcess;

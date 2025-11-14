@@ -12,7 +12,7 @@ import TypoLogo from "../ui/logo/TypoLogo";
 
 gsap.registerPlugin(ScrollToPlugin);
 
-// 5vh를 픽셀 단위로 계산
+
 const VH_THRESHOLD = 5; // 5vh
 const VH_ALWAYS_VISIBLE = 50; // 50vh
 
@@ -24,6 +24,7 @@ export default function GlobalHeader() {
   // SCROLL UI
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
+
 
   const handleMenuClick =  (link: string) => (e: MouseEvent)=> {
      e.preventDefault();
@@ -39,7 +40,10 @@ export default function GlobalHeader() {
   }
 
   useEffect(() => {
-    // 5vh와 50vh를 픽셀 단위로 변환
+    if(pathname.length > 1) { // HOME 만 스크롤 이벤트 적용
+      return;
+    }
+
     const THRESHOLD_PX = (window.innerHeight * VH_THRESHOLD) / 100;
     const ALWAYS_VISIBLE_PX = (window.innerHeight * VH_ALWAYS_VISIBLE) / 100;
 

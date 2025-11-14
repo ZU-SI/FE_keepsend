@@ -86,7 +86,7 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-scroll-section
         data-section-index={startIdx}
         data-service-id={"intro"}
-        className="s-section"
+        className="s-section service-intro"
         style={{ height: "60vh" }}
       >
         <ServiceIntro id="intro" index={startIdx} />
@@ -107,7 +107,7 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-section-index={startIdx + 2}
         data-service-id={"b2b-2"}
         className="s-section"
-        style={{ height: "100vh" }}
+        style={{ height: "fit-content" }}
       >
         <ServiceB2bTwo id="b2b-2" index={startIdx + 2} />
       </div>

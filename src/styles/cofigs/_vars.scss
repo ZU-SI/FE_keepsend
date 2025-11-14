@@ -5,7 +5,7 @@
 $background: #0a0f1a;              // Dark background
 $foreground: #ffffff;              // Dark theme text
 
-// Light theme colors  
+// Light theme colors
 $background-light: #f8fafc;        // Light section background
 $foreground-light: #0f172a;        // Light section text
 
@@ -19,23 +19,23 @@ $popover: #111827;
 $popover-foreground: #ffffff;
 
 // Primary colors
-$primary: #3b82f6;                 
+$primary: #3b82f6;
 $primary-foreground: #ffffff;
-$primary-hover: #2563eb;           
+$primary-hover: #2563eb;
 
 // Secondary colors
-$secondary: #1e3a8a;               
+$secondary: #1e3a8a;
 $secondary-foreground: #ffffff;
 
 // Muted colors
 $muted: #1e293b;                   // Dark muted
-$muted-foreground: #94a3b8;        
+$muted-foreground: #94a3b8;
 $muted-light: #f1f5f9;             // Light muted background
 $muted-foreground-light: #64748b;  // Light muted text
 
 // Accent colors
-$accent: #06b6d4;                  
-$accent-foreground: #ffffff;       
+$accent: #06b6d4;
+$accent-foreground: #ffffff;
 
 // Destructive
 $destructive: #ef4444;
@@ -49,23 +49,23 @@ $border-light: #e2e8f0;            // Light border
 $input: #334155;                   // Dark input (더 밝게 조정)
 
 // Ring (focus)
-$ring: #3b82f6;                    
+$ring: #3b82f6;
 
 // Base colors
 $black: #000000;
 $white: #fafafa;                   // Off-white (NOT pure #fff)
 
 // Gray scale (comprehensive)
-$gray-50: #f8fafc;                 
-$gray-100: #f1f5f9;                
-$gray-200: #e2e8f0;                
-$gray-300: #cbd5e1;                
-$gray-400: #94a3b8;                
-$gray-500: #64748b;                
-$gray-600: #475569;                
-$gray-700: #334155;                
-$gray-800: #1e293b;                
-$gray-900: #0f172a;                
+$gray-50: #f8fafc;
+$gray-100: #f1f5f9;
+$gray-200: #e2e8f0;
+$gray-300: #cbd5e1;
+$gray-400: #94a3b8;
+$gray-500: #64748b;
+$gray-600: #475569;
+$gray-700: #334155;
+$gray-800: #1e293b;
+$gray-900: #0f172a;
 
 $slate-800: #1e293b;
 $cyan-400: #22d3ee;
@@ -74,9 +74,9 @@ $cyan-600: #0891b2;
 
 // Purple colors
 $purple-50: #faf5ff;               // Light purple background
-$purple-100: #f3e8ff;              
-$purple-500: #8b5cf6;              
-$purple-600: #7c3aed;              
+$purple-100: #f3e8ff;
+$purple-500: #8b5cf6;
+$purple-600: #7c3aed;
 
 // Gradients
 $gradient-cyan: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
@@ -96,7 +96,7 @@ $border-radius-full: 9999px;
 /* ============================================
    FONTS
    ============================================ */
-$font-sans: 'suite',  -apple-system, BlinkMacSystemFont,
+$font-sans: 'suite', 'suit', 'rajdhani',  -apple-system, BlinkMacSystemFont,
   "Segoe UI", Roboto, sans-serif;
 $font-mono: "Geist Mono", "Geist Mono Fallback", "Courier New", monospace;
 

@@ -1,0 +1,280 @@
+@use "../cofigs/vars" as v;
+
+// B2B Two Service Section - Logistics Flow Animation
+.s-section {
+  // B2B Two specific logistics section styling
+  &.service-b2b-two {
+    .s-section__animation {
+      // max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 0 v.$spacing-xl;
+    }
+
+    .s-section__description {
+      text-align: center;
+      margin-bottom: v.$spacing-2xl * 2;
+      width: 100%;
+    }
+  }
+}
+
+// Logistics Animation Component
+.s-logistics {
+  position: relative;
+  height: fit-content;
+
+  // Sticky container for animation viewport
+  &__container {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // Main content wrapper
+  &__content {
+    width: 100%;
+    // max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 v.$spacing-xl;
+  }
+
+  // Process flow path container
+  &__path {
+    position: relative;
+    margin-bottom: v.$spacing-2xl * 2;
+
+    // Connecting line between steps
+    &-line {
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: v.$gradient-cyan;
+      transform: translateY(-50%);
+
+      @include v.desktop {
+        left: 0;
+        right: 0;
+      }
+    }
+  }
+
+  // Steps grid container
+  &__steps {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: v.$spacing-2xl;
+    padding: v.$spacing-2xl 0;
+
+    @include v.desktop {
+      grid-template-columns: repeat(4, 1fr);
+      gap: v.$spacing-xl;
+    }
+  }
+
+  // Individual step styling
+  &__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+
+    // Step icon styling
+    &-icon {
+      width: 60px;
+      height: 60px;
+      background: v.$card;
+      border-radius: v.$border-radius-full;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid;
+      margin-bottom: v.$spacing-lg;
+      transition: all v.$transition-default;
+
+      svg {
+        width: 28px;
+        height: 28px;
+      }
+
+      @include v.desktop {
+        width: 80px;
+        height: 80px;
+
+        svg {
+          width: 36px;
+          height: 36px;
+        }
+      }
+
+      // Step color variants
+      &--cyan {
+        border-color: v.$cyan-400;
+        color: v.$cyan-400;
+      }
+
+      &--blue {
+        border-color: v.$primary;
+        color: v.$primary;
+      }
+
+      &--purple {
+        border-color: v.$purple-500;
+        color: v.$purple-500;
+      }
+
+      &--green {
+        border-color: #10b981;
+        color: #10b981;
+      }
+    }
+
+    // Step title
+    &-title {
+      font-weight: 600;
+      margin-top: v.$spacing-2xl;
+      margin-bottom: v.$spacing-sm;
+      font-size: 0.875rem;
+
+      @include v.desktop {
+        font-size: 1rem;
+      }
+    }
+
+    // Step description
+    &-description {
+      color: v.$gray-400;
+      font-size: 0.75rem;
+      text-align: center;
+
+      @include v.desktop {
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  // Moving truck animation
+  &__truck {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+
+    // Truck container
+    &-wrapper {
+      position: relative;
+    }
+
+    // Glowing effect
+    &-glow {
+      position: absolute;
+      inset: -16px;
+      background: rgba(v.$cyan-400, 0.2);
+      border-radius: v.$border-radius-full;
+      filter: blur(12px);
+      animation: s-logistics-pulse 2s infinite;
+    }
+
+    // Truck icon
+    &-icon {
+      position: relative;
+      background: v.$gradient-cyan;
+      padding: v.$spacing-md;
+      border-radius: v.$radius;
+      box-shadow: 0 10px 40px rgba(v.$cyan-500, 0.5);
+
+      svg {
+        width: 24px;
+        height: 24px;
+        color: v.$white;
+
+        @include v.desktop {
+          width: 32px;
+          height: 32px;
+        }
+      }
+    }
+
+    // Motion trail effect
+    &-trail {
+      position: absolute;
+      top: 50%;
+      right: 100%;
+      transform: translateY(-50%);
+      height: 2px;
+      width: 100px;
+      background: linear-gradient(to left, rgba(v.$cyan-400, 0.5), transparent);
+    }
+  }
+
+  // Statistics section
+  &__stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: v.$spacing-md;
+
+    @include v.desktop {
+      grid-template-columns: repeat(3, 1fr);
+      gap: v.$spacing-xl;
+    }
+
+    // Individual stat card
+    &-card {
+      background: rgba(v.$card, 0.5);
+      backdrop-filter: blur(10px);
+      border-radius: v.$radius;
+      padding: v.$spacing-xl;
+      border: 1px solid v.$border;
+      text-align: center;
+
+      @include v.desktop {
+        text-align: left;
+      }
+    }
+
+    // Stat label
+    &-label {
+      color: v.$cyan-400;
+      font-weight: 600;
+      margin-bottom: v.$spacing-sm;
+      font-size: 0.875rem;
+
+      @include v.desktop {
+        font-size: 1rem;
+      }
+    }
+
+    // Stat value
+    &-value {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: v.$spacing-sm;
+
+      @include v.desktop {
+        font-size: 2.5rem;
+      }
+    }
+
+    // Stat description
+    &-description {
+      color: v.$gray-400;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Animation keyframes
+@keyframes s-logistics-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

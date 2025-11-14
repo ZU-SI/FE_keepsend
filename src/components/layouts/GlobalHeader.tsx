@@ -7,16 +7,23 @@ import ScrollToPlugin from "gsap/ScrollToPlugin";
 import { useAtomValue, useSetAtom } from "jotai";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import TypoLogo from "../ui/logo/TypoLogo";
 
 gsap.registerPlugin(ScrollToPlugin);
+
+// 5vh를 픽셀 단위로 계산
+const VH_THRESHOLD = 5; // 5vh
+const VH_ALWAYS_VISIBLE = 50; // 50vh
 
 export default function GlobalHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const activePrimary = useAtomValue(activeMenuAtom);
   const setContactModalOpen = useSetAtom(contactModalOpenAtom);
+  // SCROLL UI
+  const [isHidden, setIsHidden] = useState(false);
+  const lastScrollY = useRef(0);
 
   const handleMenuClick =  (link: string) => (e: MouseEvent)=> {
      e.preventDefault();
@@ -31,8 +38,45 @@ export default function GlobalHeader() {
     setIsMenuOpen(false);
   }
 
+  useEffect(() => {
+    // 5vh와 50vh를 픽셀 단위로 변환
+    const THRESHOLD_PX = (window.innerHeight * VH_THRESHOLD) / 100;
+    const ALWAYS_VISIBLE_PX = (window.innerHeight * VH_ALWAYS_VISIBLE) / 100;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const isScrollingDown = currentScrollY > lastScrollY.current;
+
+      // 1. 0 ~ 50vh 사이에는 항상 Visible 처리 (50vh = ALWAYS_VISIBLE_PX)
+      if (currentScrollY <= ALWAYS_VISIBLE_PX) {
+        setIsHidden(false);
+      }
+      // 2. 50vh 이상 스크롤된 경우
+      else {
+        // 2-1. 위로 스크롤 시 (스크롤 방향 감지) -> 항상 Visible
+        if (!isScrollingDown) {
+          setIsHidden(false);
+        }
+        // 2-2. 아래로 스크롤 시 -> 5vh(THRESHOLD_PX) 이상 내려가면 Hidden
+        else if (currentScrollY > THRESHOLD_PX) {
+          setIsHidden(true);
+        }
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <nav className="header">
+    <nav className="header" style={{
+      'visibility': isHidden? 'hidden' : 'visible'
+    }}>
       <div className="header__container">
         {/* Logo */}
         <Link href="/" className="header__logo">
@@ -59,7 +103,7 @@ export default function GlobalHeader() {
           >
             IT 솔루션
           </button>
-          <button 
+          <button
             type="button"
             onClick={ handleMenuClick('news')}
             className={`header__link ${
@@ -105,7 +149,7 @@ export default function GlobalHeader() {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="header__mobile">
-          <button 
+          <button
             type="button"
             onClick={ handleMenuClick('#service')}
             className="header__mobile-link"

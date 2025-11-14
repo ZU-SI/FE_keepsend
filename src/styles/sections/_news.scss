@@ -8,7 +8,7 @@
 .n-section {
   min-height: 100vh;
   background-color: v.$background-light;
-  
+
   /* ============================================
      Banner (Dark Theme)
      ============================================ */
@@ -17,12 +17,12 @@
   &__banner {
     // max-width: 1040px;
     margin: 0 auto;
-    padding: 4rem v.$spacing-lg;
+    padding: 8rem v.$spacing-lg;
     text-align: center;
     background-color: v.$background;
 
     @include v.desktop {
-      padding: 6rem v.$spacing-lg;
+      padding: 12rem v.$spacing-lg;
     }
   }
 
@@ -56,7 +56,6 @@
   &__filter-bar {
     position: sticky;
     top: 60px;
-    height: 65px;
     z-index: 40;
     background-color: rgba(v.$background, 0.95);
     backdrop-filter: blur(12px);
@@ -66,6 +65,7 @@
 
     @include v.desktop {
       padding: v.$spacing-md 0;
+      height: 65px;
     }
   }
 
@@ -145,11 +145,11 @@
       border-radius: v.$radius-sm;
       font-size: 0.875rem;
       color: v.$foreground;
-  
+
       &::placeholder {
         color: v.$muted-foreground;
       }
-  
+
       &:focus {
         outline: none;
         border-color: v.$primary;
@@ -450,7 +450,7 @@
     height: calc(100% - 65px);
     overflow-y: auto;
     background-color: v.$card-light;
-    
+
     .contents {
       height: auto;
       padding: v.$spacing-xl;

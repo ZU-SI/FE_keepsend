@@ -12,6 +12,12 @@
   background-color: rgba(v.$black, 0.8);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid v.$slate-800;
+  z-index: 10;
+
+  & + #main {
+    position: relative;
+    z-index: 9;
+  }
 
   &__container {
     width: 100%;

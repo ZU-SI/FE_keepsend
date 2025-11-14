@@ -3,6 +3,7 @@
 import BannerSection from "@/app/(home)/_components/BannerSection";
 import ServiceSection from "@/app/(home)/_components/ServiceSection";
 import SolutionSection from "@/app/(home)/_components/SolutionSection";
+import GlobalHeader from "@/components/layouts/GlobalHeader";
 import { contactModalOpenAtom } from "@/store/contact.store";
 import gsap from "gsap";
 import ScrollToPlugin from "gsap/ScrollToPlugin";
@@ -262,10 +263,10 @@ export default function Home() {
 
     // 초기 이벤트 리스너 등록
     attachEventListeners();
-    
+
     // 초기 활성 상태 업데이트
     updateActivePrimary();
-    
+
     return () => {
       // 이벤트 리스너 정리
       window.removeEventListener("wheel", handleWheel);
@@ -277,9 +278,9 @@ export default function Home() {
   // 모달 상태에 따라 이벤트 리스너를 추가/제거하는 별도의 useEffect
   useEffect(() => {
     const { handleWheel, handleResize, updateActivePrimary } = eventHandlersRef.current;
-    
+
     if (!handleWheel || !handleResize || !updateActivePrimary) return;
-    
+
     if (isModalOpen) {
       // 모달이 열리면 이벤트 리스너를 제거
       window.removeEventListener("wheel", handleWheel);
@@ -294,7 +295,8 @@ export default function Home() {
   }, [isModalOpen]); // 모달 상태가 변경될 때만 실행
 
   return (
-    <main ref={containerRef}>
+    <main id="main" ref={containerRef}>
+      <GlobalHeader />
       <BannerSection startIdx={0} />
       <ServiceSection startIdx={3} />
       <SolutionSection startIdx={11} />

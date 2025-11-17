@@ -48,7 +48,7 @@ export default function SolutionSection({ startIdx }: SolutionSectionProps) {
   };
 
   return (
-    <div ref={containerRef} id="solution" className="s-section__container">
+    <div ref={containerRef} id="solution" className="s-sections">
       {showMenu && (
         <div className="s-section__menu-wrapper">
           <div className="s-section__menu">

@@ -47,7 +47,6 @@ export default function ServiceConsulting({ id, index }: Props) {
           <br />
           비용 절감·운영 최적화·확장성 강화를 실현합니다.
         </p>
-
         <div className="cs-cards">
           {consultingServices.map((service, idx) => (
             <div key={idx} className="cs-card">

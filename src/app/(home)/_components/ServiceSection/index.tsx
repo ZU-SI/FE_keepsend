@@ -55,7 +55,7 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
   };
 
   return (
-    <div id="service" ref={containerRef} className="s-section__container">
+    <div id="service" ref={containerRef} className="s-sections">
       {showMenu && (
         <div className="s-section__menu-wrapper">
           <div className="s-section__menu">
@@ -96,7 +96,7 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-scroll-section
         data-section-index={startIdx + 1}
         data-service-id={"b2b-1"}
-        className="s-section"
+        className="s-section light service-problem"
         style={{ height: "100vh" }}
       >
         <ServiceB2bOne id="b2b-1" index={startIdx + 1} />
@@ -156,7 +156,7 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-scroll-section
         data-section-index={startIdx + 7}
         data-service-id={"consulting"}
-        className="s-section service-cs"
+        className="s-section light service-cs"
         style={{ height: "100vh" }}
       >
         <ServiceConsulting id="consulting" index={startIdx + 7} />

@@ -21,16 +21,20 @@
 
 /* New Block: s-sections */
 .s-sections {
+  position: relative;
   width: 100%;
 }
 
 /* Block: s-section */
 .s-section {
+
   width: 100%;
   height: 100vh;
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 4rem 1rem;
+  background-color: v.$background;
 
   @media (min-width: 640px) {
     padding: 5rem 1.5rem;
@@ -38,12 +42,6 @@
 
   @include v.desktop {
     padding: 8rem 3rem;
-  }
-
-  /* Element: container */
-  &__container {
-    position: relative;
-    background-color: v.$background;
   }
 
   /* ============================================
@@ -78,75 +76,74 @@
     @include v.desktop {
       padding: v.$spacing-xl;
     }
-  }
 
-  /* Element: menu-header */
-  &__menu-header {
-    font-size: 1.125rem;
-    font-weight: 700;
-    margin-bottom: v.$spacing-md;
-    margin-left: v.$spacing-sm;
+    &-header {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: v.$spacing-md;
+      margin-left: v.$spacing-sm;
 
-    @include v.desktop {
-      font-size: 1.25rem;
-      margin-bottom: v.$spacing-xl;
+      @include v.desktop {
+        font-size: 1.25rem;
+        margin-bottom: v.$spacing-xl;
+      }
     }
-  }
-
-  /* Element: menu-title */
-  &__menu-title {
-    background: v.$gradient-cyan;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
-  }
-
-  /* Element: menu-nav */
-  &__menu-nav {
-    display: flex;
-    flex-direction: column;
-    gap: v.$spacing-sm;
-  }
-
-  /* Element: menu-button */
-  &__menu-button {
-    height: 36px;
-    padding: 0 0.75rem;
-    border-radius: v.$border-radius-full;
-    font-weight: 500;
-    font-size: 0.75rem;
-    transition: all v.$transition-default;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-    border: none;
-    cursor: pointer;
-
-    @include v.desktop {
-      padding: 0 v.$spacing-md;
-      font-size: 0.875rem;
+    /* Element: menu-title */
+    &-title {
+      background: v.$gradient-cyan;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
     }
 
-    /* Modifier: active */
-    &--active {
-      background-color: v.$cyan-500;
-      color: v.$black;
-      font-weight: 600;
+    /* Element: menu-nav */
+    &-nav {
+      display: flex;
+      flex-direction: column;
+      gap: v.$spacing-sm;
     }
 
-    /* Modifier: inactive */
-    &--inactive {
-      background-color: rgba(v.$slate-800, 0.6);
-      color: v.$gray-300;
+    /* Element: menu-button */
+    &-button {
+      height: 36px;
+      padding: 0 0.75rem;
+      border-radius: v.$border-radius-full;
+      font-weight: 500;
+      font-size: 0.75rem;
+      transition: all v.$transition-default;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      border: none;
+      cursor: pointer;
 
-      &:hover {
-        background-color: #334155; // Note: Color not in variables
-        color: #f3f4f6; // Note: Color not in variables
+      @include v.desktop {
+        padding: 0 v.$spacing-md;
+        font-size: 0.875rem;
+      }
+
+      /* Modifier: active */
+      &--active {
+        background-color: v.$cyan-500;
+        color: v.$black;
+        font-weight: 600;
+      }
+
+      /* Modifier: inactive */
+      &--inactive {
+        background-color: rgba(v.$slate-800, 0.6);
+        color: v.$gray-300;
+
+        &:hover {
+          background-color: #334155; // Note: Color not in variables
+          color: #f3f4f6; // Note: Color not in variables
+        }
       }
     }
   }
+
 
   /* ============================================
      Service Sections
@@ -173,7 +170,8 @@
   /* Element: header */
   &__header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
     gap: 0.75rem;
     margin-bottom: v.$spacing-xl;
 
@@ -212,6 +210,7 @@
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 0.25rem;
+    text-align: center;
     color: v.$white;
 
     @media (min-width: 640px) {
@@ -226,15 +225,30 @@
 
   /* Element: subtitle */
   &__subtitle {
-    color: v.$muted-foreground;
-    font-size: 0.75rem;
-
-    @media (min-width: 640px) {
-      font-size: 0.875rem;
-    }
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: v.$primary;
+    position: relative;
+    padding-bottom: v.$spacing-md;
+    margin-bottom: v.$spacing-md;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
 
     @include v.desktop {
-      font-size: 1.125rem;
+      font-size: 1rem;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 3px;
+      background-color: v.$primary;
+      border-radius: v.$radius-sm;
     }
   }
 
@@ -247,8 +261,11 @@
     color: v.$gray-300;
     font-size: 0.875rem;
     line-height: 1.625;
-    margin-bottom: v.$spacing-xl;
     max-width: 42rem;
+    text-align: center;
+    width: 100%;
+    margin: 0 auto v.$spacing-2xl * 2;
+    text-align: center;
 
     @media (min-width: 640px) {
       font-size: 1rem;
@@ -409,5 +426,17 @@
       outline: 2px solid v.$cyan-500;
       outline-offset: 2px;
     }
+  }
+}
+
+.s-section.light {
+    background: v.$background-light;
+
+  .s-section__title {
+    color: v.$foreground-light;
+  }
+
+  .s-section__description {
+    color: v.$muted-foreground-light;
   }
 }

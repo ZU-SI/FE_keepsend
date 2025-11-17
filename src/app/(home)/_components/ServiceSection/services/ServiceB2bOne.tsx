@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 interface Problem {
   title: string;
   description: string;
-  relatedTalkIndices?: number[]; // Indices of related talk items
+  relatedTalkIndices?: number[];
 }
 
 interface ProblemSectionProps {
@@ -18,118 +18,109 @@ interface ProblemSectionProps {
 }
 
 const defaultTalks: string[] = [
-  "상품 위치가 파악이 안되니까 고객 문의 들어 올 때마다 창고랑 운송팀에 일일이 확인해야 해서 너무 힘듭니다.",
+  "사업을 키우는데 시스템이 그걸 못 따라가네요.",
+  "확장보다 유지가 더 버겁습니다.",
   "이슈 하나하나 터질 때마다 매번 새로 개발하고, 인력, 장비도 그만큼 비용도 만만치가 않네요.",
   "수요 예측이 안돼서 재고와 재고지 둘 다 리스크가 너무 심합니다.",
   "거래처마다 요청 방식이 달라 납기 일정 맞추려면 기존 시스템으로는 역부족이에요.",
   "응답이 제대로 왔는 건지 검증도 안되고, 엑셀로 확인하다 보면 오류가 너무 많이 발생해요.",
-  "사업을 키우는데 시스템이 그걸 못 따라가네요.",
-  "확장보다 유지가 더 버겁습니다."
+  "상품 위치가 파악이 안되니까 고객 문의 들어 올 때마다 창고랑 운송팀에 일일이 확인해야 해서 너무 힘듭니다.",
 ];
 
 const defaultProblems: Problem[] = [
   {
     title: "확장, 예측의 한계",
     description: "멈춰버린 기업 성장, 꽉 막힌 인프라",
-    relatedTalkIndices: [2, 5, 6]
+    relatedTalkIndices: [0,1]
   },
   {
     title: "관리 포인트 과총",
     description: "복잡한 구조, 낮은 효율, 비용 부담",
-    relatedTalkIndices: [0, 1]
+    relatedTalkIndices: [2,3]
   },
   {
     title: "미 검증, 정산",
     description: "불투명한 정산과 데이터",
-    relatedTalkIndices: [4]
+    relatedTalkIndices: [4,5]
   },
   {
     title: "추적 및 보안 취약",
     description: "실시간 모니터링 부재, 정보 보안 리스크",
-    relatedTalkIndices: [0, 3]
+    relatedTalkIndices: [6,7]
   }
 ];
 
 export default function ServiceB2bOne({
   id = "service-problem",
-  index = 0,
   problems = defaultProblems,
   talks = defaultTalks,
-  centerImageSrc,
-  centerImageAlt = "Problem solution"
 }: ProblemSectionProps) {
   const [visibleProblems, setVisibleProblems] = useState<boolean[]>(
     new Array(problems.length).fill(false)
   );
-  const [visibleTalks, setVisibleTalks] = useState<number>(0);
+  const [allProblemsLoaded, setAllProblemsLoaded] = useState(false);
+  const [currentLoadingProblem, setCurrentLoadingProblem] = useState<number>(-1);
   const [hoveredProblemIndex, setHoveredProblemIndex] = useState<number | null>(null);
+  const [reorderedTalks, setReorderedTalks] = useState<Array<{text: string, originalIndex: number}>>([]);
+
   const problemRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const chatRef = useRef<HTMLDivElement>(null);
   const chatMessagesRef = useRef<HTMLDivElement>(null);
   const chatBubbleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // Intersection Observer for problem items (scroll animation)
+  // Reorder talks based on problem sequence
   useEffect(() => {
-    const observers = problemRefs.current.map((ref, idx) => {
-      if (!ref) return null;
+    const ordered: Array<{text: string, originalIndex: number}> = [];
+    const usedIndices = new Set<number>();
 
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
+    // Add talks in problem order
+    problems.forEach(problem => {
+      if (problem.relatedTalkIndices) {
+        problem.relatedTalkIndices.forEach(idx => {
+          if (!usedIndices.has(idx) && idx < talks.length) {
+            ordered.push({ text: talks[idx], originalIndex: idx });
+            usedIndices.add(idx);
+          }
+        });
+      }
+    });
+
+    // Add remaining talks
+    talks.forEach((talk, idx) => {
+      if (!usedIndices.has(idx)) {
+        ordered.push({ text: talk, originalIndex: idx });
+      }
+    });
+
+    setReorderedTalks(ordered);
+  }, [problems, talks]);
+
+  // Sequential problem loading with related chat highlighting
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && currentLoadingProblem === -1) {
+            // Start sequential loading
+            problems.forEach((_, idx) => {
               setTimeout(() => {
+                setCurrentLoadingProblem(idx);
                 setVisibleProblems((prev) => {
                   const newState = [...prev];
                   newState[idx] = true;
                   return newState;
                 });
-              }, idx * 200);
-            }
-          });
-        },
-        {
-          threshold: 0.2,
-          rootMargin: '0px 0px -10% 0px'
-        }
-      );
 
-      observer.observe(ref);
-      return observer;
-    });
-
-    return () => {
-      observers.forEach((observer) => observer?.disconnect());
-    };
-  }, [problems.length]);
-
-  // Sequential chat bubble animation with smooth scroll
-  useEffect(() => {
-    if (!chatRef.current) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && visibleTalks === 0) {
-            talks.forEach((_, idx) => {
-              setTimeout(() => {
-                setVisibleTalks((prev) => Math.max(prev, idx + 1));
-
-                // Smooth scroll to new item
-                if (chatMessagesRef.current && chatBubbleRefs.current[idx]) {
-                  const container = chatMessagesRef.current;
-                  const newBubble = chatBubbleRefs.current[idx];
-
-                  if (newBubble) {
-                    setTimeout(() => {
-                      container.scrollTo({
-                        top: container.scrollHeight,
-                        behavior: 'smooth'
-                      });
-                    }, 100);
-                  }
+                // Check if all loaded
+                if (idx === problems.length - 1) {
+                  setTimeout(() => {
+                    setAllProblemsLoaded(true);
+                    setCurrentLoadingProblem(-1);
+                  }, 1000);
                 }
-              }, idx * 600);
+              }, idx * 1200);
             });
           }
         });
@@ -139,30 +130,12 @@ export default function ServiceB2bOne({
       }
     );
 
-    observer.observe(chatRef.current);
+    observer.observe(sectionRef.current);
 
     return () => observer.disconnect();
-  }, [talks.length, visibleTalks]);
+  }, [problems.length, currentLoadingProblem]);
 
-  // Scroll to first highlighted chat bubble when hovering problem
-  useEffect(() => {
-    if (hoveredProblemIndex !== null) {
-      const relatedIndices = problems[hoveredProblemIndex]?.relatedTalkIndices;
-      if (relatedIndices && relatedIndices.length > 0) {
-        const firstRelatedIndex = relatedIndices[0];
-        const firstBubble = chatBubbleRefs.current[firstRelatedIndex];
-
-        // if (firstBubble) {
-        //   firstBubble.scrollIntoView({
-        //     behavior: 'smooth',
-        //     block: 'center'
-        //   });
-        // }
-      }
-    }
-  }, [hoveredProblemIndex, problems]);
-
-  // Scroll functions for chat box
+  // Scroll functions
   const scrollToTop = () => {
     if (chatMessagesRef.current) {
       chatMessagesRef.current.scrollTo({
@@ -181,26 +154,82 @@ export default function ServiceB2bOne({
     }
   };
 
+  // Check if chat should be highlighted
+  const isChatHighlighted = (originalIndex: number): boolean => {
+    if (!allProblemsLoaded && currentLoadingProblem >= 0) {
+      // During loading: highlight chats related to current problem
+      return problems[currentLoadingProblem]?.relatedTalkIndices?.includes(originalIndex) || false;
+    } else if (allProblemsLoaded && hoveredProblemIndex !== null) {
+      // After loading: highlight on hover
+      return problems[hoveredProblemIndex]?.relatedTalkIndices?.includes(originalIndex) || false;
+    }
+    return false;
+  };
+
+  // Check if chat should be visible (animated in)
+  const isChatVisible = (originalIndex: number): boolean => {
+    if (currentLoadingProblem === -1) return true;
+
+    // Show chats up to current problem's related indices
+    for (let i = 0; i <= currentLoadingProblem; i++) {
+      if (problems[i]?.relatedTalkIndices?.includes(originalIndex)) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   return (
-    <section className="service-problem" ref={sectionRef} id={id}>
-      <div className="service-problem__container">
-        {/* Header - Updated structure */}
-        <div className="service-problem__header">
-          <div className="service-problem__title-group">
-            <h3 className="service-problem__subtitle">Pain Points</h3>
-            <h2 className="service-problem__title">
-              B2B 3PL 비즈니스, 이런 불편함 겪고 계신가요?
+    <section className="s-section__content" ref={sectionRef} id={id}>
+        {/* Header */}
+        <div className="s-section__header">
+          <div className="s-section__title-group">
+            <h3 className="s-section__subtitle">물류 사업의 고충 및 문제점</h3>
+            <h2 className="s-section__title">
+              B2B 3PL 번거롭고 어려우신가요?
             </h2>
+            <p className="s-section__description">
+              여러가지 고충으로 지체되는 사업 확장의 목표를 KEEPSEND가 해결하고 성공까지 함께합니다.
+            </p>
           </div>
         </div>
-        <p className="service-problem__description">
-          실제 현장에서 마주하는 문제들을 우리가 해결합니다
-        </p>
+        {/* Main Content Grid */}
+        <div className="service-problem__main-grid">
+          {/* Problem List - Left on desktop, Top on mobile */}
+          <div className="service-problem__problem-list">
+            {problems.map((problem, idx) => (
+              <div
+                key={idx}
+                ref={(el) => (problemRefs.current[idx] = el)}
+                className={`service-problem__problem-item ${
+                  visibleProblems[idx] ? 'service-problem__problem-item--visible' : ''
+                }`}
+                onMouseEnter={() => allProblemsLoaded ? setHoveredProblemIndex(idx) : null}
+                onMouseLeave={() => setHoveredProblemIndex(null)}
+              >
+                <div className="service-problem__problem-number">
+                  {String(idx + 1).padStart(2, '0')}
+                </div>
+                <div className="service-problem__problem-content">
+                  <h3 className="service-problem__problem-title">
+                    {problem.title}
+                  </h3>
+                  <p className="service-problem__problem-description">
+                    {problem.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
 
-        {/* Content Grid */}
-        <div className="service-problem__content">
-          {/* Chat Box - Left on desktop, Top on mobile */}
-          <div className="service-problem__chat-box" ref={chatRef}>
+          {/* Center Divider - Responsive */}
+          <div className="service-problem__divider">
+            <span className="service-problem__divider-icon">🧐</span>
+            <p className="service-problem__divider-text">우리가 해결하는 문제</p>
+          </div>
+
+          {/* Chat Box - Right on desktop, Bottom on mobile */}
+          <div className="service-problem__chat-box">
             <div className="service-problem__chat-header">
               <div className="service-problem__chat-status"></div>
               <span className="service-problem__chat-title">
@@ -208,27 +237,22 @@ export default function ServiceB2bOne({
               </span>
             </div>
             <div className="service-problem__chat-messages" ref={chatMessagesRef}>
-              {talks.map((talk, idx) => {
-                const isHighlighted = hoveredProblemIndex !== null &&
-                  problems[hoveredProblemIndex]?.relatedTalkIndices?.includes(idx);
+              {reorderedTalks.map((talk, idx) => {
+                const isHighlighted = isChatHighlighted(talk.originalIndex);
+                const isVisible = isChatVisible(talk.originalIndex);
 
                 return (
                   <div
                     key={idx}
                     ref={(el) => (chatBubbleRefs.current[idx] = el)}
                     className={`service-problem__chat-bubble ${
-                      idx < visibleTalks ? 'service-problem__chat-bubble--visible' : ''
-                    } ${
-                      idx % 2 === 0 ? 'service-problem__chat-bubble--left' : 'service-problem__chat-bubble--right'
-                    } ${
+                      isVisible ? 'service-problem__chat-bubble--visible' : ''
+                    }${
                       isHighlighted ? 'service-problem__chat-bubble--highlighted' : ''
-                    }`}
-                    style={{
-                      transitionDelay: `${idx * 0.1}s`
-                    }}
+                    } ${idx % 2 === 1? 'service-problem__chat-bubble--left' : 'service-problem__chat-bubble--right'}`}
                   >
                     <div className="service-problem__bubble-content">
-                      <p>{talk}</p>
+                      <p>{talk.text}</p>
                     </div>
                   </div>
                 );
@@ -269,80 +293,7 @@ export default function ServiceB2bOne({
               </button>
             </div>
           </div>
-
-          {/* Center Arrow + Image - Desktop only */}
-          <div className="service-problem__center-divider">
-            <div className="service-problem__arrow-wrapper">
-              <p className="service-problem__arrow-text">우리가 해결하는 문제</p>
-              <svg
-                className="service-problem__arrow-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M5 12H19M19 12L12 5M19 12L12 19"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
-            {centerImageSrc && (
-              <div className="service-problem__center-image">
-                <img src={centerImageSrc} alt={centerImageAlt} />
-              </div>
-            )}
-          </div>
-
-          {/* Arrow - Mobile/Tablet only */}
-          <div className="service-problem__mobile-arrow">
-            <svg
-              className="service-problem__mobile-arrow-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 5V19M12 19L5 12M12 19L19 12"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <p className="service-problem__mobile-arrow-text">우리가 해결하는 문제</p>
-          </div>
-
-          {/* Problem List - Right on desktop, Bottom on mobile */}
-          <div className="service-problem__problem-list">
-            {problems.map((problem, idx) => (
-              <div
-                key={idx}
-                ref={(el) => (problemRefs.current[idx] = el)}
-                className={`service-problem__problem-item ${
-                  visibleProblems[idx] ? 'service-problem__problem-item--visible' : ''
-                }`}
-                onMouseEnter={() => setHoveredProblemIndex(idx)}
-                onMouseLeave={() => setHoveredProblemIndex(null)}
-              >
-                <div className="service-problem__problem-number">
-                  {String(idx + 1).padStart(2, '0')}
-                </div>
-                <div className="service-problem__problem-content">
-                  <h3 className="service-problem__problem-title">
-                    {problem.title}
-                  </h3>
-                  <p className="service-problem__problem-description">
-                    {problem.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
-      </div>
     </section>
   );
 }

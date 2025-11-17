@@ -3,125 +3,216 @@
 .service-problem {
   position: relative;
   width: 100%;
-  min-height: 100vh;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: v.$background-light;
-  color: v.$foreground-light;
-  overflow: hidden;
-  padding: v.$spacing-xl v.$spacing-md;
 
-  @include v.desktop {
-    padding: v.$spacing-2xl v.$spacing-xl;
+  .s-section__content {
+    display: grid;
+    grid-template-rows: auto auto;
   }
 
-  // Container
-  &__container {
-    max-width: 1440px;
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: v.$spacing-xl;
 
-    @include v.desktop {
-      gap: v.$spacing-2xl;
-    }
-  }
-
-  // Header Section - Fixed height
-  &__header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    flex-shrink: 0;
-  }
-
-  &__title-group {
-    display: flex;
-    flex-direction: column;
-    gap: v.$spacing-sm;
-    align-items: center;
-
-    @include v.desktop {
-      gap: v.$spacing-md;
-    }
-  }
-
-  &__subtitle {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: v.$primary;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-
-    @include v.desktop {
-      font-size: 1rem;
-    }
-  }
-
-  &__title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: v.$foreground-light;
-    line-height: 1.3;
-
-    @include v.desktop {
-      font-size: 2.25rem;
-    }
-  }
-
-  &__description {
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: v.$muted-foreground-light;
-    margin-top: v.$spacing-md;
-    text-align: center;
-
-    @include v.desktop {
-      font-size: 1rem;
-      margin-top: v.$spacing-lg;
-    }
-  }
-
-  // Content Grid - Takes remaining height
-  &__content {
+  // Main Grid
+  &__main-grid {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: v.$spacing-lg;
-    min-height: 0;
-    overflow: hidden;
+    max-height: 60vh;
 
     @include v.desktop {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       gap: v.$spacing-xl;
-      align-items: center; // CHANGED: Vertical center alignment
+      align-items: stretch;
     }
   }
 
-  // Chat Box - LEFT on desktop, TOP on mobile
-  &__chat-box {
+  // Problem List - Left 1x4 on desktop, Top 2x2 on mobile
+  &__problem-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: v.$spacing-md;
+    flex-shrink: 0;
     order: 1;
+
+    @include v.desktop {
+      grid-template-columns: 1fr;
+      gap: v.$spacing-lg;
+      order: 1;
+      padding-right: v.$spacing-sm;
+
+      // // Hide scrollbar
+      // scrollbar-width: none;
+      // -ms-overflow-style: none;
+      // &::-webkit-scrollbar {
+      //   display: none;
+      // }
+    }
+  }
+
+  &__problem-item {
+    display: flex;
+    gap: v.$spacing-md;
+    padding: v.$spacing-md;
+    background-color: v.$card-light;
+    border-radius: v.$radius-lg;
+    border: 1px solid v.$border-light;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    opacity: 0;
+    transform: translateY(-20%);
+    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+
+    &--visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border-color: v.$primary;
+
+      .service-problem__problem-number {
+        background-color: v.$primary;
+        color: v.$white;
+        transform: scale(1.1);
+      }
+    }
+
+    @include v.desktop {
+      padding: v.$spacing-lg;
+      gap: v.$spacing-lg;
+    }
+  }
+
+  &__problem-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: v.$muted-light;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: v.$primary;
+    flex-shrink: 0;
+    transition: all v.$transition-default;
+
+    @include v.desktop {
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
+    }
+  }
+
+  &__problem-content {
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-sm;
+    flex: 1;
+  }
+
+  &__problem-title {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: v.$foreground-light;
+    line-height: 1.3;
+
+    @include v.desktop {
+      font-size: 0.9375rem;
+    }
+  }
+
+  &__problem-description {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: v.$muted-foreground-light;
+    margin: 0;
+
+    @include v.desktop {
+      font-size: 0.8125rem;
+    }
+  }
+
+  // Divider - Responsive (works for both desktop and mobile)
+  &__divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: v.$spacing-sm;
+    padding: v.$spacing-md 0;
+    flex-shrink: 0;
+    order: 2;
+
+    @include v.desktop {
+      flex-direction: column;
+      justify-content: center;
+      gap: v.$spacing-md;
+      padding: 0 v.$spacing-md;
+    }
+  }
+
+  &__divider-icon {
+    font-size: 28px;
+    animation: bounce 2s ease-in-out infinite;
+
+    @include v.desktop {
+      font-size: 40px;
+      animation: slide-right 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(8px);
+      }
+    }
+
+    @keyframes slide-right {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      50% {
+        transform: translateX(10px);
+      }
+    }
+  }
+
+  &__divider-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: v.$primary;
+    text-align: center;
+    margin: 0;
+
+    @include v.desktop {
+      font-size: 1.1rem;
+      white-space: nowrap;
+    }
+  }
+
+
+  // Chat Box - Right on desktop, Bottom on mobile
+  &__chat-box {
     display: flex;
     flex-direction: column;
     background-color: v.$card-light;
     border-radius: v.$radius-lg;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     border: 1px solid v.$border-light;
-    overflow: hidden;
+    overflow: auto;
+    position: relative;
+    order: 3;
+    height: 100%;
+    min-height: 40vh;
     flex: 1;
-    min-height: 0;
-    position: relative; // ADDED: For scroll button positioning
 
     @include v.desktop {
-      order: 1;
-      height: 100%; // Full height within grid
-      max-height: 600px; // Limit max height
+      order: 3;
     }
   }
 
@@ -129,7 +220,7 @@
     display: flex;
     align-items: center;
     gap: v.$spacing-sm;
-    padding: v.$spacing-md v.$spacing-lg;
+    padding: v.$spacing-sm v.$spacing-lg;
     background-color: v.$muted-light;
     border-bottom: 1px solid v.$border-light;
     flex-shrink: 0;
@@ -174,27 +265,16 @@
     gap: v.$spacing-md;
     background: linear-gradient(180deg, v.$gray-50 0%, v.$white 100%);
     position: relative;
-    overflow-y: auto; // CHANGED: Enable scrolling with smooth scroll
+    overflow-y: auto;
     min-height: 0;
-    scroll-behavior: smooth; // ADDED: Smooth scroll behavior
+    scroll-behavior: smooth;
 
-    // Custom scrollbar
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: v.$gray-300;
-      border-radius: v.$radius-sm;
-
-      &:hover {
-        background: v.$gray-400;
-      }
-    }
+    // Hide scrollbar
+    // scrollbar-width: none;
+    // -ms-overflow-style: none;
+    // &::-webkit-scrollbar {
+    //   display: none;
+    // }
 
     @include v.desktop {
       padding: v.$spacing-xl;
@@ -202,7 +282,61 @@
     }
   }
 
-  // ADDED: Scroll buttons
+  &__chat-bubble {
+    display: flex;
+    gap: v.$spacing-sm;
+    opacity: 0;
+    flex-shrink: 0;
+    transform: translateY(-100%);
+    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    &--visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    &--highlighted {
+      .service-problem__bubble-content {
+        background-color: v.$purple-50;
+        border-color: v.$primary;
+        box-shadow: 0 4px 16px rgba(v.$primary, 0.3);
+        transform: scale(1.02);
+      }
+    }
+
+    &--right {
+      justify-content: flex-end;
+    }
+  }
+
+  &__bubble-content {
+    width: 85%;
+    padding: v.$spacing-sm v.$spacing-md;
+    background-color: v.$white;
+    border-radius: v.$radius-lg;
+    border: 1px solid v.$border-light;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    position: relative;
+    transition: all 0.3s ease;
+
+    p {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      color: v.$foreground-light;
+      margin: 0;
+
+      @include v.desktop {
+        font-size: 0.875rem;
+        line-height: 1.6;
+      }
+    }
+
+    @include v.desktop {
+      padding: v.$spacing-md v.$spacing-lg;
+    }
+  }
+
+  // Scroll buttons
   &__scroll-buttons {
     position: absolute;
     bottom: v.$spacing-md;
@@ -258,363 +392,7 @@
     }
   }
 
-  &__chat-bubble {
-    display: flex;
-    flex-direction: column;
-    gap: v.$spacing-sm;
-    opacity: 0;
-    flex-shrink: 0;
-    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-
-    // CHANGED: Simple bottom to center animation (no auto-scroll hide)
-    transform: translateY(30px) scale(0.95);
-
-    &--visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-
-    // ADDED: Highlight state when problem is hovered
-    &--highlighted {
-      .service-problem__bubble-content {
-        background-color: v.$purple-50;
-        border-color: v.$primary;
-        box-shadow: 0 4px 16px rgba(v.$primary, 0.3);
-        transform: scale(1.02);
-      }
-    }
-
-    // Alternating left/right alignment
-    &--left {
-      align-self: flex-start;
-    }
-
-    &--right {
-      align-self: flex-end;
-    }
-  }
-
-  &__bubble-content {
-    max-width: 85%;
-    padding: v.$spacing-sm v.$spacing-md;
-    background-color: v.$white;
-    border-radius: v.$radius-lg;
-    border: 1px solid v.$border-light;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    position: relative;
-    transition: all 0.3s ease; // ADDED: Smooth transition for highlight
-
-    // Chat bubble tail for left bubbles
-    .service-problem__chat-bubble--left & {
-      &::before {
-        content: '';
-        position: absolute;
-        left: -8px;
-        top: 12px;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 8px 8px 8px 0;
-        border-color: transparent v.$white transparent transparent;
-      }
-
-      &::after {
-        content: '';
-        position: absolute;
-        left: -9px;
-        top: 12px;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 8px 8px 8px 0;
-        border-color: transparent v.$border-light transparent transparent;
-      }
-    }
-
-    // Chat bubble tail for right bubbles
-    .service-problem__chat-bubble--right & {
-      &::before {
-        content: '';
-        position: absolute;
-        right: -8px;
-        top: 12px;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 8px 0 8px 8px;
-        border-color: transparent transparent transparent v.$white;
-      }
-
-      &::after {
-        content: '';
-        position: absolute;
-        right: -9px;
-        top: 12px;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 8px 0 8px 8px;
-        border-color: transparent transparent transparent v.$border-light;
-      }
-    }
-
-    p {
-      font-size: 0.8125rem;
-      line-height: 1.5;
-      color: v.$foreground-light;
-      margin: 0;
-
-      @include v.desktop {
-        font-size: 0.875rem;
-        line-height: 1.6;
-      }
-    }
-
-    @include v.desktop {
-      padding: v.$spacing-md v.$spacing-lg;
-    }
-  }
-
-  // Center Divider - Desktop only
-  &__center-divider {
-    order: 2;
-    display: none;
-
-    @include v.desktop {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: v.$spacing-xl;
-      padding: 0 v.$spacing-lg;
-      height: auto; // CHANGED: Auto height for vertical center
-    }
-  }
-
-  &__arrow-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: v.$spacing-md;
-  }
-
-  &__arrow-text {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: v.$muted-foreground-light;
-    text-align: center;
-    white-space: nowrap;
-
-    @include v.desktop {
-      font-size: 0.9375rem;
-    }
-  }
-
-  &__arrow-icon {
-    width: 40px;
-    height: 40px;
-    color: v.$primary;
-    animation: slide-right 2s ease-in-out infinite;
-
-    @include v.desktop {
-      width: 48px;
-      height: 48px;
-    }
-
-    @keyframes slide-right {
-      0%, 100% {
-        transform: translateX(0);
-      }
-      50% {
-        transform: translateX(10px);
-      }
-    }
-  }
-
-  &__center-image {
-    width: 150px;
-    height: auto;
-    border-radius: v.$radius;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-    @include v.desktop {
-      width: 180px;
-    }
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-  }
-
-  // Mobile Arrow - Mobile/Tablet only
-  &__mobile-arrow {
-    order: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: v.$spacing-sm;
-    padding: v.$spacing-md 0;
-    flex-shrink: 0;
-
-    @include v.desktop {
-      display: none;
-    }
-  }
-
-  &__mobile-arrow-icon {
-    width: 28px;
-    height: 28px;
-    color: v.$primary;
-    animation: bounce 2s ease-in-out infinite;
-
-    @keyframes bounce {
-      0%, 100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(8px);
-      }
-    }
-  }
-
-  &__mobile-arrow-text {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: v.$muted-foreground-light;
-    text-align: center;
-  }
-
-  // Problem List - RIGHT on desktop, BOTTOM on mobile
-  &__problem-list {
-    order: 3;
-    display: flex;
-    flex-direction: column;
-    gap: v.$spacing-md;
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    padding-right: v.$spacing-sm;
-
-    // Custom scrollbar
-    &::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: v.$gray-300;
-      border-radius: v.$radius-sm;
-
-      &:hover {
-        background: v.$gray-400;
-      }
-    }
-
-    @include v.desktop {
-      order: 3;
-      gap: v.$spacing-lg;
-      height: 100%; // CHANGED: Full height
-      max-height: 600px; // CHANGED: Match chat box max height
-      overflow-y: auto;
-    }
-  }
-
-  &__problem-item {
-    display: flex;
-    gap: v.$spacing-md;
-    padding: v.$spacing-lg;
-    background-color: v.$card-light;
-    border-radius: v.$radius-lg;
-    border: 1px solid v.$border-light;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    opacity: 0;
-    transform: translateY(-20%);
-    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    flex-shrink: 0;
-    cursor: pointer; // ADDED: Show it's interactive
-
-    &--visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      border-color: v.$primary;
-
-      .service-problem__problem-number {
-        background-color: v.$primary;
-        color: v.$white;
-        transform: scale(1.1);
-      }
-    }
-
-    @include v.desktop {
-      padding: v.$spacing-xl;
-      gap: v.$spacing-lg;
-    }
-  }
-
-  &__problem-number {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: v.$muted-light;
-    font-size: 1rem;
-    font-weight: 700;
-    color: v.$primary;
-    flex-shrink: 0;
-    transition: all v.$transition-default;
-
-    @include v.desktop {
-      width: 48px;
-      height: 48px;
-      font-size: 1.125rem;
-    }
-  }
-
-  &__problem-content {
-    display: flex;
-    flex-direction: column;
-    gap: v.$spacing-sm;
-    flex: 1;
-  }
-
-  &__problem-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: v.$foreground-light;
-    line-height: 1.3;
-
-    @include v.desktop {
-      font-size: 1.125rem;
-    }
-  }
-
-  &__problem-description {
-    font-size: 0.8125rem;
-    line-height: 1.5;
-    color: v.$muted-foreground-light;
-    margin: 0;
-
-    @include v.desktop {
-      font-size: 0.875rem;
-      line-height: 1.6;
-    }
-  }
-
-  // Responsive adjustments for transitions
+  // Responsive adjustments
   @media (prefers-reduced-motion: reduce) {
     &__chat-bubble,
     &__problem-item {

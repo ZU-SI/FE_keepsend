@@ -15,35 +15,6 @@
     margin-bottom: v.$spacing-xl;
   }
 
-  .s-section__subtitle {
-    color: v.$primary;
-    font-size: 0.875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: v.$spacing-sm;
-  }
-
-  .s-section__title {
-    color: v.$foreground-light;
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: v.$spacing-md;
-
-    @include v.desktop {
-      font-size: 2.5rem;
-    }
-  }
-
-  .s-section__description {
-    color: v.$muted-foreground-light;
-    font-size: 1rem;
-    line-height: 1.6;
-    max-width: 700px;
-    margin: 0 auto v.$spacing-2xl * 2;
-    text-align: center;
-  }
 
   .cs-cards {
     display: grid;

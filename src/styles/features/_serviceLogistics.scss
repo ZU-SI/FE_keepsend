@@ -1,0 +1,336 @@
+@use "../cofigs/vars" as v;
+
+/* ============================================
+   Service Logistics Section (Mobile First)
+   - Left: vertical timeline + truck (위치: 중앙)
+   - Right: cards (각 단계별)
+   - Desktop (v.desktop)에서 좌/우 2열 레이아웃 적용
+   ============================================ */
+
+.s-logistics {
+  width: 100%;
+  min-height: 100vh; // 전체 페이지 높이 제약
+  display: flex;
+  justify-content: center;
+  padding: v.$spacing-2xl 0;
+
+  &__container {
+    width: 100%;
+    max-width: 1280px;
+    padding: 0 v.$spacing-lg;
+    margin: 0 auto;
+  }
+
+  &__content {
+    position: relative;
+    width: 100%;
+  }
+
+  /* ---------- Grid (mobile: stacked, desktop: two-column) ---------- */
+  &__grid {
+    width: 100%;
+    display: flex;
+    flex-direction: column; // 모바일 기본: 위->아래
+    gap: v.$spacing-3xl;
+  }
+
+  /* ---------- LEFT: timeline + truck ---------- */
+  &__left {
+    width: 100%;
+    position: relative;
+    padding: v.$spacing-lg 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__path {
+    width: 100%;
+    max-width: 320px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: v.$spacing-xl;
+    padding: v.$spacing-lg 0;
+  }
+
+  &__path-line {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 100%;
+    border-radius: 2px;
+    background-color: v.$border-light;
+    opacity: 0; // motion에서 제어
+  }
+
+  &__steps {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-lg;
+    padding: v.$spacing-lg 0;
+    z-index: 2;
+  }
+
+  &__step {
+    width: 100%;
+    max-width: 260px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  &__step-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto v.$spacing-sm;
+    background-color: v.$muted-light;
+
+    svg {
+      width: 28px;
+      height: 28px;
+      color: v.$white;
+    }
+
+    &--cyan   { background-color: v.$cyan-400; }
+    &--blue   { background-color: v.$primary; }
+    &--purple { background-color: v.$purple-500; }
+    &--green  { background-color: v.$ring; }
+  }
+
+  &__step-title {
+    font-size: v.$font-lg;
+    font-weight: v.$weight-semibold;
+    margin-bottom: v.$spacing-xs;
+  }
+
+  &__step-description {
+    font-size: v.$font-sm;
+    color: v.$muted-light;
+    line-height: 1.4;
+  }
+
+  /* Truck */
+  &__truck {
+    position: absolute;
+    left: calc(50% + 100px); // left of timeline for visual separation on mobile; desktop override exists
+    transform: translateY(-50%);
+    width: 52px;
+    height: 52px;
+    z-index: 5;
+    top: 0; // motion으로 제어 (top: truckY)
+  }
+
+  &__truck-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__truck-glow {
+    position: absolute;
+    inset: 0;
+    filter: blur(8px);
+    opacity: 0.12;
+    border-radius: 50%;
+    background: linear-gradient(180deg, v.$primary, transparent);
+  }
+
+  &__truck-icon {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: v.$primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 24px;
+      height: 24px;
+      color: v.$white;
+    }
+  }
+
+  &__truck-trail {
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    width: 24px;
+    height: 6px;
+    transform: translateY(-50%);
+    border-radius: 4px;
+    opacity: 0.06;
+    background: v.$muted;
+  }
+
+  /* ---------- RIGHT: cards (모바일: stacked, 데스크탑: 오른쪽 컬럼) ---------- */
+  &__right {
+    width: 100%;
+    padding: 0 v.$spacing-sm;
+    display: flex;
+    flex-direction: column;
+    gap: v.$spacing-lg;
+  }
+
+  &__point {
+    background: transparent;
+  }
+
+  &__point-header {
+    margin-bottom: v.$spacing-sm;
+  }
+
+  &__point-title {
+    font-size: v.$font-md;
+    font-weight: v.$weight-semibold;
+    margin: 0 0 v.$spacing-xs 0;
+  }
+
+  &__point-cards {
+    display: grid;
+    grid-template-columns: 1fr; // mobile: single column
+    gap: v.$spacing-md;
+  }
+
+  &__card {
+    background: v.$muted;
+    padding: v.$spacing-lg;
+    border-radius: v.$radius-lg;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  }
+
+  &__card-title {
+    font-size: v.$font-sm;
+    font-weight: v.$weight-medium;
+    margin-bottom: v.$spacing-xs;
+  }
+
+  &__card-meta {
+    font-size: v.$font-sm;
+    font-weight: v.$weight-semibold;
+    margin-bottom: v.$spacing-xs;
+  }
+
+  &__card-desc {
+    font-size: v.$font-sm;
+    color: v.$muted-light;
+    line-height: 1.4;
+  }
+
+  /* ---------- Stats area (optional) ---------- */
+  &__stats {
+    margin-top: v.$spacing-2xl;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: v.$spacing-lg;
+  }
+
+  &__stats-card {
+    background-color: v.$muted;
+    padding: v.$spacing-lg;
+    border-radius: v.$radius-lg;
+    text-align: center;
+  }
+
+  /* ============================
+     Desktop overrides (v.desktop)
+     - Two-column layout: left timeline, right cards
+     - Timeline is fixed-width at left; truck placed along that timeline
+     - Right column shows grouped cards with 2x2 (or as needed)
+     ============================ */
+  @include v.desktop {
+    padding: v.$spacing-4xl 0;
+
+    &__grid {
+      flex-direction: row;
+      gap: v.$spacing-4xl;
+      align-items: flex-start;
+    }
+
+    &__left {
+      width: 38%;
+      padding: v.$spacing-lg 0;
+      display: block;
+    }
+
+    &__right {
+      width: 62%;
+      padding-left: v.$spacing-lg;
+    }
+
+    &__path {
+      max-width: none;
+      width: 100%;
+      padding-left: v.$spacing-lg;
+      display: block;
+      align-items: flex-start;
+    }
+
+    /* horizontal center line becomes full-width horizontal line (but we keep vertical timeline semantics).
+       However because the design requested vertical timeline + truck motion even on desktop,
+       we keep the vertical line but ensure visual alignment with left column. */
+    &__path-line {
+      left: 36px; // fixed offset from left edge (aligned with icons)
+      transform: none;
+      width: 4px;
+      top: 0;
+      height: 100%;
+    }
+
+    &__steps {
+      padding-left: 0;
+      gap: v.$spacing-xl;
+    }
+
+    &__step {
+      display: flex;
+      align-items: flex-start;
+      gap: v.$spacing-lg;
+      text-align: left;
+      max-width: none;
+      margin: 0;
+      padding: v.$spacing-sm 0;
+    }
+
+    &__step-icon {
+      width: 56px;
+      height: 56px;
+      flex-shrink: 0;
+      margin: 0;
+    }
+
+    &__step-title {
+      font-size: v.$font-md;
+      margin-bottom: v.$spacing-xs;
+    }
+
+    &__truck {
+      left: calc(36px - 26px); // truck is centered horizontally along the left timeline
+      transform: translateY(-50%);
+      width: 52px;
+      height: 52px;
+    }
+
+    /* RIGHT column card layout: two-column for points with 2 cards, single for single card */
+    &__point-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: v.$spacing-lg;
+    }
+
+    /* If a point has only one card, make it span 1 column but look wider:
+       handled with basic grid behavior; if you want full-width single card:
+       you can add a modifier class later e.g. .s-logistics__card--full */
+    &__card {
+      min-height: 120px;
+    }
+  } // end v.desktop
+}

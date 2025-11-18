@@ -146,7 +146,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-scroll-section
         data-section-index={startIdx + 5}
         data-service-id={"center"}
-        className="s-section service-center"
+        className="s-section light service-center"
         // style={{ height: "fit-content" }}
       >
         <ServiceCenter id="center" index={startIdx + 5} />

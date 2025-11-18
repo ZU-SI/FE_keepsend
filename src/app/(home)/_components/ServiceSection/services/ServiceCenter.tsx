@@ -69,18 +69,16 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
   };
 
   return (
-    <section className="service-center" id={id}>
-      <div className="service-center__container">
-        <div className="service-center__header">
-          <span className="service-center__label">물류 센터</span>
-          <h2 className="service-center__title">전국을 잇는 네트워크, 효율이 시작되는 곳</h2>
-          <p className="service-center__description">
+    <section className="s-section__content" id={id}>
+        <div className="s-section__header">
+          <span className="s-section__subtitle">물류 센터</span>
+          <h2 className="s-section__title">전국을 잇는 네트워크, 효율이 시작되는 곳</h2>
+          <p className="s-section__description">
             전국 주요 지점에 구축된 물류센터를 통해 다양한 B2B 기계 교육에 대응합니다.
             <br />
             정확한 운영 시스템과 효율적 관리 프로세스로 기업과 어떤 환경에 상관없이 지원을 다합니다.
           </p>
         </div>
-
         <div className="service-center__content">
           <div className="service-center__map-container">
             <div className="service-center__map">
@@ -186,7 +184,6 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
             </div>
           </div>
         </div>
-      </div>
     </section>
   );
 };

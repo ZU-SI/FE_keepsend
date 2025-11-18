@@ -1,22 +1,30 @@
 @use "../cofigs/vars" as v;
 
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
 
 .service-partner {
+
+  .s-section__content {
+    justify-content: space-between;
+  }
 
   &__intro {
     display: flex;
     flex-direction: column;
-    gap: 4rem;
+    gap: v.$spacing-4xl;
   }
 
   &__stats {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem 1rem;
     display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: v.$spacing-2xl v.$spacing-md;
 
     @include v.desktop {
       grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
+      gap: v.$spacing-xl;
     }
   }
 
@@ -35,137 +43,132 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 1rem;
+    margin-bottom: v.$spacing-md;
     color: v.$white;
-    font-size: 1.5rem;
+    font-size: v.$font-2xl;
     box-shadow: 0 8px 20px rgba(v.$primary, 0.25);
   }
 
   &__stat-label {
-    font-size: 0.875rem;
-    font-weight: 500;
+    font-size: v.$font-sm;
+    font-weight: v.$weight-medium;
     color: v.$cyan-400;
-    margin-bottom: 0.5rem;
+    margin-bottom: v.$spacing-sm;
   }
 
   &__stat-value {
-    font-size: 2rem;
-    font-weight: 700;
+    font-size: v.$font-4xl;
+    font-weight: v.$weight-bold;
     color: v.$white;
     line-height: 1;
   }
 
   &__stat-unit {
-    font-size: 1rem;
-    margin-left: 0.25rem;
+    font-size: v.$font-md;
+    margin-left: v.$spacing-xs;
     opacity: 0.8;
   }
 
-  // Content section with partners
   &__content {
     display: flex;
     flex-direction: column;
-    gap: 4rem;
+    gap: v.$spacing-4xl;
   }
 
-  &__header {
-    text-align: center;
-    max-width: 700px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  &__subtitle {
-    color: v.$cyan-400;
-    font-size: 1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  &__title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: v.$white;
-
-    @media (max-width: 768px) {
-      font-size: 2rem;
-    }
-  }
-
-  &__description {
-    font-size: 1.125rem;
-    color: v.$gray-400;
-    line-height: 1.6;
-  }
-
-  // Showcase with main image and partners
+  // Showcase - 무한 스크롤 배너
   &__showcase {
-    display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
-    gap: 2rem;
+    overflow: hidden;
     position: relative;
+    width: 100%;
+    background: rgba(v.$card, 0.3);
+    border-radius: v.$radius-lg;
+    padding: v.$spacing-2xl 0;
 
-    @media (max-width: 1024px) {
-      grid-template-columns: 1fr;
-      gap: 3rem;
+    @include v.desktop {
+      padding: v.$spacing-3xl 0;
+    }
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 100px;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+
+      @include v.desktop {
+        width: 200px;
+      }
+    }
+
+    &::before {
+      left: 0;
+      background: linear-gradient(to right, v.$background 0%, transparent 100%);
+    }
+
+    &::after {
+      right: 0;
+      background: linear-gradient(to left, v.$background 0%, transparent 100%);
     }
   }
 
-  &__partner-column {
+  &__showcase-track {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    gap: v.$spacing-3xl;
+    animation: scroll 30s linear infinite;
+    width: max-content;
 
-    @media (max-width: 1024px) {
-      order: 2;
-      width: 70%;
-      margin: 0 auto;
+    @include v.desktop {
+      gap: v.$spacing-4xl;
+      animation-duration: 40s;
     }
-
-    @media (max-width: 768px) {
-      width: 100%;
-    }
-  }
-
-  &__partner-card {
-    background-color: v.$card;
-    border-radius: v.$radius;
-    padding: 2rem;
-    height: 100%;
-    max-height: 300px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    border: 1px solid v.$gray-800;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 40px rgba(6, 182, 212, 0.15);
+      animation-play-state: paused;
+    }
+  }
+
+  &__showcase-item {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: v.$card;
+    border-radius: v.$radius;
+    padding: v.$spacing-lg v.$spacing-2xl;
+    border: 1px solid v.$gray-800;
+    transition: all v.$transition-default;
+    min-width: 200px;
+
+    @include v.desktop {
+      min-width: 250px;
+      padding: v.$spacing-xl v.$spacing-3xl;
+    }
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 40px rgba(v.$cyan-500, 0.15);
       border-color: v.$cyan-600;
     }
+  }
 
-    @media (max-width: 1024px) {
-      max-height: none;
-      width: 100%;
+  &__showcase-logo {
+    width: 140px;
+    height: auto;
+    object-fit: contain;
+    filter: grayscale(100%) brightness(1.5);
+    opacity: 0.7;
+    transition: all v.$transition-default;
+
+    @include v.desktop {
+      width: 180px;
+    }
+
+    &:hover {
+      filter: grayscale(0%) brightness(1);
+      opacity: 1;
     }
   }
-
-  &__partner-logo {
-    width: 180px;
-    height: auto;
-    margin-bottom: 1.5rem;
-  }
-
-  &__partner-desc {
-    font-size: 1rem;
-    color: v.$gray-400;
-  }
-
 }

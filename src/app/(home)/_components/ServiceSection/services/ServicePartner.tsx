@@ -12,6 +12,11 @@ interface StatItem {
   unit: string;
 }
 
+interface Partner {
+  name: string;
+  logo: string;
+}
+
 const ServicePartner: React.FC<Props> = ({ id, index }) => {
   const stats: StatItem[] = [
     { label: '물류 센터', value: '0,000', unit: '개' },
@@ -20,18 +25,17 @@ const ServicePartner: React.FC<Props> = ({ id, index }) => {
     { label: '운용 장비', value: '0,000', unit: '대' }
   ];
 
-  const partners = [
-    {
-      name: '쿠팡',
-      logo: '/images/coupang-logo.png',
-      description: '신뢰와 혁신의 이커머스 기업'
-    },
-    {
-      name: '롯데글로벌로지스틱스',
-      logo: '/images/lotte-logo.png',
-      description: '글로벌 물류 네트워크'
-    }
+  const partners: Partner[] = [
+    { name: '쿠팡', logo: '/images/coupang-logo.png' },
+    { name: '롯데글로벌로지스틱스', logo: '/images/lotte-logo.png' },
+    { name: 'CJ대한통운', logo: '/images/cj-logo.png' },
+    { name: '한진', logo: '/images/hanjin-logo.png' },
+    { name: 'GS리테일', logo: '/images/gs-logo.png' },
+    { name: '네이버', logo: '/images/naver-logo.png' }
   ];
+
+  // 무한 스크롤을 위해 파트너 목록 2배 복제
+  const duplicatedPartners = [...partners, ...partners];
 
   return (
       <div className="s-section__content">
@@ -66,33 +70,18 @@ const ServicePartner: React.FC<Props> = ({ id, index }) => {
               </p>
           </div>
           <div className="service-partner__showcase">
-            <div className="service-partner__partner-column">
-              <div className="service-partner__partner-card">
-                <div className="service-partner__partner-logo">
+            <div className="service-partner__showcase-track">
+              {duplicatedPartners.map((partner, idx) => (
+                <div className="service-partner__showcase-item" key={`${partner.name}-${idx}`}>
                   <Image
-                    src={partners[0].logo}
-                    alt={partners[0].name}
+                    src={partner.logo}
+                    alt={partner.name}
                     width={180}
-                    height={50}
-                    layout="responsive"
+                    height={60}
+                    className="service-partner__showcase-logo"
                   />
                 </div>
-                <p className="service-partner__partner-desc">{partners[0].description}</p>
-              </div>
-            </div>
-            <div className="service-partner__partner-column">
-              <div className="service-partner__partner-card">
-                <div className="service-partner__partner-logo">
-                  <Image
-                    src={partners[1].logo}
-                    alt={partners[1].name}
-                    width={180}
-                    height={50}
-                    layout="responsive"
-                  />
-                </div>
-                <p className="service-partner__partner-desc">{partners[1].description}</p>
-              </div>
+              ))}
             </div>
           </div>
         </div>

@@ -27,19 +27,8 @@
 
 /* Block: s-section */
 .s-section {
-
   width: 100%;
-  height: fit-content;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
   background-color: v.$background;
-
-  @include v.desktop {
-    padding: 5rem 3rem;
-  }
 
   /* ============================================
      Fixed Menu
@@ -147,14 +136,24 @@
 
   /* Element: content */
   &__content {
-    max-width: 1040px;
+    max-width: 1080px;
     margin: 0 auto;
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     gap: v.$spacing-xl;
+    padding: 2rem 20px;
+    height: fit-content;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
 
+    @include v.desktop {
+      padding: 5rem 20px;
+      gap: v.$spacing-3xl;
+      min-height: 100vh;
+    }
   }
 
   /* Element: animation */

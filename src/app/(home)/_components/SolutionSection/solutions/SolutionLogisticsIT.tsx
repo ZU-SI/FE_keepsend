@@ -21,19 +21,15 @@ const logisticsCards = [
 export default function SolutionLogisticsIT({ id, index }: Props) {
   return (
     <div className="s-section__content">
-      <div className="s-section__animation">
         <div className="s-section__header">
-          <div className="s-section__title-group">
             <h3 className="s-section__subtitle">통합 물류 솔루션</h3>
             <h2 className="s-section__title">
               하나로 연결되는 물류 통합 운영의 혁신
             </h2>
-          </div>
+            <p className="s-section__description">
+              OMS, WMS, TMS를 통합한 원스톱 물류 솔루션으로 물류 전 과정을 민첩하게 유기적으로 관리합니다.
+            </p>
         </div>
-        <p className="s-section__description">
-          OMS, WMS, TMS를 통합한 원스톱 물류 솔루션으로 물류 전 과정을 민첩하게 유기적으로 관리합니다.
-        </p>
-
         <div className="logistics-cards">
           {logisticsCards.map((card, idx) => (
             <div key={idx} className="logistics-card">
@@ -47,7 +43,6 @@ export default function SolutionLogisticsIT({ id, index }: Props) {
             </div>
           ))}
         </div>
-      </div>
     </div>
   );
 }

@@ -6,6 +6,7 @@
     display: flex;
     flex-direction: column;
     gap: v.$spacing-2xl;
+
     @include v.desktop {
       flex-direction: row;
       align-items: center;
@@ -21,9 +22,9 @@
   }
 
   .stm-swiper {
-    height: 400px;
+    height: 30vh;
+    @include v.desktop { height: 40vh; }
     border-radius: v.$radius-xl;
-    @include v.desktop { height: 500px; }
   }
 
   .stm-slide {

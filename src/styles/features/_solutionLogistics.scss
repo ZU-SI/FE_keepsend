@@ -5,7 +5,8 @@
 
   .logistics-cards {
     display: grid;
-    gap: v.$spacing-xl;
+    gap: v.$spacing-sm;
+
     @include v.desktop {
       grid-template-columns: repeat(3, 1fr);
       gap: v.$spacing-2xl;

@@ -34,7 +34,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 1rem;
+  padding: 2rem 1rem;
   background-color: v.$background;
 
   @include v.desktop {
@@ -168,14 +168,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     gap: 0.75rem;
     margin-bottom: v.$spacing-xl;
     white-space: pre-wrap;
     word-break: keep-all;
-
-    @media (min-width: 640px) {
-      gap: v.$spacing-md;
-    }
+    width: 100%;
 
     @include v.desktop {
       gap: v.$spacing-xl;
@@ -201,7 +199,10 @@
   /* Element: title-group */
   &__title-group {
     flex: 1;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   /* Element: title */
@@ -256,15 +257,13 @@
     color: v.$gray-300;
     font-size: 0.875rem;
     line-height: 1.625;
-    max-width: 42rem;
     text-align: center;
     width: 100%;
-    margin: 0 auto v.$spacing-2xl * 2;
-    text-align: center;
+
 
     @include v.desktop {
       font-size: 1.125rem;
-      margin-bottom: v.$spacing-2xl;
+      width: 100%;
     }
   }
 

@@ -43,6 +43,12 @@ export default function Home() {
     const container = containerRef.current;
     if (!container) return;
 
+    // 모바일에서는 fullpage 스크롤 비활성화 (자연스러운 스크롤)
+    const isMobile = () => window.innerWidth < 1024;
+    if (isMobile()) {
+      return;
+    }
+
     const getScrollY = () => window.scrollY || window.pageYOffset || 0;
     const getContainerTop = () => {
       const rect = container.getBoundingClientRect();
@@ -102,23 +108,24 @@ export default function Home() {
       const viewportBottom = scrollY + window.innerHeight;
       const bounds = getBounds();
 
-      // ignore if viewport fully outside container
-      if (viewportBottom <= bounds.top || viewportTop >= bounds.bottom) return;
+      // Footer 영역에 진입했으면 스크롤 제어 하지 않음
+      if (viewportTop >= bounds.bottom) {
+        return;
+      }
+
+      // viewport가 container 위쪽에 있으면 제어 안함
+      if (viewportBottom <= bounds.top) return;
 
       const direction = e.deltaY > 0 ? 1 : -1;
 
-      // recompute current index using viewport center for robustness across mixed heights
+      // 현재 섹션 인덱스 계산: viewport top에 가장 가까운 섹션
       const offsetsForIndex = getSectionOffsets();
       const containerTop = getContainerTop();
-      const viewportCenter = scrollY + window.innerHeight / 2;
       let currentIndex = 0;
       let bestDist = Number.POSITIVE_INFINITY;
       for (let i = 0; i < offsetsForIndex.length; i++) {
         const topI = containerTop + offsetsForIndex[i];
-        const el = sections[i];
-        const heightI = el.getBoundingClientRect().height;
-        const midI = topI + heightI / 2;
-        const dist = Math.abs(midI - viewportCenter);
+        const dist = Math.abs(topI - viewportTop);
         if (dist < bestDist) {
           bestDist = dist;
           currentIndex = i;
@@ -131,23 +138,27 @@ export default function Home() {
       const currentHeight = currentEl.getBoundingClientRect().height;
       const currentBottom = currentTop + currentHeight;
 
-      // allow natural scrolling inside tall sections
-      const threshold = 12; // px tolerance near edges
+      // 섹션 내부 스크롤 허용
+      const threshold = 20; // px tolerance near edges
       if (direction > 0) {
-        // going down
-        const distanceToBottom = currentBottom - (scrollY + window.innerHeight);
-        if (
-          distanceToBottom > threshold &&
-          currentHeight > window.innerHeight
-        ) {
-          // still room to scroll inside this section: release
+        // 아래로 스크롤
+        const distanceToBottom = currentBottom - viewportBottom;
+        
+        // 마지막 섹션에서 아래로 스크롤하고 섹션의 끝에 도달했으면 footer로 자연스럽게
+        if (currentIndex === total - 1 && distanceToBottom <= threshold) {
+          return;
+        }
+        
+        // 큰 섹션 내부에서 아래로 스크롤할 여지가 있으면 자연스럽게
+        if (distanceToBottom > threshold && currentHeight > window.innerHeight) {
           return;
         }
       } else {
-        // going up
-        const distanceFromTop = scrollY - currentTop;
+        // 위로 스크롤
+        const distanceFromTop = viewportTop - currentTop;
+        
+        // 큰 섹션 내부에서 위로 스크롤할 여지가 있으면 자연스럽게
         if (distanceFromTop > threshold && currentHeight > window.innerHeight) {
-          // scrolled away from top inside a tall section: release
           return;
         }
       }
@@ -236,6 +247,9 @@ export default function Home() {
     const handleResize = () => {
       // 모달이 열려 있으면 크기 조정 시 스크롤 재설정을 건너뛰기
       if (isModalOpen) return;
+      
+      // 모바일에서는 리사이즈 시 스냅 안함
+      if (isMobile()) return;
 
       const sections = getSections();
       if (sections.length === 0) return;

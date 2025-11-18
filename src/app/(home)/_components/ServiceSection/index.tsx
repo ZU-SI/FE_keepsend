@@ -93,7 +93,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-section-index={startIdx}
         data-service-id={"intro"}
         className="s-section service-intro"
-        style={{ height: "60vh" }}
+        style={{ minHeight: "60vh" }}
         ref={firstSectionRef}
         id="service-intro"
       >
@@ -105,7 +105,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-section-index={startIdx + 1}
         data-service-id={"b2b-1"}
         className="s-section light service-problem"
-        style={{ height: "100vh" }}
+        // style={{ height: "100vh" }}
       >
         <ServiceB2bOne id="b2b-1" index={startIdx + 1} />
       </div>
@@ -115,7 +115,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-section-index={startIdx + 2}
         data-service-id={"b2b-2"}
         className="s-section"
-        style={{ height: "fit-content" }}
+        // style={{ height: "fit-content" }}
       >
         {/* <ServiceB2bTwo id="b2b-2" index={startIdx + 2} /> */}
       </div>
@@ -125,7 +125,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-section-index={startIdx + 3}
         data-service-id={"b2b-3"}
         className="s-section"
-        style={{ height: "100vh" }}
+        // style={{ height: "100vh" }}
       >
         <ServiceB2bThree id="b2b-3" index={startIdx + 3} />
       </div>
@@ -136,7 +136,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-section-index={startIdx + 4}
         data-service-id={"process"}
         className="s-section"
-        style={{ height: "auto" }}
+        // style={{ height: "auto" }}
       >
         <ServiceProcess id="process" index={startIdx + 4} />
       </div>
@@ -147,7 +147,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-section-index={startIdx + 5}
         data-service-id={"center"}
         className="s-section service-center"
-        style={{ height: "fit-content" }}
+        // style={{ height: "fit-content" }}
       >
         <ServiceCenter id="center" index={startIdx + 5} />
       </div>
@@ -158,7 +158,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-section-index={startIdx + 6}
         data-service-id={"partner"}
         className="s-section service-partner"
-        style={{ height: "fit-content" }}
+        // style={{ height: "fit-content" }}
       >
         <ServicePartner id="partner" index={startIdx + 6} />
       </div>
@@ -169,7 +169,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-section-index={startIdx + 7}
         data-service-id={"consulting"}
         className="s-section light service-cs"
-        style={{ height: "100vh" }}
+        // style={{ height: "100vh" }}
         ref={lastSectionRef}
       >
         <ServiceConsulting id="consulting" index={startIdx + 7} />

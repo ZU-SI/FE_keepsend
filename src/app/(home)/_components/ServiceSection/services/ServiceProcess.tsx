@@ -103,16 +103,12 @@ const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
   };
 
   return (
-    <section className="service-process" id={id} ref={sectionRef}>
-      <div className="service-process__container">
-        <div className="service-process__header">
-          <span className="service-process__label">KEEPSEND 프로세스</span>
-          <h2 className="service-process__title">당신의 브랜드가 닿는 길, 그 안의 모든 과정</h2>
-          <p className="service-process__description">
-            담메라닷 검증된 관리 체계로, 신뢰받는 B2B 퍼포먼스를 완성합니다.
-          </p>
+    <section className="s-section__content" id={id} ref={sectionRef}>
+        <div className="s-section__header">
+          <span className="s-section__subtitle">KEEPSEND 프로세스</span>
+          <h2 className="s-section__title">당신의 브랜드가 닿는 길, 그 안의 모든 과정</h2>
+          <p className="s-section__description">단계마다 검증된 관리 체계로, 신뢰받는 B2B 파트너십을 완성합니다.</p>
         </div>
-
         <div className="service-process__flow">
           <div className="service-process__row service-process__row--first">
             {processSteps.slice(0, 4).map((step, idx) => (
@@ -120,8 +116,11 @@ const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
                 <div
                   className={`service-process__step ${visibleSteps.includes(step.id) ? 'visible' : ''}`}
                 >
-                  <div className="service-process__step-circle">
-                    <span className="service-process__step-number">{step.id}</span>
+                  <div className="service-process__step-img">
+                    img
+                  <span className="service-process__step-num">
+                    {step.id}
+                  </span>
                   </div>
                   <div className="service-process__step-content">
                     <h3 className="service-process__step-title">{step.title}</h3>
@@ -158,8 +157,11 @@ const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
                 <div
                   className={`service-process__step ${visibleSteps.includes(step.id) ? 'visible' : ''}`}
                 >
-                  <div className="service-process__step-circle">
-                    <span className="service-process__step-number">{step.id}</span>
+                  <div className="service-process__step-img">
+                    img
+                  <span className="service-process__step-num">
+                    {step.id}
+                  </span>
                   </div>
                   <div className="service-process__step-content">
                     <h3 className="service-process__step-title">{step.title}</h3>
@@ -180,7 +182,6 @@ const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
             ))}
           </div>
         </div>
-      </div>
     </section>
   );
 };

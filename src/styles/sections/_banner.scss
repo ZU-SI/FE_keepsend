@@ -71,7 +71,7 @@
 
   &__title {
     @extend %animated-text;
-    font-size: 3rem;
+    font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: v.$spacing-xl;
     color: v.$white;
@@ -81,7 +81,7 @@
 
   &__description {
     @extend %animated-text;
-    font-size: 1.125rem;
+    font-size: 1rem;
     color: v.$gray-300;
     margin-bottom: v.$spacing-2xl;
     max-width: 42rem;
@@ -101,7 +101,7 @@
   }
 
   %button-base {
-    padding: 0.625rem v.$spacing-2xl;
+    padding: 0.25rem v.$spacing-2xl;
     border-radius: v.$border-radius-full;
     font-weight: 600;
     font-size: 1rem;

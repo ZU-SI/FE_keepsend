@@ -177,6 +177,7 @@
     white-space: pre-wrap;
     word-break: keep-all;
     width: 100%;
+    overflow: hidden;
 
     @include v.desktop {
       gap: v.$spacing-xl;
@@ -262,6 +263,8 @@
     line-height: 1.625;
     text-align: center;
     width: 100%;
+    white-space: pre-wrap;
+    word-break: keep-all;
 
 
     @include v.desktop {

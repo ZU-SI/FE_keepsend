@@ -6,7 +6,6 @@
 }
 
 .service-partner {
-
   .s-section__content {
     justify-content: space-between;
   }
@@ -14,13 +13,17 @@
   &__intro {
     display: flex;
     flex-direction: column;
-    gap: v.$spacing-4xl;
+    gap: v.$spacing-sm;
+
+    @include v.desktop {
+      gap: v.$spacing-4xl;
+    }
   }
 
   &__stats {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: v.$spacing-2xl v.$spacing-md;
+    gap: v.$spacing-xl v.$spacing-md;
 
     @include v.desktop {
       grid-template-columns: repeat(4, 1fr);
@@ -36,31 +39,45 @@
   }
 
   &__stat-icon {
-    width: 70px;
-    height: 70px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background: v.$gradient-cyan;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: v.$spacing-md;
+    margin-bottom: v.$spacing-sm;
     color: v.$white;
     font-size: v.$font-2xl;
     box-shadow: 0 8px 20px rgba(v.$primary, 0.25);
+
+    @include v.desktop {
+      width: 70px;
+      height: 70px;
+      margin-bottom: v.$spacing-md;
+    }
   }
 
   &__stat-label {
     font-size: v.$font-sm;
     font-weight: v.$weight-medium;
     color: v.$cyan-400;
-    margin-bottom: v.$spacing-sm;
+    margin-bottom: v.$spacing-xs;
+
+    @include v.desktop {
+      margin-bottom: v.$spacing-sm;
+    }
   }
 
   &__stat-value {
-    font-size: v.$font-4xl;
+    font-size: v.$font-xl;
     font-weight: v.$weight-bold;
     color: v.$white;
     line-height: 1;
+
+    @include v.desktop {
+      font-size: v.$font-4xl;
+    }
   }
 
   &__stat-unit {
@@ -72,7 +89,12 @@
   &__content {
     display: flex;
     flex-direction: column;
-    gap: v.$spacing-4xl;
+    gap: 0;
+    width: 100%;
+
+    @include v.desktop {
+      gap: v.$spacing-4xl;
+    }
   }
 
   // Showcase - 무한 스크롤 배너

@@ -88,8 +88,9 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         className="s-section solution-intro"
         style={{ minHeight: "60vh" }}
         ref={firstSectionRef}
+        id="solution-intro"
       >
-        <SolutionIntro id="solution-intro" index={startIdx} />
+        <SolutionIntro id="solution-intro"  index={startIdx} />
       </div>
 
       {/* Logistics IT */}

@@ -95,8 +95,9 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         className="s-section service-intro"
         style={{ height: "60vh" }}
         ref={firstSectionRef}
+        id="service-intro"
       >
-        <ServiceIntro id="intro" index={startIdx} />
+        <ServiceIntro id="service-intro"  index={startIdx} />
       </div>
       {/* B2B section 1 */}
       <div

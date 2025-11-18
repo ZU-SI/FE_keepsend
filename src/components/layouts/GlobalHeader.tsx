@@ -85,7 +85,7 @@ export default function GlobalHeader() {
         <div className="header__menu">
           <button
             type="button"
-            onClick={handleMenuClick("#service")}
+            onClick={handleMenuClick("#service-intro")}
             className={`header__link ${
               activePrimary === "service" ? "header__link--active" : ""
             }`}
@@ -94,7 +94,7 @@ export default function GlobalHeader() {
           </button>
           <button
             type="button"
-            onClick={handleMenuClick("#solution")}
+            onClick={handleMenuClick("#solution-intro")}
             className={`header__link ${
               activePrimary === "solution" ? "header__link--active" : ""
             }`}

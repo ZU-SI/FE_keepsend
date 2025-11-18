@@ -1,11 +1,11 @@
 "use client";
 
-import { useSetAtom } from "jotai";
 import { contactModalOpenAtom } from "@/store/contact.store";
+import { useSetAtom } from "jotai";
 
 export default function GlobalFooter() {
   const setContactModalOpen = useSetAtom(contactModalOpenAtom);
-  
+
   const handleContactClick = () => {
     setContactModalOpen(true);
   };
@@ -40,17 +40,17 @@ export default function GlobalFooter() {
                 <h4 className="footer__column__title">메뉴</h4>
                 <ul className="footer__menu">
                   <li className="footer__menu__item">
-                    <a href="#services" className="footer__menu__link">
+                    <a href="#service-intro" className="footer__menu__link">
                       물류 서비스
                     </a>
                   </li>
                   <li className="footer__menu__item">
-                    <a href="#solutions" className="footer__menu__link">
+                    <a href="#solution-intro" className="footer__menu__link">
                       IT 솔루션
                     </a>
                   </li>
                   <li className="footer__menu__item">
-                    <a href="#news" className="footer__menu__link">
+                    <a href="/news" className="footer__menu__link">
                       소식
                     </a>
                   </li>

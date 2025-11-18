@@ -23,19 +23,17 @@ const aiFeatures = [
 export default function SolutionAIPlatform({ id, index }: Props) {
   return (
     <div className="s-section__content">
-      <div className="s-section__animation">
         <div className="s-section__header">
           <div className="s-section__title-group">
             <h3 className="s-section__subtitle">AI 물류의 시대</h3>
             <h2 className="s-section__title">
               스마트 오퍼레이션의 시작, AI와 함께!
             </h2>
+            <p className="s-section__description">
+              AI 기반 채팅 어시스턴트와 재고관리 로봇이 결합된 지능형 물류 자동화 서비스를 준비 중입니다.
+            </p>
           </div>
         </div>
-        <p className="s-section__description">
-          AI 기반 채팅 어시스턴트와 재고관리 로봇이 결합된 지능형 물류 자동화 서비스를 준비 중입니다.
-        </p>
-
         <div className="ai-features">
           {aiFeatures.map((feature, idx) => (
             <div
@@ -63,7 +61,6 @@ export default function SolutionAIPlatform({ id, index }: Props) {
             </div>
           ))}
         </div>
-      </div>
     </div>
   );
 }

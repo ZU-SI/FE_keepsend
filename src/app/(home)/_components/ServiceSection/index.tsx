@@ -2,11 +2,10 @@
 
 import { activeMenuAtom } from "@/store/menu.store";
 import { useSetAtom } from "jotai";
-import { RefObject, useRef } from "react";
+import { useRef } from "react";
 import { useSectionObserver } from "../../_utils/useSectionObserver";
 import ServiceB2bOne from "./services/ServiceB2bOne";
 import ServiceB2bThree from "./services/ServiceB2bThree";
-import ServiceB2bTwo from "./services/ServiceB2bTwo";
 import ServiceCenter from "./services/ServiceCenter";
 import ServiceConsulting from "./services/ServiceConsulting";
 import ServiceIntro from "./services/ServiceIntro";
@@ -18,8 +17,11 @@ interface ServiceSectionProps {
 }
 
 export default function ServiceSection({ startIdx }: ServiceSectionProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+const firstSectionRef = useRef<HTMLDivElement>(null);
+const lastSectionRef = useRef<HTMLDivElement>(null);
+
   const setActiveMenu = useSetAtom(activeMenuAtom);
+
   const menuGroups = [
     { id: "b2b", titleKo: "B2B", sectionIds: ["b2b-1", "b2b-2", "b2b-3"] },
     { id: "process", titleKo: "프로세스", sectionIds: ["process"] },
@@ -27,35 +29,39 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
     { id: "partner", titleKo: "파트너", sectionIds: ["partner"] },
     { id: "consulting", titleKo: "컨설팅", sectionIds: ["consulting"] },
   ];
-  const { showMenu, activeMenuId, sectionRefs } = useSectionObserver(
-    containerRef as RefObject<HTMLElement>,
-    {
-      sectionSelector: "[data-scroll-section][data-service-id]",
-      idAttribute: "data-service-id",
-      menuGroups,
-      onComeIn: () => {
-        setActiveMenu("service");
-      },
-      onGoOut: () => {
-        setActiveMenu(null);
-      },
-    }
-  );
+
+  const { showMenu, activeMenuId, sectionRefs } = useSectionObserver({
+    sectionSelector: "[data-scroll-section][data-service-id]",
+    idAttribute: "data-service-id",
+    menuGroups,
+    firstSectionRef,
+    lastSectionRef,
+    onComeIn: () => {
+      setActiveMenu("service");
+    },
+    onGoOut: () => {
+      setActiveMenu(null);
+    },
+  });
 
   const handleMenuClick = (menuId: string) => {
     const targetSectionId =
       menuGroups.find((g) => g.id === menuId)?.sectionIds[0] ?? menuId;
+
     const el = sectionRefs.current.find(
       (e) => e.getAttribute("data-service-id") === targetSectionId
     );
     if (!el) return;
+
     const rect = el.getBoundingClientRect();
     const targetY = rect.top + (window.scrollY || window.pageYOffset);
+
     window.scrollTo({ top: targetY, behavior: "smooth" });
   };
 
   return (
-    <div id="service" ref={containerRef} className="s-sections">
+    <>
+      {/* sentinel: 메뉴 ON 트리거 */}
       {showMenu && (
         <div className="s-section__menu-wrapper">
           <div className="s-section__menu">
@@ -88,10 +94,11 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-service-id={"intro"}
         className="s-section service-intro"
         style={{ height: "60vh" }}
+        ref={firstSectionRef}
       >
         <ServiceIntro id="intro" index={startIdx} />
       </div>
-      {/* B2B (1) 100vh */}
+      {/* B2B section 1 */}
       <div
         data-scroll-section
         data-section-index={startIdx + 1}
@@ -101,7 +108,7 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
       >
         <ServiceB2bOne id="b2b-1" index={startIdx + 1} />
       </div>
-      {/* B2B (2) 100vh */}
+      {/* B2B section 2 */}
       <div
         data-scroll-section
         data-section-index={startIdx + 2}
@@ -109,9 +116,9 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         className="s-section"
         style={{ height: "fit-content" }}
       >
-        <ServiceB2bTwo id="b2b-2" index={startIdx + 2} />
+        {/* <ServiceB2bTwo id="b2b-2" index={startIdx + 2} /> */}
       </div>
-      {/* B2B (3) 100vh */}
+      {/* B2B section 3 */}
       <div
         data-scroll-section
         data-section-index={startIdx + 3}
@@ -121,7 +128,8 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
       >
         <ServiceB2bThree id="b2b-3" index={startIdx + 3} />
       </div>
-      {/* Process (auto) */}
+
+      {/* Process */}
       <div
         data-scroll-section
         data-section-index={startIdx + 4}
@@ -131,7 +139,8 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
       >
         <ServiceProcess id="process" index={startIdx + 4} />
       </div>
-      {/* Center (100vh) */}
+
+      {/* Center */}
       <div
         data-scroll-section
         data-section-index={startIdx + 5}
@@ -141,7 +150,8 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
       >
         <ServiceCenter id="center" index={startIdx + 5} />
       </div>
-      {/* Partner (100vh) */}
+
+      {/* Partner */}
       <div
         data-scroll-section
         data-section-index={startIdx + 6}
@@ -151,16 +161,18 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
       >
         <ServicePartner id="partner" index={startIdx + 6} />
       </div>
-      {/* Consulting (100vh) */}
+
+      {/* Consulting */}
       <div
         data-scroll-section
         data-section-index={startIdx + 7}
         data-service-id={"consulting"}
         className="s-section light service-cs"
         style={{ height: "100vh" }}
+        ref={lastSectionRef}
       >
         <ServiceConsulting id="consulting" index={startIdx + 7} />
       </div>
-    </div>
+    </>
   );
 }

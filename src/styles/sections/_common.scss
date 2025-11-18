@@ -29,19 +29,16 @@
 .s-section {
 
   width: 100%;
-  height: 100vh;
+  height: fit-content;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 4rem 1rem;
   background-color: v.$background;
 
-  @media (min-width: 640px) {
-    padding: 5rem 1.5rem;
-  }
-
   @include v.desktop {
-    padding: 8rem 3rem;
+    padding: 5rem 3rem;
   }
 
   /* ============================================
@@ -68,8 +65,7 @@
   /* Element: menu */
   &__menu {
     pointer-events: auto;
-    background-color: rgba(v.$black, 0.4);
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(1px);
     border-radius: 0.75rem;
     padding: v.$spacing-md;
 
@@ -174,6 +170,8 @@
     justify-content: center;
     gap: 0.75rem;
     margin-bottom: v.$spacing-xl;
+    white-space: pre-wrap;
+    word-break: keep-all;
 
     @media (min-width: 640px) {
       gap: v.$spacing-md;
@@ -203,6 +201,7 @@
   /* Element: title-group */
   &__title-group {
     flex: 1;
+
   }
 
   /* Element: title */
@@ -212,10 +211,6 @@
     margin-bottom: 0.25rem;
     text-align: center;
     color: v.$white;
-
-    @media (min-width: 640px) {
-      font-size: 1.875rem;
-    }
 
     @include v.desktop {
       font-size: 2.25rem;
@@ -267,10 +262,6 @@
     margin: 0 auto v.$spacing-2xl * 2;
     text-align: center;
 
-    @media (min-width: 640px) {
-      font-size: 1rem;
-    }
-
     @include v.desktop {
       font-size: 1.125rem;
       margin-bottom: v.$spacing-2xl;
@@ -287,10 +278,6 @@
     grid-template-columns: 1fr;
     gap: 0.75rem;
     margin-bottom: v.$spacing-xl;
-
-    @media (min-width: 640px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
 
     @include v.desktop {
       gap: v.$spacing-md;

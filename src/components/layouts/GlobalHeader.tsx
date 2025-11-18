@@ -12,86 +12,80 @@ import TypoLogo from "../ui/logo/TypoLogo";
 
 gsap.registerPlugin(ScrollToPlugin);
 
-
-const VH_THRESHOLD = 5; // 5vh
-const VH_ALWAYS_VISIBLE = 50; // 50vh
+const SCROLL_THRESHOLD = 10;
 
 export default function GlobalHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const activePrimary = useAtomValue(activeMenuAtom);
   const setContactModalOpen = useSetAtom(contactModalOpenAtom);
-  // SCROLL UI
   const [isHidden, setIsHidden] = useState(false);
   const lastScrollY = useRef(0);
+  const ticking = useRef(false);
 
-
-  const handleMenuClick =  (link: string) => (e: MouseEvent)=> {
-     e.preventDefault();
+  const handleMenuClick = (link: string) => (e: MouseEvent) => {
+    e.preventDefault();
     if (!window) return;
     window.location.href = `${window.location.origin}/${link}`;
     setIsMenuOpen(false);
-  }
+  };
 
   const handleContactClick = (e: MouseEvent) => {
     e.preventDefault();
     setContactModalOpen(true);
     setIsMenuOpen(false);
-  }
+  };
 
   useEffect(() => {
-    if(pathname.length > 1) { // HOME 만 스크롤 이벤트 적용
+    if (pathname.length > 1) {
       return;
     }
 
-    const THRESHOLD_PX = (window.innerHeight * VH_THRESHOLD) / 100;
-    const ALWAYS_VISIBLE_PX = (window.innerHeight * VH_ALWAYS_VISIBLE) / 100;
-
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const isScrollingDown = currentScrollY > lastScrollY.current;
+      if (!ticking.current) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          const scrollDiff = currentScrollY - lastScrollY.current;
 
-      // 1. 0 ~ 50vh 사이에는 항상 Visible 처리 (50vh = ALWAYS_VISIBLE_PX)
-      if (currentScrollY <= ALWAYS_VISIBLE_PX) {
-        setIsHidden(false);
-      }
-      // 2. 50vh 이상 스크롤된 경우
-      else {
-        // 2-1. 위로 스크롤 시 (스크롤 방향 감지) -> 항상 Visible
-        if (!isScrollingDown) {
-          setIsHidden(false);
-        }
-        // 2-2. 아래로 스크롤 시 -> 5vh(THRESHOLD_PX) 이상 내려가면 Hidden
-        else if (currentScrollY > THRESHOLD_PX) {
-          setIsHidden(true);
-        }
-      }
+          if (Math.abs(scrollDiff) > SCROLL_THRESHOLD) {
+            if (scrollDiff > 0 && currentScrollY > 100) {
+              setIsHidden(true);
+            } else {
+              setIsHidden(false);
+            }
+            lastScrollY.current = currentScrollY;
+          }
 
-      lastScrollY.current = currentScrollY;
+          ticking.current = false;
+        });
+        ticking.current = true;
+      }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [pathname]);
 
   return (
-    <nav className="header" style={{
-      'visibility': isHidden? 'hidden' : 'visible'
-    }}>
+    <nav
+      className="header"
+      style={{
+        transform: isHidden ? "translateY(-100%)" : "translateY(0)",
+        transition: "transform 0.3s ease-in-out",
+      }}
+    >
       <div className="header__container">
-        {/* Logo */}
         <Link href="/" className="header__logo">
           <TypoLogo />
         </Link>
 
-        {/* Desktop Menu */}
         <div className="header__menu">
           <button
             type="button"
-            onClick={ handleMenuClick('#service')}
+            onClick={handleMenuClick("#service")}
             className={`header__link ${
               activePrimary === "service" ? "header__link--active" : ""
             }`}
@@ -100,7 +94,7 @@ export default function GlobalHeader() {
           </button>
           <button
             type="button"
-            onClick={ handleMenuClick('#solution')}
+            onClick={handleMenuClick("#solution")}
             className={`header__link ${
               activePrimary === "solution" ? "header__link--active" : ""
             }`}
@@ -109,7 +103,7 @@ export default function GlobalHeader() {
           </button>
           <button
             type="button"
-            onClick={ handleMenuClick('news')}
+            onClick={handleMenuClick("news")}
             className={`header__link ${
               pathname === "/news" ? "header__link--active" : ""
             }`}
@@ -118,7 +112,6 @@ export default function GlobalHeader() {
           </button>
         </div>
 
-        {/* CTA Button */}
         <div className="header__cta">
           <button
             className="btn btn--primary btn--md"
@@ -128,7 +121,6 @@ export default function GlobalHeader() {
           </button>
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           className="header__hamburger"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -150,31 +142,34 @@ export default function GlobalHeader() {
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="header__mobile">
           <button
             type="button"
-            onClick={ handleMenuClick('#service')}
+            onClick={handleMenuClick("#service")}
             className="header__mobile-link"
           >
             물류 서비스
           </button>
           <button
             type="button"
-            onClick={ handleMenuClick('#solution')}
+            onClick={handleMenuClick("#solution")}
             className="header__mobile-link"
           >
             IT 솔루션
           </button>
           <button
             type="button"
-            onClick={ handleMenuClick('news')}
+            onClick={handleMenuClick("news")}
             className="header__mobile-link"
           >
             소식
           </button>
-          <button type="button" onClick={handleContactClick} className="btn btn--primary btn--md btn--full">
+          <button
+            type="button"
+            onClick={handleContactClick}
+            className="btn btn--primary btn--md btn--full"
+          >
             견적 문의
           </button>
         </div>

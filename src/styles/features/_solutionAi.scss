@@ -1,48 +1,6 @@
 @use "../cofigs/vars" as v;
 
 .solution-ai {
-  background: v.$background-light;
-  min-height: 100vh;
-  padding: v.$spacing-2xl v.$spacing-lg;
-
-  .s-section__animation {
-    max-width: 1040px;
-    margin: 0 auto;
-  }
-
-  .s-section__header {
-    text-align: center;
-    margin-bottom: v.$spacing-xl;
-  }
-
-  %section-text {
-    color: v.$primary;
-    font-size: v.$font-sm;
-    font-weight: v.$weight-semibold;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: v.$spacing-sm;
-  }
-
-  .s-section__subtitle { @extend %section-text; }
-
-  .s-section__title {
-    color: v.$foreground-light;
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: v.$spacing-md;
-    @include v.desktop { font-size: 2.5rem; }
-  }
-
-  .s-section__description {
-    color: v.$muted-foreground-light;
-    font-size: 1rem;
-    line-height: 1.6;
-    max-width: 700px;
-    margin: 0 auto v.$spacing-2xl * 2;
-    text-align: center;
-  }
 
   .ai-features {
     display: flex;

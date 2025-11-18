@@ -1,12 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-interface StickySectionMenuOptions {
-  sectionSelector: string;
-  idAttribute: string;
-  menuGroups?: { id: string; sectionIds: string[] }[];
-  excludeId?: string;
-}
-
 interface SectionObserverOptions {
   sectionSelector: string;
   idAttribute: string;
@@ -14,131 +7,28 @@ interface SectionObserverOptions {
   excludeId?: string;
   onComeIn?: (menuId: string) => void;
   onGoOut?: () => void;
+  firstSectionRef: React.RefObject<HTMLDivElement | null>;
+  lastSectionRef: React.RefObject<HTMLDivElement|null>;
 }
 
-/**
- * @deprecated useSectionObserver를 사용하세요
- */
-export function useStickySectionMenu<T extends HTMLElement>(
-  containerRef: React.RefObject<T>,
-  options: StickySectionMenuOptions
-) {
-  const [showMenu, setShowMenu] = useState(false);
-  const [activeMenuId, setActiveMenuId] = useState<string>("");
-  const sectionRefs = useRef<HTMLElement[]>([]);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    sectionRefs.current = Array.from(
-      container.querySelectorAll<HTMLElement>(options.sectionSelector)
-    );
-
-    // IntersectionObserver로 메뉴 노출 제어
-    const observer = new window.IntersectionObserver(
-      ([entry]) => {
-        setShowMenu(entry.isIntersecting);
-      },
-      {
-        root: null,
-        threshold: 0.1,
-      }
-    );
-    observer.observe(container);
-
-    // 메뉴 그룹 매핑
-    const sectionIdToMenuId = options.menuGroups
-      ? Object.fromEntries(
-          options.menuGroups.flatMap((g) =>
-            g.sectionIds.map((sid) => [sid, g.id])
-          )
-        )
-      : undefined;
-
-    const getScrollY = () => window.scrollY || window.pageYOffset || 0;
-    const findActiveSection = () => {
-      const viewportCenter = getScrollY() + window.innerHeight / 2;
-      let bestId: string | undefined = undefined;
-      let bestDist = Number.POSITIVE_INFINITY;
-      sectionRefs.current.forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        const top = rect.top + getScrollY();
-        const middle = top + rect.height / 2;
-        const dist = Math.abs(middle - viewportCenter);
-        if (dist < bestDist) {
-          bestDist = dist;
-          bestId = el.getAttribute(options.idAttribute) || bestId;
-        }
-      });
-      return bestId;
-    };
-
-    const handleScroll = () => {
-      if (showMenu) {
-        const id = findActiveSection();
-        if (id && id !== options.excludeId) {
-          if (sectionIdToMenuId) {
-            setActiveMenuId(sectionIdToMenuId[id] || id);
-          } else {
-            setActiveMenuId(id);
-          }
-        }
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
-    handleScroll();
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options.menuGroups, options.excludeId, showMenu]);
-
-  return { showMenu, activeMenuId, sectionRefs };
-}
-
-/**
- * 섹션 진입/이탈 감지 및 스크롤 위치 추적 hook
- * IntersectionObserver와 스크롤 이벤트를 사용하여 섹션 감지
- */
-export function useSectionObserver<T extends HTMLElement>(
-  containerRef: React.RefObject<T>,
-  options: SectionObserverOptions
-) {
+export function useSectionObserver(options: SectionObserverOptions) {
   const [showMenu, setShowMenu] = useState(false);
   const [activeMenuId, setActiveMenuId] = useState<string>("");
   const sectionRefs = useRef<HTMLElement[]>([]);
   const lastActiveMenuIdRef = useRef<string | null>(null);
 
+  /**
+   * 메뉴 노출 여부 & 섹션 하이라이트
+   */
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
     sectionRefs.current = Array.from(
-      container.querySelectorAll<HTMLElement>(options.sectionSelector)
+      document.querySelectorAll<HTMLElement>(options.sectionSelector)
     );
 
-    // IntersectionObserver로 메뉴 노출 제어
-    const observer = new window.IntersectionObserver(
-      ([entry]) => {
-        const isIntersecting = entry.isIntersecting;
-        setShowMenu(isIntersecting);
+    const firstEl = options.firstSectionRef.current;
+    const lastEl = options.lastSectionRef.current;
+    if (!firstEl || !lastEl) return;
 
-        if (!isIntersecting && lastActiveMenuIdRef.current) {
-          // 섹션 이탈
-          options.onGoOut?.();
-          lastActiveMenuIdRef.current = null;
-        }
-      },
-      {
-        root: null,
-        threshold: 0.1,
-      }
-    );
-    observer.observe(container);
-
-    // 메뉴 그룹 매핑
     const sectionIdToMenuId = options.menuGroups
       ? Object.fromEntries(
           options.menuGroups.flatMap((g) =>
@@ -147,16 +37,19 @@ export function useSectionObserver<T extends HTMLElement>(
         )
       : undefined;
 
-    const getScrollY = () => window.scrollY || window.pageYOffset || 0;
+    const getScrollY = () => window.scrollY || window.pageYOffset;
+
     const findActiveSection = () => {
       const viewportCenter = getScrollY() + window.innerHeight / 2;
-      let bestId: string | undefined = undefined;
-      let bestDist = Number.POSITIVE_INFINITY;
+      let bestId: string | undefined;
+      let bestDist = Infinity;
+
       sectionRefs.current.forEach((el) => {
         const rect = el.getBoundingClientRect();
         const top = rect.top + getScrollY();
         const middle = top + rect.height / 2;
         const dist = Math.abs(middle - viewportCenter);
+
         if (dist < bestDist) {
           bestDist = dist;
           bestId = el.getAttribute(options.idAttribute) || bestId;
@@ -166,30 +59,54 @@ export function useSectionObserver<T extends HTMLElement>(
     };
 
     const handleScroll = () => {
-      if (showMenu) {
+      const scrollY = getScrollY();
+      
+      // 첫 섹션 50% 지점 계산
+      const firstRect = firstEl.getBoundingClientRect();
+      const firstTop = firstRect.top + scrollY;
+      const first50PercentY = firstTop + firstRect.height * 0.5;
+      
+      // 마지막 섹션 50% 지점 계산
+      const lastRect = lastEl.getBoundingClientRect();
+      const lastTop = lastRect.top + scrollY;
+      const last50PercentY = lastTop + lastRect.height * 0.5;
+      
+      // 현재 스크롤 위치가 첫 섹션 50%와 마지막 섹션 50% 사이에 있는지 확인
+      const viewportTop = scrollY;
+      const shouldShowMenu = viewportTop >= first50PercentY && viewportTop < last50PercentY;
+      
+      if (shouldShowMenu !== showMenu) {
+        setShowMenu(shouldShowMenu);
+        if (shouldShowMenu) {
+          options.onComeIn?.("service");
+        } else {
+          options.onGoOut?.();
+        }
+      }
+
+      // 활성 섹션 하이라이트
+      if (shouldShowMenu) {
         const id = findActiveSection();
         if (id && id !== options.excludeId) {
           const menuId = sectionIdToMenuId ? sectionIdToMenuId[id] || id : id;
-          setActiveMenuId(menuId);
-
-          // 메뉴 진입 감지
-          if (lastActiveMenuIdRef.current !== menuId) {
-            options.onComeIn?.(menuId);
+          
+          if (activeMenuId !== menuId) {
+            setActiveMenuId(menuId);
             lastActiveMenuIdRef.current = menuId;
           }
         }
       }
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleScroll);
     handleScroll();
+
     return () => {
-      observer.disconnect();
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [options.menuGroups, options.excludeId, showMenu]);
+  }, [showMenu, activeMenuId, options.sectionSelector, options.idAttribute, options.excludeId, options.menuGroups]);
 
   return { showMenu, activeMenuId, sectionRefs };
 }

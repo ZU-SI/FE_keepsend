@@ -30,6 +30,8 @@
   .s-section__content {
     position: relative;
     z-index: 13;
+    word-break: keep-all;
+    white-space: pre-wrap;
   }
 
   .s-section__animation {

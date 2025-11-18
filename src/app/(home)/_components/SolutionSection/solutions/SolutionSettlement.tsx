@@ -48,20 +48,18 @@ export default function SolutionSettlement({ id, index }: Props) {
 
   return (
     <div className="s-section__content">
-      <div className="s-section__animation">
         <div className="s-section__header">
           <div className="s-section__title-group">
             <h3 className="s-section__subtitle">정산 솔루션</h3>
             <h2 className="s-section__title">
               복잡한 물류 정산 대행 솔루션 'ULMA'
             </h2>
+            <p className="s-section__description">
+              ULMA는 물류 플랫폼과 기업 간 거래 데이터를 자동으로 집계, 정산하는 B2B 특화 정산 솔루션입니다.<br />
+              정확한 데이터 기반으로 정산 오류를 최소화하고, 시간과 비용을 절감하는 지능형 정산 환경을 제공합니다.
+            </p>
           </div>
         </div>
-        <p className="s-section__description">
-          ULMA는 물류 플랫폼과 기업 간 거래 데이터를 자동으로 집계, 정산하는 B2B 특화 정산 솔루션입니다.<br />
-          정확한 데이터 기반으로 정산 오류를 최소화하고, 시간과 비용을 절감하는 지능형 정산 환경을 제공합니다.
-        </p>
-
         <div className="stm-container">
           <div className="stm-slider">
             <Swiper
@@ -116,7 +114,6 @@ export default function SolutionSettlement({ id, index }: Props) {
             ))}
           </div>
         </div>
-      </div>
     </div>
   );
 }

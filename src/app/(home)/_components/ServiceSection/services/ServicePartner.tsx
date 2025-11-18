@@ -34,9 +34,13 @@ const ServicePartner: React.FC<Props> = ({ id, index }) => {
   ];
 
   return (
-      <div className="service-partner__container">
+      <div className="s-section__content">
         <div className="service-partner__intro">
-          <h2 className="service-partner__headline">효율적인 인력 배치와 차량 운용으로 신속하고 정밀한 물류 서비스를 제공합니다.</h2>
+          <div className="s-section__header">
+              <h2 className="s-section__title">
+                효율적인 인력 배치와 차량 운용으로 신속하고 정밀한 물류 서비스를 제공합니다.
+              </h2>
+          </div>
           <div className="service-partner__stats">
             {stats.map((stat, idx) => (
               <div className="service-partner__stat-item" key={idx}>
@@ -51,14 +55,16 @@ const ServicePartner: React.FC<Props> = ({ id, index }) => {
             ))}
           </div>
         </div>
-
         <div className="service-partner__content">
-          <div className="service-partner__header">
-            <span className="service-partner__subtitle">주요 고객사</span>
-            <h3 className="service-partner__title">B2B 시장을 잇는 파트너십</h3>
-            <p className="service-partner__description">산업과 플랫폼을 이어주는 기업! 비즈니스의 성장을 이끕니다.</p>
+          <div className="s-section__header">
+              <h3 className="s-section__subtitle">주요 고객사</h3>
+              <h2 className="s-section__title">
+                B2B 시장을 잇는 파트너십
+              </h2>
+              <p className="s-section__description">
+                신뢰와 결과로 이어진 협력의 기록! 비즈니스 이상의 관계를 이어갑니다.
+              </p>
           </div>
-
           <div className="service-partner__showcase">
             <div className="service-partner__partner-column">
               <div className="service-partner__partner-card">
@@ -74,24 +80,6 @@ const ServicePartner: React.FC<Props> = ({ id, index }) => {
                 <p className="service-partner__partner-desc">{partners[0].description}</p>
               </div>
             </div>
-
-            <div className="service-partner__main-image">
-              <div className="service-partner__experience-badge">
-                <span>10+ Years of Experience</span>
-              </div>
-              <Image
-                src="/images/business-meeting.jpg"
-                alt="Business partners in meeting"
-                width={800}
-                height={300}
-                layout="responsive"
-              />
-              <div className="service-partner__growth-badge">
-                <h4>Growth-Driven</h4>
-                <p>KPI-focused for real growth.</p>
-              </div>
-            </div>
-
             <div className="service-partner__partner-column">
               <div className="service-partner__partner-card">
                 <div className="service-partner__partner-logo">

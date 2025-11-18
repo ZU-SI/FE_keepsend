@@ -8,19 +8,6 @@
 }
 
 .service-cs {
-  background: v.$background-light;
-  min-height: 100vh;
-  padding: v.$spacing-2xl v.$spacing-lg;
-
-  .s-section__animation {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .s-section__header {
-    text-align: center;
-    margin-bottom: v.$spacing-xl;
-  }
 
   .cs-cards {
     display: grid;
@@ -32,13 +19,20 @@
   }
 
   .cs-card {
+    position: relative;
     background: v.$card-light;
-    padding: v.$spacing-2xl;
+    padding: v.$spacing-md v.$spacing-xl;
     border-radius: v.$radius-xl;
     border: 1px solid v.$border-light;
     position: relative;
     overflow: hidden;
     transition: all v.$transition-default;
+    padding-left: 100px;
+    padding-top: 80px;
+
+    @include v.desktop {
+      padding: v.$spacing-2xl;
+    }
 
     &::before {
       content: '';
@@ -80,10 +74,20 @@
 
     &__icon {
       @extend %card-content;
+      position: absolute !important;
+      top: calc(50% - 50px);
+      left: v.$spacing-xl;
       font-size: 3rem;
       margin-bottom: v.$spacing-lg;
       display: inline-block;
       transition: transform v.$transition-default;
+
+      @include v.desktop {
+        position: relative !important;
+        top: 0;
+        left: 0;
+      }
+
     }
 
     &__title {
@@ -108,6 +112,9 @@
       display: flex;
       flex-wrap: wrap;
       gap: v.$spacing-sm;
+      position: absolute !important;
+      top: v.$spacing-2xl;
+      right: v.$spacing-2xl;
     }
 
     &__tag {

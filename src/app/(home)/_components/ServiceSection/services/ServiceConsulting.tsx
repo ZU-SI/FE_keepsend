@@ -33,20 +33,17 @@ const consultingServices = [
 export default function ServiceConsulting({ id, index }: Props) {
   return (
     <div className="s-section__content">
-      <div className="s-section__animation">
         <div className="s-section__header">
-          <div className="s-section__title-group">
             <h3 className="s-section__subtitle">하이퍼(Hyper) 물류 컨설팅</h3>
             <h2 className="s-section__title">
               비즈니스 확장의 시작, 최적화된 물류 전략으로 완성
             </h2>
-          </div>
+            <p className="s-section__description">
+              운영 효율을 극대화하고, 데이터 분석과 현장 진단을 기반으로,
+              <br />
+              비용 절감·운영 최적화·확장성 강화를 실현합니다.
+            </p>
         </div>
-        <p className="s-section__description">
-          운영 효율을 극대화하고, 데이터 분석과 현장 진단을 기반으로,
-          <br />
-          비용 절감·운영 최적화·확장성 강화를 실현합니다.
-        </p>
         <div className="cs-cards">
           {consultingServices.map((service, idx) => (
             <div key={idx} className="cs-card">
@@ -63,7 +60,6 @@ export default function ServiceConsulting({ id, index }: Props) {
             </div>
           ))}
         </div>
-      </div>
     </div>
   );
 }

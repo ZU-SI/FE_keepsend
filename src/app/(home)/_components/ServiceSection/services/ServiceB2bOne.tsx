@@ -183,7 +183,6 @@ export default function ServiceB2bOne({
     <section className="s-section__content" ref={sectionRef} id={id}>
         {/* Header */}
         <div className="s-section__header">
-          <div className="s-section__title-group">
             <h3 className="s-section__subtitle">물류 사업의 고충 및 문제점</h3>
             <h2 className="s-section__title">
               B2B 3PL 번거롭고 어려우신가요?
@@ -191,7 +190,6 @@ export default function ServiceB2bOne({
             <p className="s-section__description">
               여러가지 고충으로 지체되는 사업 확장의 목표를 KEEPSEND가 해결하고 성공까지 함께합니다.
             </p>
-          </div>
         </div>
         {/* Main Content Grid */}
         <div className="service-problem__main-grid">

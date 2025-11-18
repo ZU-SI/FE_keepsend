@@ -14,7 +14,9 @@ interface ProcessStep {
 const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
   const [visibleSteps, setVisibleSteps] = useState<number[]>([]);
   const [visibleLines, setVisibleLines] = useState<number[]>([]);
+  const [isDesktop, setIsDesktop] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const processSteps: ProcessStep[] = [
     {
@@ -59,18 +61,32 @@ const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
     }
   ];
 
-  // 화면에 보이는지 감지하는 함수
+  // 화면 크기 감지
   useEffect(() => {
+    const checkDesktop = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
+
+  // 데스크탑: 섹션 진입 시 자동 순차 애니메이션
+  useEffect(() => {
+    if (!isDesktop) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          startAnimation();
+          startAutoAnimation();
         }
       },
       {
         root: null,
         rootMargin: '0px',
-        threshold: 0.2, // 20% 이상 보이면 애니메이션 시작
+        threshold: 0.2,
       }
     );
 
@@ -83,11 +99,59 @@ const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
         observer.unobserve(sectionRef.current);
       }
     };
-  }, []);
+  }, [isDesktop]);
 
-  // 애니메이션 시작 함수
-  const startAnimation = () => {
-    // 각 단계를 순차적으로 보이게 함
+  // 모바일/태블릿: 각 스텝별 스크롤 기반 애니메이션
+  useEffect(() => {
+    if (isDesktop) return;
+
+    const observers: IntersectionObserver[] = [];
+
+    stepRefs.current.forEach((stepRef, idx) => {
+      if (!stepRef) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            const stepId = processSteps[idx].id;
+            setVisibleSteps((prev) => {
+              if (!prev.includes(stepId)) {
+                return [...prev, stepId];
+              }
+              return prev;
+            });
+
+            // 라인 애니메이션 (마지막 단계는 라인이 없음)
+            if (idx < processSteps.length - 1) {
+              setTimeout(() => {
+                setVisibleLines((prev) => {
+                  if (!prev.includes(stepId)) {
+                    return [...prev, stepId];
+                  }
+                  return prev;
+                });
+              }, 300);
+            }
+          }
+        },
+        {
+          root: null,
+          rootMargin: '0px',
+          threshold: 0.3,
+        }
+      );
+
+      observer.observe(stepRef);
+      observers.push(observer);
+    });
+
+    return () => {
+      observers.forEach(observer => observer.disconnect());
+    };
+  }, [isDesktop]);
+
+  // 데스크탑 자동 애니메이션 시작 함수
+  const startAutoAnimation = () => {
     processSteps.forEach((step, idx) => {
       setTimeout(() => {
         setVisibleSteps((prev) => [...prev, step.id]);
@@ -96,9 +160,9 @@ const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
         if (idx < processSteps.length - 1) {
           setTimeout(() => {
             setVisibleLines((prev) => [...prev, step.id]);
-          }, 300); // 각 단계가 나타난 후 300ms 후에 라인 표시
+          }, 300);
         }
-      }, idx * 600); // 각 단계마다 600ms 간격
+      }, idx * 600);
     });
   };
 
@@ -114,6 +178,7 @@ const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
             {processSteps.slice(0, 4).map((step, idx) => (
               <React.Fragment key={step.id}>
                 <div
+                  ref={(el) => stepRefs.current[idx] = el}
                   className={`service-process__step ${visibleSteps.includes(step.id) ? 'visible' : ''}`}
                 >
                   <div className="service-process__step-img">
@@ -152,34 +217,38 @@ const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
           </div>
 
           <div className="service-process__row service-process__row--second">
-            {processSteps.slice(4, 8).reverse().map((step, idx) => (
-              <React.Fragment key={step.id}>
-                <div
-                  className={`service-process__step ${visibleSteps.includes(step.id) ? 'visible' : ''}`}
-                >
-                  <div className="service-process__step-img">
-                    img
-                  <span className="service-process__step-num">
-                    {step.id}
-                  </span>
-                  </div>
-                  <div className="service-process__step-content">
-                    <h3 className="service-process__step-title">{step.title}</h3>
-                    <p className="service-process__step-description">{step.description}</p>
-                  </div>
-                </div>
-                {idx < 3 && (
+            {processSteps.slice(4, 8).reverse().map((step, idx) => {
+              const originalIdx = processSteps.findIndex(s => s.id === step.id);
+              return (
+                <React.Fragment key={step.id}>
                   <div
-                    className={`service-process__line service-process__line--horizontal service-process__line--reverse ${visibleLines.includes(step.id) ? 'visible' : ''}`}
+                    ref={(el) => stepRefs.current[originalIdx] = el}
+                    className={`service-process__step ${visibleSteps.includes(step.id) ? 'visible' : ''}`}
                   >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M19 12H5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <path d="M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    <div className="service-process__step-img">
+                      img
+                    <span className="service-process__step-num">
+                      {step.id}
+                    </span>
+                    </div>
+                    <div className="service-process__step-content">
+                      <h3 className="service-process__step-title">{step.title}</h3>
+                      <p className="service-process__step-description">{step.description}</p>
+                    </div>
                   </div>
-                )}
-              </React.Fragment>
-            ))}
+                  {idx < 3 && (
+                    <div
+                      className={`service-process__line service-process__line--horizontal service-process__line--reverse ${visibleLines.includes(step.id) ? 'visible' : ''}`}
+                    >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 12H5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                  )}
+                </React.Fragment>
+              );
+            })}
           </div>
         </div>
     </section>

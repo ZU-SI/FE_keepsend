@@ -1,7 +1,6 @@
 "use client";
 
 import { Fragment } from "react";
-import { AIBrainSVG, CircuitrySVG, LayeredStructureSVG } from "./svg";
 
 interface Banner {
   id: number;
@@ -45,7 +44,6 @@ interface BannerSectionProps {
 }
 
 export default function BannerSection({ startIdx = 0 }: BannerSectionProps) {
-  const svgComponents = [AIBrainSVG, LayeredStructureSVG, CircuitrySVG];
 
   return (
     <Fragment>

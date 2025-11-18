@@ -1,37 +1,37 @@
 /* ============================================
-   COLORS
+   SCSS Variables & Configuration
    ============================================ */
+
 // Dark theme colors
-$background: #0a0f1a;              // Dark background
-$foreground: #ffffff;              // Dark theme text
+$background: #0a0f1a;
+$foreground: #ffffff;
 
 // Light theme colors
-$background-light: #f8fafc;        // Light section background
-$foreground-light: #0f172a;        // Light section text
+$background-light: #f8fafc;
+$foreground-light: #0f172a;
 
 // Card colors
-$card: #111827;                    // Dark card
+$card: #111827;
 $card-foreground: #ffffff;
-$card-light: #ffffff;              // Light card (NOT pure white, but close)
+$card-light: #ffffff;
 $card-light-foreground: #0f172a;
 
 $popover: #111827;
 $popover-foreground: #ffffff;
 
-// Primary colors
+// Primary & Secondary colors
 $primary: #3b82f6;
 $primary-foreground: #ffffff;
 $primary-hover: #2563eb;
 
-// Secondary colors
 $secondary: #1e3a8a;
 $secondary-foreground: #ffffff;
 
 // Muted colors
-$muted: #1e293b;                   // Dark muted
+$muted: #1e293b;
 $muted-foreground: #94a3b8;
-$muted-light: #f1f5f9;             // Light muted background
-$muted-foreground-light: #64748b;  // Light muted text
+$muted-light: #f1f5f9;
+$muted-foreground-light: #64748b;
 
 // Accent colors
 $accent: #06b6d4;
@@ -42,20 +42,20 @@ $destructive: #ef4444;
 $destructive-foreground: #ffffff;
 
 // Borders
-$border: #1e293b;                  // Dark border
-$border-light: #e2e8f0;            // Light border
+$border: #1e293b;
+$border-light: #e2e8f0;
 
 // Input
-$input: #334155;                   // Dark input (더 밝게 조정)
+$input: #334155;
 
 // Ring (focus)
 $ring: #3b82f6;
 
 // Base colors
 $black: #000000;
-$white: #fafafa;                   // Off-white (NOT pure #fff)
+$white: #fafafa;
 
-// Gray scale (comprehensive)
+// Gray scale
 $gray-50: #f8fafc;
 $gray-100: #f1f5f9;
 $gray-200: #e2e8f0;
@@ -73,7 +73,7 @@ $cyan-500: #06b6d4;
 $cyan-600: #0891b2;
 
 // Purple colors
-$purple-50: #faf5ff;               // Light purple background
+$purple-50: #faf5ff;
 $purple-100: #f3e8ff;
 $purple-500: #8b5cf6;
 $purple-600: #7c3aed;
@@ -83,38 +83,36 @@ $gradient-cyan: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
 $gradient-light: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
 
 /* ============================================
-   BORDER
+   BORDER RADIUS
    ============================================ */
 $radius: 0.625rem;
 $radius-sm: calc($radius - 4px);
 $radius-md: calc($radius - 2px);
 $radius-lg: $radius;
 $radius-xl: calc($radius + 4px);
-
 $border-radius-full: 9999px;
 
 /* ============================================
-   FONTS
+   TYPOGRAPHY
    ============================================ */
-$font-sans: 'suite', 'suit', 'rajdhani',  -apple-system, BlinkMacSystemFont,
-  "Segoe UI", Roboto, sans-serif;
+$font-sans: 'suite', 'suit', 'rajdhani', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 $font-mono: "Geist Mono", "Geist Mono Fallback", "Courier New", monospace;
-$font-xs: 0.75rem;   // 12px
-$font-sm: 0.875rem;  // 14px
-$font-md: 1rem;      // 16px (기본 텍스트)
-$font-lg: 1.125rem;  // 18px
-$font-xl: 1.25rem;   // 20px
-$font-2xl: 1.5rem;   // 24px
-$font-3xl: 1.875rem; // 30px
-$font-4xl: 2.25rem;  // 36px
-$font-5xl: 3rem;     // 48px
+
+$font-xs: 0.75rem;
+$font-sm: 0.875rem;
+$font-md: 1rem;
+$font-lg: 1.125rem;
+$font-xl: 1.25rem;
+$font-2xl: 1.5rem;
+$font-3xl: 1.875rem;
+$font-4xl: 2.25rem;
+$font-5xl: 3rem;
 
 $weight-light: 300;
 $weight-regular: 400;
 $weight-medium: 500;
 $weight-semibold: 600;
 $weight-bold: 700;
-
 
 /* ============================================
    SPACING
@@ -129,7 +127,7 @@ $spacing-3xl: 2.25rem;
 $spacing-4xl: 2.5rem;
 
 /* ============================================
-   TRANSITION
+   TRANSITIONS & ANIMATIONS
    ============================================ */
 $transition-default: 0.3s ease;
 
@@ -144,11 +142,26 @@ $breakpoint-md: 768px;
 $z-navigation: 50;
 
 /* ============================================
-   Mixins
+   MIXINS
    ============================================ */
-
 @mixin desktop {
   @media (min-width: $breakpoint-md) {
     @content;
   }
+}
+
+@mixin card-hover {
+  transition: all $transition-default;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@mixin gradient-text {
+  background: $gradient-cyan;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
 }

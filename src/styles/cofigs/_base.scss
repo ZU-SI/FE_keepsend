@@ -1,9 +1,8 @@
 @use "./vars" as v;
 
 /* ============================================
-   Reset
+   RESET & BASE STYLES
    ============================================ */
-
 * {
   margin: 0;
   padding: 0;
@@ -26,41 +25,41 @@ body {
   min-height: 100vh;
 }
 
-/* ============================================
-   Scroll Snap Utilities
-   ============================================ */
+button, a {
+  font-family: 'suite';
+  letter-spacing: 1px;
+  line-height: 1;
+  cursor: pointer;
+  outline: none;
+  background: inherit;
+  border: 0;
+  width: fit-content;
+  height: fit-content;
+}
 
+/* ============================================
+   SCROLL UTILITIES
+   ============================================ */
 .snap-section {
   scroll-snap-align: start;
   scroll-snap-stop: always;
 }
 
 /* ============================================
-   Gradient & Glow Effects
+   GRADIENT & VISUAL EFFECTS
    ============================================ */
-
 .gradient-text {
-  background: v.$gradient-cyan;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
+  @include v.gradient-text;
 }
 
 .glow {
-  &-blue {
-    box-shadow: 0 0 30px rgba(v.$accent, 0.3);
-  }
-
-  &-accent {
-    box-shadow: 0 0 20px rgba(v.$accent, 0.2);
-  }
+  &-blue { box-shadow: 0 0 30px rgba(v.$accent, 0.3); }
+  &-accent { box-shadow: 0 0 20px rgba(v.$accent, 0.2); }
 }
 
 /* ============================================
-   Animations
+   ANIMATIONS
    ============================================ */
-
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -79,77 +78,32 @@ body {
 }
 
 /* ============================================
-   Utility Classes for Common Patterns
+   UTILITY CLASSES
    ============================================ */
-
 .bg {
-  &-background {
-    background-color: v.$background;
-  }
-  &-card {
-    background-color: v.$card;
-  }
-  &-primary {
-    background-color: v.$primary;
-  }
-  &-secondary {
-    background-color: v.$secondary;
-  }
-  &-accent {
-    background-color: v.$accent;
-  }
-  &-muted {
-    background-color: v.$muted;
-  }
+  &-background { background-color: v.$background; }
+  &-card { background-color: v.$card; }
+  &-primary { background-color: v.$primary; }
+  &-secondary { background-color: v.$secondary; }
+  &-accent { background-color: v.$accent; }
+  &-muted { background-color: v.$muted; }
 }
 
 .text {
-  &-foreground {
-    color: v.$foreground;
-  }
-  &-muted {
-    color: v.$muted-foreground;
-  }
-  &-primary {
-    color: v.$primary;
-  }
-  &-accent {
-    color: v.$accent;
-  }
+  &-foreground { color: v.$foreground; }
+  &-muted { color: v.$muted-foreground; }
+  &-primary { color: v.$primary; }
+  &-accent { color: v.$accent; }
 }
 
 .border {
   border: 1px solid v.$border;
-
-  &-border {
-    border-color: v.$border;
-  }
+  &-border { border-color: v.$border; }
 }
 
 .rounded {
-  &-sm {
-    border-radius: v.$radius-sm;
-  }
-  &-md {
-    border-radius: v.$radius-md;
-  }
-  &-lg {
-    border-radius: v.$radius-lg;
-  }
-  &-xl {
-    border-radius: v.$radius-xl;
-  }
-}
-
-button,
-a {
-  font-family: 'suite';
-  letter-spacing: 1;
-  line-height: 1;
-  cursor: pointer;
-  outline: none;
-  background: inherit;
-  border: 0;
-  width: fit-content;
-  height: fit-content;
+  &-sm { border-radius: v.$radius-sm; }
+  &-md { border-radius: v.$radius-md; }
+  &-lg { border-radius: v.$radius-lg; }
+  &-xl { border-radius: v.$radius-xl; }
 }

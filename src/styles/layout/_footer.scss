@@ -1,25 +1,18 @@
 @use "../cofigs/vars" as v;
 
 /* ============================================
-   Footer Component (BEM)
+   FOOTER COMPONENT (BEM)
    ============================================ */
-
 .footer {
   background: linear-gradient(to bottom, #0f172a, #000000);
   border-top: 1px solid #1e293b;
 
-  /* ============================================
-     Content
-     ============================================ */
   &__content {
     max-width: 1240px;
     margin: 0 auto;
     padding: 4rem 1.25rem;
   }
 
-  /* ============================================
-     Main Section
-     ============================================ */
   &__main {
     display: flex;
     flex-direction: column;
@@ -33,15 +26,8 @@
     }
   }
 
-  /* ============================================
-     Left Section
-     ============================================ */
   &__left {
     flex-shrink: 0;
-
-    @media (min-width: 640px) {
-      flex-shrink: 0;
-    }
   }
 
   &__logo {
@@ -52,11 +38,7 @@
   }
 
   &__logo-text {
-    background: linear-gradient(135deg, #0ea5e9 0%, #60a5fa 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
+    @include v.gradient-text;
   }
 
   &__tagline {
@@ -77,26 +59,20 @@
     color: #000000;
     font-weight: 600;
     padding: 0.625rem 1.5rem;
-    border-radius: 9999px;
+    border-radius: v.$border-radius-full;
     border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all v.$transition-default;
     font-size: 1rem;
     margin-top: 1.5rem;
 
-    &:hover {
-      background-color: #0891b2;
-    }
-
+    &:hover { background-color: #0891b2; }
     &:focus {
       outline: 2px solid #06b6d4;
       outline-offset: 2px;
     }
   }
 
-  /* ============================================
-     Right Section
-     ============================================ */
   &__right {
     display: flex;
     flex-direction: column;
@@ -129,9 +105,6 @@
     }
   }
 
-  /* ============================================
-     Menu Links
-     ============================================ */
   &__menu {
     list-style: none;
     padding: 0;
@@ -140,26 +113,17 @@
     flex-direction: column;
     gap: 0.5rem;
 
-    &__item {
-      /* No additional styles needed */
-    }
-
     &__link {
       font-size: 0.75rem;
       color: #9ca3af;
       text-decoration: none;
-      transition: color 0.3s ease;
+      transition: color v.$transition-default;
       display: inline-block;
 
-      &:hover {
-        color: #22d3ee;
-      }
+      &:hover { color: #22d3ee; }
     }
   }
 
-  /* ============================================
-     SNS Links
-     ============================================ */
   &__sns {
     list-style: none;
     padding: 0;
@@ -168,22 +132,16 @@
     flex-direction: column;
     gap: 0.5rem;
 
-    &__item {
-      /* No additional styles needed */
-    }
-
     &__link {
       font-size: 0.75rem;
       color: #9ca3af;
       text-decoration: none;
-      transition: color 0.3s ease;
+      transition: color v.$transition-default;
       display: flex;
       align-items: center;
       gap: 0.5rem;
 
-      &:hover {
-        color: #22d3ee;
-      }
+      &:hover { color: #22d3ee; }
     }
 
     &__icon {
@@ -192,9 +150,6 @@
     }
   }
 
-  /* ============================================
-     Contact Info
-     ============================================ */
   &__contact {
     list-style: none;
     padding: 0;
@@ -208,29 +163,20 @@
       color: #9ca3af;
       margin-top: 0.75rem;
 
-      &:first-child {
-        margin-top: 0;
-      }
+      &:first-child { margin-top: 0; }
     }
 
-    &__label {
-      font-weight: 600;
-    }
+    &__label { font-weight: 600; }
 
     &__link {
       color: #9ca3af;
       text-decoration: none;
-      transition: color 0.3s ease;
+      transition: color v.$transition-default;
 
-      &:hover {
-        color: #22d3ee;
-      }
+      &:hover { color: #22d3ee; }
     }
   }
 
-  /* ============================================
-     Bottom Section
-     ============================================ */
   &__bottom {
     border-top: 1px solid #1e293b;
     padding-top: 2rem;
@@ -262,11 +208,9 @@
       font-size: 0.75rem;
       color: #6b7280;
       text-decoration: none;
-      transition: color 0.3s ease;
+      transition: color v.$transition-default;
 
-      &:hover {
-        color: #9ca3af;
-      }
+      &:hover { color: #9ca3af; }
     }
   }
 }

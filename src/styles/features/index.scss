@@ -1,8 +1,11 @@
-@import './contact';
-@import './solution';
-@import './service';
-@import './serviceLogistics';
-@import './serviceCenter';
-@import './serviceProcess';
-@import './serviceProblem';
-// @import './serviceB2bThree'
+@use './contact' as contact;
+@use './solutionIntro' as solutionIntro;
+@use './solutionStm' as solutionStm;
+@use './solutionAi' as solutionAi;
+@use './solutionLogistics' as solutionLogistics;
+@use './serviceCs' as serviceCs;
+@use './serviceLogistics' as serviceLogistics;
+@use './serviceCenter' as serviceCenter;
+@use './serviceProcess' as serviceProcess;
+@use './serviceProblem' as serviceProblem;
+@use './servicePartner' as servicePartner;

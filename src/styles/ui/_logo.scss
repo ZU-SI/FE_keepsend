@@ -1,5 +1,8 @@
 @use "../cofigs/vars" as v;
 
+/* ============================================
+   LOGO COMPONENT
+   ============================================ */
 .typo-logo {
   font-family: 'rajdhani';
   display: flex;
@@ -7,10 +10,6 @@
   letter-spacing: -1px;
   font-size: 1.75rem;
 
-  .white {
-    color: white;
-  }
-  .primary {
-    color: v.$primary;
-  }
+  .white { color: v.$white; }
+  .primary { color: v.$primary; }
 }

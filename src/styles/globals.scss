@@ -1,6 +1,5 @@
-// @use './vars' as v;
-@import './cofigs/base';
-@import "./layout/index.scss";
-@import './ui/index.scss';
-@import './sections/index.scss';
-@import './features/index.scss';
+@use './cofigs/base';
+@use './layout/index' as layout;
+@use './ui/index' as ui;
+@use './sections/index' as sections;
+@use './features/index' as features;

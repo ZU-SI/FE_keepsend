@@ -1,9 +1,13 @@
 "use client";
 
+import { useSetAtom } from "jotai";
+import { contactModalOpenAtom } from "@/store/contact.store";
+
 export default function GlobalFooter() {
+  const setContactModalOpen = useSetAtom(contactModalOpenAtom);
+  
   const handleContactClick = () => {
-    // Open quote request popup-same as header button
-    alert("견적 문의 팝업-추후 구현");
+    setContactModalOpen(true);
   };
 
   return (
@@ -22,7 +26,7 @@ export default function GlobalFooter() {
               혁신적인 기술과 신뢰할 수 있는 서비스로 글로벌 물류의 미래를
               만들어갑니다.
             </p>
-            <button onClick={handleContactClick} className="footer__button">
+            <button onClick={handleContactClick} className="btn btn--primary btn--md">
               문의하기
             </button>
           </div>

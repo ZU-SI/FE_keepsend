@@ -121,7 +121,7 @@ export default function GlobalHeader() {
         {/* CTA Button */}
         <div className="header__cta">
           <button
-            className="header__button"
+            className="btn btn--primary btn--md"
             onClick={handleContactClick}
           >
             견적 문의
@@ -174,7 +174,7 @@ export default function GlobalHeader() {
           >
             소식
           </button>
-          <button type="button" onClick={handleContactClick} className={`header__button header__button--mobile`}>
+          <button type="button" onClick={handleContactClick} className="btn btn--primary btn--md btn--full">
             견적 문의
           </button>
         </div>

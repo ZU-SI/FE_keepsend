@@ -1,6 +1,8 @@
 "use client";
 
 import { Fragment } from "react";
+import { useSetAtom } from "jotai";
+import { contactModalOpenAtom } from "@/store/contact.store";
 
 interface Banner {
   id: number;
@@ -44,6 +46,11 @@ interface BannerSectionProps {
 }
 
 export default function BannerSection({ startIdx = 0 }: BannerSectionProps) {
+  const setContactModalOpen = useSetAtom(contactModalOpenAtom);
+
+  const handleContactClick = () => {
+    setContactModalOpen(true);
+  };
 
   return (
     <Fragment>
@@ -75,11 +82,11 @@ export default function BannerSection({ startIdx = 0 }: BannerSectionProps) {
               { banner.onClick &&
                 <button
                 type="button"
-                className={`hero-banners__button hero-banners__button--primary`}
+                className={`btn btn--primary btn--lg`}
               >
                 자세히 보기
               </button>}
-              <button type="button" onClick={() => { }} className="hero-banners__button hero-banners__button--outline">
+              <button type="button" onClick={handleContactClick} className="btn btn--outline btn--lg">
                 문의하기
               </button>
             </div>

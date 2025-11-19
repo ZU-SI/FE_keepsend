@@ -81,6 +81,7 @@ export default function ServiceB2bThree({ id }: Props) {
           OMS, WMS, TMS를 통합한 원스톱 솔루션으로 복잡한 물류 과정을 단순화합니다.
         </p>
       </div>
+      {/* 특장점 영역 */}
 
       {/* 다이어그램 영역 */}
       <div className="logistics-diagram">

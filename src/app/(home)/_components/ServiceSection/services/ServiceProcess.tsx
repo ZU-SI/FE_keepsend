@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
+import { motion, useScroll } from 'framer-motion';
 
 interface ServiceProcessProps {
   id: string;
@@ -12,11 +13,7 @@ interface ProcessStep {
 }
 
 const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
-  const [visibleSteps, setVisibleSteps] = useState<number[]>([]);
-  const [visibleLines, setVisibleLines] = useState<number[]>([]);
-  const [isDesktop, setIsDesktop] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
-  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const containerRef = useRef<HTMLElement>(null);
 
   const processSteps: ProcessStep[] = [
     {
@@ -61,198 +58,169 @@ const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
     }
   ];
 
-  // 화면 크기 감지
-  useEffect(() => {
-    const checkDesktop = () => {
-      setIsDesktop(window.innerWidth >= 768);
-    };
-
-    checkDesktop();
-    window.addEventListener('resize', checkDesktop);
-
-    return () => window.removeEventListener('resize', checkDesktop);
-  }, []);
-
-  // 데스크탑: 섹션 진입 시 자동 순차 애니메이션
-  useEffect(() => {
-    if (!isDesktop) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          startAutoAnimation();
-        }
-      },
-      {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.2,
-      }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, [isDesktop]);
-
-  // 모바일/태블릿: 각 스텝별 스크롤 기반 애니메이션
-  useEffect(() => {
-    if (isDesktop) return;
-
-    const observers: IntersectionObserver[] = [];
-
-    stepRefs.current.forEach((stepRef, idx) => {
-      if (!stepRef) return;
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting) {
-            const stepId = processSteps[idx].id;
-            setVisibleSteps((prev) => {
-              if (!prev.includes(stepId)) {
-                return [...prev, stepId];
-              }
-              return prev;
-            });
-
-            // 라인 애니메이션 (마지막 단계는 라인이 없음)
-            if (idx < processSteps.length - 1) {
-              setTimeout(() => {
-                setVisibleLines((prev) => {
-                  if (!prev.includes(stepId)) {
-                    return [...prev, stepId];
-                  }
-                  return prev;
-                });
-              }, 300);
-            }
-          }
-        },
-        {
-          root: null,
-          rootMargin: '0px',
-          threshold: 0.3,
-        }
-      );
-
-      observer.observe(stepRef);
-      observers.push(observer);
-    });
-
-    return () => {
-      observers.forEach(observer => observer.disconnect());
-    };
-  }, [isDesktop]);
-
-  // 데스크탑 자동 애니메이션 시작 함수
-  const startAutoAnimation = () => {
-    processSteps.forEach((step, idx) => {
-      setTimeout(() => {
-        setVisibleSteps((prev) => [...prev, step.id]);
-
-        // 라인 애니메이션 (마지막 단계는 라인이 없음)
-        if (idx < processSteps.length - 1) {
-          setTimeout(() => {
-            setVisibleLines((prev) => [...prev, step.id]);
-          }, 300);
-        }
-      }, idx * 600);
-    });
-  };
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start center", "end center"],
+  });
 
   return (
-    <section className="s-section__content" id={id} ref={sectionRef}>
-        <div className="s-section__header">
-          <span className="s-section__subtitle">KEEPSEND 프로세스</span>
-          <h2 className="s-section__title">당신의 브랜드가 닿는 길, 그 안의 모든 과정</h2>
-          <p className="s-section__description">단계마다 검증된 관리 체계로, 신뢰받는 B2B 파트너십을 완성합니다.</p>
-        </div>
-        <div className="service-process__flow">
-          <div className="service-process__row service-process__row--first">
-            {processSteps.slice(0, 4).map((step, idx) => (
-              <React.Fragment key={step.id}>
-                <div
-                  ref={(el) => stepRefs.current[idx] = el}
-                  className={`service-process__step ${visibleSteps.includes(step.id) ? 'visible' : ''}`}
-                >
-                  <div className="service-process__step-img">
-                    img
-                  <span className="service-process__step-num">
-                    {step.id}
-                  </span>
-                  </div>
-                  <div className="service-process__step-content">
-                    <h3 className="service-process__step-title">{step.title}</h3>
-                    <p className="service-process__step-description">{step.description}</p>
-                  </div>
-                </div>
-                {idx < 3 && (
-                  <div
-                    className={`service-process__line service-process__line--horizontal ${visibleLines.includes(step.id) ? 'visible' : ''}`}
-                  >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <path d="M12 5L19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
+    <section
+      className="s-section__content"
+      id={id}
+      ref={containerRef}
+      style={{ position: "relative", paddingBottom: "150px" }}
+    >
+      <div className="s-section__header">
+        <span className="s-section__subtitle">KEEPSEND 프로세스</span>
+        <h2 className="s-section__title">당신의 브랜드가 닿는 길, 그 안의 모든 과정</h2>
+        <p className="s-section__description">단계마다 검증된 관리 체계로, 신뢰받는 B2B 파트너십을 완성합니다.</p>
+      </div>
 
-          {/* 수직 연결선 (위쪽) - 4에서 5로 가는 화살표 */}
-          <div
-            className={`service-process__line service-process__line--vertical service-process__line--top ${visibleLines.includes(4) ? 'visible' : ''}`}
+      <div style={{ position: "relative", maxWidth: "1200px", margin: "0 auto" }}>
+        {/* 1. 배경 라인 (회색 점선) */}
+        <div
+          style={{
+            position: "absolute", left: "50%", top: 0, bottom: 0, width: "2px",
+            background: "#e5e7eb", transform: "translateX(-50%)", zIndex: 0
+          }}
+        />
+
+        {/* 2. 진행 라인 (파란색 실선 - 스크롤에 따라 늘어남) */}
+        <motion.div
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: 0,
+            width: "4px",
+            background: "#3b82f6", // 브랜드 컬러
+            transform: "translateX(-50%)",
+            originY: 0, // 위에서부터 자라남
+            scaleY: scrollYProgress, // 스크롤에 매핑
+            height: "100%",
+            zIndex: 1,
+          }}
+        />
+
+        {/* 3. 각 단계별 아이템 */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "80px", position: "relative", zIndex: 2 }}>
+          {processSteps.map((step, idx) => (
+            <ProcessStepItem key={step.id} step={step} index={idx} />
+          ))}
+
+          {/* 4. Final Step: Keepsend 통합 솔루션 */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, margin: "-100px" }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              position: "relative",
+              marginTop: "40px"
+            }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 19V5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M5 12L12 5L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-
-          <div className="service-process__row service-process__row--second">
-            {processSteps.slice(4, 8).reverse().map((step, idx) => {
-              const originalIdx = processSteps.findIndex(s => s.id === step.id);
-              return (
-                <React.Fragment key={step.id}>
-                  <div
-                    ref={(el) => stepRefs.current[originalIdx] = el}
-                    className={`service-process__step ${visibleSteps.includes(step.id) ? 'visible' : ''}`}
-                  >
-                    <div className="service-process__step-img">
-                      img
-                    <span className="service-process__step-num">
-                      {step.id}
-                    </span>
-                    </div>
-                    <div className="service-process__step-content">
-                      <h3 className="service-process__step-title">{step.title}</h3>
-                      <p className="service-process__step-description">{step.description}</p>
-                    </div>
-                  </div>
-                  {idx < 3 && (
-                    <div
-                      className={`service-process__line service-process__line--horizontal service-process__line--reverse ${visibleLines.includes(step.id) ? 'visible' : ''}`}
-                    >
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 12H5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </div>
+            <div
+              style={{
+                width: "180px",
+                height: "180px",
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)", // Blue gradient
+                boxShadow: "0 10px 25px rgba(59, 130, 246, 0.4)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                color: "white",
+                fontWeight: "bold",
+                fontSize: "1.25rem",
+                lineHeight: "1.4",
+                zIndex: 10,
+                border: "4px solid white"
+              }}
+            >
+              keepsend
+              <br />
+              통합 솔루션
+            </div>
+          </motion.div>
         </div>
+      </div>
     </section>
   );
 };
+
+// 개별 단계 컴포넌트
+function ProcessStepItem({ step, index }: { step: ProcessStep; index: number }) {
+  // 지그재그 배치를 위한 로직 (짝수: 왼쪽 / 홀수: 오른쪽)
+  // index 0: isEven=true -> flex-end (Right side)
+  // index 1: isEven=false -> flex-start (Left side)
+  const isEven = index % 2 === 0;
+  const isRightSide = isEven;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, margin: "-100px" }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: isRightSide ? "flex-end" : "flex-start",
+        position: "relative",
+      }}
+    >
+      {/* 중앙 노드 (원형 점) */}
+      <div
+        style={{
+          position: "absolute",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "20px",
+          height: "20px",
+          background: "#fff",
+          border: "4px solid #3b82f6",
+          borderRadius: "50%",
+          zIndex: 10
+        }}
+      />
+
+      {/* 텍스트 카드 (기존 UI 컴포넌트 재사용) */}
+      <div
+        className="service-process__item-wrapper"
+        style={{
+          // Spacing from center rail
+          marginRight: isRightSide ? "0" : "80px",
+          marginLeft: isRightSide ? "80px" : "0"
+        }}
+      >
+        <div
+          className="service-process__step visible"
+          style={{
+            width: '100%',
+            // Right side: Image Left (Row)
+            // Left side: Image Right (Row Reverse)
+            flexDirection: isRightSide ? 'row' : 'row-reverse',
+            alignItems: 'center',
+            textAlign: isRightSide ? 'left' : 'right'
+          }}
+        >
+          <div className="service-process__step-img" style={{ margin: 0, flexShrink: 0 }}>
+            img
+            <span className="service-process__step-num">
+              {step.id}
+            </span>
+          </div>
+          <div className="service-process__step-content" style={{ textAlign: isRightSide ? 'left' : 'right' }}>
+            <h3 className="service-process__step-title">{step.title}</h3>
+            <p className="service-process__step-description">{step.description}</p>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export default ServiceProcess;

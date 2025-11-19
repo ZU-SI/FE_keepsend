@@ -11,14 +11,15 @@ import ServiceConsulting from "./services/ServiceConsulting";
 import ServiceIntro from "./services/ServiceIntro";
 import ServicePartner from "./services/ServicePartner";
 import ServiceProcess from "./services/ServiceProcess";
+import ServiceB2bTwo from "./services/ServiceB2bTwo";
 
 interface ServiceSectionProps {
   startIdx: number;
 }
 
 export default function ServiceSection({ startIdx }: ServiceSectionProps) {
-const firstSectionRef = useRef<HTMLDivElement>(null);
-const lastSectionRef = useRef<HTMLDivElement>(null);
+  const firstSectionRef = useRef<HTMLDivElement>(null);
+  const lastSectionRef = useRef<HTMLDivElement>(null);
 
   const setActiveMenu = useSetAtom(activeMenuAtom);
 
@@ -73,11 +74,10 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
                 <button
                   key={group.id}
                   onClick={() => handleMenuClick(group.id)}
-                  className={`s-section__menu-button ${
-                    activeMenuId === group.id
-                      ? "s-section__menu-button--active"
-                      : "s-section__menu-button--inactive"
-                  }`}
+                  className={`s-section__menu-button ${activeMenuId === group.id
+                    ? "s-section__menu-button--active"
+                    : "s-section__menu-button--inactive"
+                    }`}
                 >
                   {group.titleKo}
                 </button>
@@ -97,7 +97,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         ref={firstSectionRef}
         id="service-intro"
       >
-        <ServiceIntro id="service-intro"  index={startIdx} />
+        <ServiceIntro id="service-intro" index={startIdx} />
       </div>
       {/* B2B section 1 */}
       <div
@@ -105,7 +105,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-section-index={startIdx + 1}
         data-service-id={"b2b-1"}
         className="s-section light service-problem"
-        // style={{ height: "100vh" }}
+      // style={{ height: "100vh" }}
       >
         <ServiceB2bOne id="b2b-1" index={startIdx + 1} />
       </div>
@@ -115,17 +115,17 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-section-index={startIdx + 2}
         data-service-id={"b2b-2"}
         className="s-section"
-        // style={{ height: "fit-content" }}
+      // style={{ height: "fit-content" }}
       >
-        {/* <ServiceB2bTwo id="b2b-2" index={startIdx + 2} /> */}
+        <ServiceB2bTwo id="b2b-2" index={startIdx + 2} />
       </div>
       {/* B2B section 3 */}
       <div
         data-scroll-section
         data-section-index={startIdx + 3}
         data-service-id={"b2b-3"}
-        className="s-section"
-        // style={{ height: "100vh" }}
+        className="s-section light service-system"
+      // style={{ height: "100vh" }}
       >
         <ServiceB2bThree id="b2b-3" index={startIdx + 3} />
       </div>
@@ -136,7 +136,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-section-index={startIdx + 4}
         data-service-id={"process"}
         className="s-section"
-        // style={{ height: "auto" }}
+      // style={{ height: "auto" }}
       >
         <ServiceProcess id="process" index={startIdx + 4} />
       </div>
@@ -147,7 +147,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-section-index={startIdx + 5}
         data-service-id={"center"}
         className="s-section light service-center"
-        // style={{ height: "fit-content" }}
+      // style={{ height: "fit-content" }}
       >
         <ServiceCenter id="center" index={startIdx + 5} />
       </div>
@@ -158,7 +158,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-section-index={startIdx + 6}
         data-service-id={"partner"}
         className="s-section service-partner"
-        // style={{ height: "fit-content" }}
+      // style={{ height: "fit-content" }}
       >
         <ServicePartner id="partner" index={startIdx + 6} />
       </div>

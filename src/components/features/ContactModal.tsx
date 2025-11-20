@@ -5,26 +5,7 @@ import { policyModalOpenAtom } from "@/store/global-modal.store";
 import { useSetAtom } from "jotai";
 import type React from "react";
 import { useState } from "react";
-import { PRODUCT_TYPE_OPTIONS } from "./option.constants";
-
-// 기획안 기준 서비스 분류 옵션 (6개 -> 2x3 Grid 딱 맞음)
-const SERVICE_TYPE_OPTIONS = [
-  "특송",
-  "택배",
-  "IT 솔루션",
-  "3PL",
-  "물류 컨설팅",
-  "기타 문의"
-];
-
-// 기획안 기준 지역 옵션
-const REGION_OPTIONS = [
-  "서울",
-  "경기",
-  "인천",
-  "부산",
-  "그 외 지역"
-];
+import { PRODUCT_TYPE_OPTIONS, REGION_OPTIONS, SERVICE_TYPE_OPTIONS } from "./option.constants";
 
 interface ContactFormData {
   // Section 1: 물류 정보

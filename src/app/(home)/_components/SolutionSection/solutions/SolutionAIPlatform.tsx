@@ -20,6 +20,10 @@ const aiFeatures = [
   },
 ];
 
+// Shimmer 애니메이션을 위한 키프레임 정의 (CSS에 별도 포함 필요)
+// Tailwind에서 직접 keyframes 정의를 사용하지 않으므로, SCSS의 @keyframes shimmer는 임시로 생략하거나
+// Global CSS에 정의된 것으로 가정합니다. 여기서는 CSS 클래스만 적용합니다.
+
 export default function SolutionAIPlatform({ id, index }: Props) {
   return (
     <div className="s-section__content">
@@ -32,32 +36,77 @@ export default function SolutionAIPlatform({ id, index }: Props) {
               AI 기반 채팅 어시스턴트와 재고관리 로봇이 결합된 지능형 물류 자동화 서비스를 준비 중입니다.
             </p>
         </div>
-        <div className="ai-features">
-          {aiFeatures.map((feature, idx) => (
-            <div
-              key={idx}
-              className={`ai-feature ai-feature--${feature.imagePosition}`}
-            >
-              <div className="ai-feature__content">
-                <span className="ai-feature__tag">{feature.tag}</span>
-                <h3 className="ai-feature__title">{feature.title}</h3>
-                <p className="ai-feature__description">{feature.description}</p>
-                <div className="ai-feature__tags">
-                  {feature.tags.map((tag, tagIdx) => (
-                    <span key={tagIdx} className="ai-feature__tag-item">
-                      {tag}
-                    </span>
-                  ))}
+
+        {/* ai-features -> flex flex-col gap-[8rem] (v.$spacing-2xl * 2 = v.$spacing-8xl) */}
+        <div className="flex flex-col gap-32">
+          {aiFeatures.map((feature, idx) => {
+            const isLeft = feature.imagePosition === "left";
+            return (
+              // ai-feature
+              // ai-feature--left 로직: 모바일은 모두 column, 데스크탑에서만 row-reverse 적용
+              <div
+                key={idx}
+                className={`flex flex-col gap-8 items-center
+                  lg:flex-row lg:gap-16
+                  ${isLeft ? 'lg:flex-row-reverse' : ''}
+                `}
+              >
+                {/* ai-feature__content (flex: 1, order: 1) */}
+                <div className="flex-1 order-1">
+
+                  {/* ai-feature__tag */}
+                  <span className="inline-block rounded-sm bg-foreground-light px-3 py-1 text-xs font-semibold uppercase tracking-wider text-background-light mb-4">
+                    {feature.tag}
+                  </span>
+
+                  {/* ai-feature__title */}
+                  <h3 className="font-bold text-foreground-light text-2xl leading-tight mb-3 lg:text-3xl">
+                    {feature.title}
+                  </h3>
+
+                  {/* ai-feature__description */}
+                  <p className="text-[0.9375rem] leading-relaxed text-muted-foreground-light mb-6">
+                    {feature.description}
+                  </p>
+
+                  {/* ai-feature__tags */}
+                  <div className="flex flex-wrap gap-2">
+                    {feature.tags.map((tag, tagIdx) => (
+                      // ai-feature__tag-item
+                      <span
+                        key={tagIdx}
+                        className="rounded-sm border border-border-light bg-background-light px-3 py-1 text-sm font-medium text-foreground-light transition-all duration-300 hover:bg-foreground-light hover:text-background-light"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* ai-feature__image (flex: 1, width: 100%, order: 2) */}
+                <div className="flex-1 w-full order-2">
+                  {/* ai-feature__image-placeholder */}
+                  <div
+                    className="relative flex w-full items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200 text-xl font-semibold text-gray-600 aspect-[4/3]"
+                    // Note: SCSS의 ::before와 ::after를 직접 Tailwind에서 구현하기 어려우므로,
+                    // 복잡한 효과는 Global CSS에 정의된 유틸리티 클래스(예: .ai-shimmer)를 사용하거나
+                    // 간단한 Placeholder 효과만 남기는 것이 일반적입니다. 여기서는 Placeholder 기본 스타일만 유지합니다.
+                  >
+                    <div
+                        className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-accent/20"
+                        aria-hidden="true"
+                    />
+                    <div
+                        className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-gradient-to-br from-transparent via-white/10 to-transparent animate-spin-slow"
+                        // animate-spin-slow는 임의의 Tailwind 애니메이션 확장 클래스를 가정한 것입니다.
+                        aria-hidden="true"
+                    />
+                    AI 이미지 {idx + 1}
+                  </div>
                 </div>
               </div>
-              <div className="ai-feature__image">
-                <div className="ai-feature__image-placeholder">
-                  {/* 이미지 placeholder */}
-                  AI 이미지 {idx + 1}
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
     </div>
   );

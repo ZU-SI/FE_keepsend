@@ -44,19 +44,47 @@ export default function ServiceConsulting({ id, index }: Props) {
               비용 절감·운영 최적화·확장성 강화를 실현합니다.
             </p>
         </div>
-        <div className="cs-cards">
+
+        {/* cs-cards: grid mobile, 2-column grid desktop */}
+        <div className="grid gap-6 lg:grid-cols-2 lg:gap-4">
           {consultingServices.map((service, idx) => (
-            <div key={idx} className="cs-card">
-              <div className="cs-card__icon">{service.icon}</div>
-              <h4 className="cs-card__title">{service.title}</h4>
-              <p className="cs-card__description">{service.description}</p>
-              <div className="cs-card__tags">
+            // cs-card: complex layout with absolute positioning on mobile
+            <div key={idx} className="group relative overflow-hidden rounded-xl border border-border-light bg-card-light px-6 pt-[80px] pb-4 pl-[100px] transition-all duration-300 hover:translate-y-[-8px] hover:border-primary/30 hover:shadow-xl lg:p-8">
+
+              {/* cs-card::before & ::after (Hover effects) - Tailwind에서 ::before/::after의 복잡한 그라디언트/애니메이션은 클래스로 대체하거나 생략합니다. */}
+              {/* 간단한 hover 배경 효과만 구현 */}
+              <div
+                  className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  aria-hidden="true"
+              />
+
+              {/* cs-card__icon: Absolute mobile, Relative desktop */}
+              <div className="absolute top-[calc(50%-50px)] left-6 text-5xl transition-transform duration-300 group-hover:scale-110 lg:relative lg:top-0 lg:left-0 lg:mb-4">
+                  {service.icon}
+              </div>
+
+              {/* cs-card__tags: Absolute mobile/desktop */}
+              <div className="absolute top-8 right-8 flex flex-wrap gap-2 lg:top-8 lg:right-8">
                 {service.tags.map((tag, tagIdx) => (
-                  <span key={tagIdx} className="cs-card__tag">
+                  // cs-card__tag
+                  <span
+                    key={tagIdx}
+                    className="rounded-sm bg-primary/10 px-3 py-1 text-xs font-semibold text-primary transition-all duration-300 hover:bg-primary hover:text-white"
+                  >
                     {tag}
                   </span>
                 ))}
               </div>
+
+              {/* cs-card__title */}
+              <h4 className="relative z-10 mb-2 text-lg font-bold leading-tight text-foreground-light">
+                {service.title}
+              </h4>
+
+              {/* cs-card__description */}
+              <p className="relative z-10 mb-4 text-sm leading-relaxed text-muted-foreground-light">
+                {service.description}
+              </p>
             </div>
           ))}
         </div>

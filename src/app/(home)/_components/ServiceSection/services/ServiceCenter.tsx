@@ -68,6 +68,10 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
     setCurrentPage(pageNumber);
   };
 
+  // Pagination Base Class (공통 스타일 재정의)
+  const paginationBaseClass = "w-[30px] h-[30px] flex items-center justify-center rounded-sm border border-border-light bg-card-light text-muted-foreground-light cursor-pointer transition-all duration-300 hover:bg-muted-light lg:w-9 lg:h-9";
+
+
   return (
     <section className="s-section__content" id={id}>
         <div className="s-section__header">
@@ -79,24 +83,34 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
             정확한 운영 시스템과 효율적 관리 프로세스로 기업과 어떤 환경에 상관없이 지원을 다합니다.
           </p>
         </div>
-        <div className="service-center__content">
-          <div className="service-center__map-container">
-            <div className="service-center__map">
-              {/* 지도 이미지 */}
+
+        {/* service-center__content: grid mobile, 2-col desktop, fixed height */}
+        <div className="grid gap-4 lg:grid-cols-2 lg:gap-8 lg:h-[50vh]">
+
+          {/* service-center__map-container */}
+          <div className="relative overflow-hidden rounded shadow-lg shadow-black/10 border border-border-light bg-card-light h-full min-h-[30vh]">
+            {/* service-center__map */}
+            <div className="w-full h-full relative">
+              {/* service-center__map-image */}
               <img
                 src="/images/korea-map.png"
                 alt="전국 물류센터 지도"
-                className="service-center__map-image"
+                className="w-full h-full object-cover object-center"
               />
             </div>
           </div>
 
-          <div className="service-center__list-container">
-            <div className="service-center__filter">
+          {/* service-center__list-container */}
+          <div className="grid grid-rows-[auto_1fr_auto] gap-4 lg:gap-6 h-full overflow-hidden lg:max-h-[50vh]">
+
+            {/* service-center__filter */}
+            <div className="flex flex-wrap justify-center gap-2 lg:justify-start">
               {regions.map((region) => (
                 <button
                   key={region.id}
-                  className={`service-center__filter-btn ${activeRegion === region.name ? 'active' : ''}`}
+                  // service-center__filter-btn
+                  className={`rounded-full border border-border-light bg-card-light px-3 py-1 text-xs font-medium text-muted-foreground-light transition-all duration-300 cursor-pointer hover:bg-muted-light lg:text-sm lg:px-4 lg:py-1
+                    ${activeRegion === region.name ? 'active !bg-primary !text-white !border-primary' : ''}`}
                   onClick={() => {
                     setActiveRegion(region.name);
                     setCurrentPage(1);
@@ -107,75 +121,72 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
               ))}
             </div>
 
-            <div className="service-center__list">
-              {currentCenters.map((center, idx) => (
-                idx % 2 === 0 && idx < currentCenters.length - 1 ? (
-                  <div className="service-center__list-row" key={center.id}>
-                    <div className="service-center__list-item">
-                      <div className="service-center__center-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="#333"/>
-                        </svg>
-                      </div>
-                      <div className="service-center__center-info">
-                        <h3 className="service-center__center-name">{center.name}</h3>
-                        <p className="service-center__center-address">{center.address}</p>
-                        <p className="service-center__center-phone">{center.phone}</p>
-                      </div>
-                    </div>
-                    <div className="service-center__list-item">
-                      <div className="service-center__center-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="#333"/>
-                        </svg>
-                      </div>
-                      <div className="service-center__center-info">
-                        <h3 className="service-center__center-name">{currentCenters[idx + 1].name}</h3>
-                        <p className="service-center__center-address">{currentCenters[idx + 1].address}</p>
-                        <p className="service-center__center-phone">{currentCenters[idx + 1].phone}</p>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  idx % 2 === 0 && (
-                    <div className="service-center__list-row" key={center.id}>
-                      <div className="service-center__list-item">
-                        <div className="service-center__center-icon">
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="#333"/>
-                          </svg>
+            {/* service-center__list */}
+            <div className="flex flex-col gap-2 overflow-y-auto p-1 lg:gap-4">
+              {/* Logic for displaying items in rows of 2 on desktop */}
+              {currentCenters.map((center, idx) => {
+                if (idx % 2 === 0) {
+                  const center2 = currentCenters[idx + 1];
+                  return (
+                    // service-center__list-row
+                    <div className="grid gap-2 lg:grid-cols-2 lg:gap-4" key={center.id}>
+                      {[center, center2].filter(c => c).map(c => (
+                        // service-center__list-item
+                        <div
+                          className="group flex gap-3 rounded border border-border-light bg-card-light p-2 shadow-sm transition-all duration-300 hover:translate-y-[-4px] hover:border-primary/30 hover:shadow-md lg:p-4"
+                          key={c.id}
+                        >
+                          {/* service-center__center-icon */}
+                          <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-primary-hover transition-colors duration-300 group-hover:bg-primary lg:h-11 lg:w-11">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="#fff"/>
+                            </svg>
+                          </div>
+                          {/* service-center__center-info */}
+                          <div className="flex flex-col gap-0 lg:gap-1">
+                            {/* service-center__center-name */}
+                            <h3 className="text-[0.9375rem] font-semibold text-foreground-light lg:text-[1.0625rem]">{c.name}</h3>
+                            {/* service-center__center-address */}
+                            <p className="text-[0.8125rem] leading-snug text-muted-foreground-light lg:text-sm">{c.address}</p>
+                            {/* service-center__center-phone */}
+                            <p className="text-[0.8125rem] font-medium text-primary lg:text-sm">{c.phone}</p>
+                          </div>
                         </div>
-                        <div className="service-center__center-info">
-                          <h3 className="service-center__center-name">{center.name}</h3>
-                          <p className="service-center__center-address">{center.address}</p>
-                          <p className="service-center__center-phone">{center.phone}</p>
-                        </div>
-                      </div>
+                      ))}
                     </div>
-                  )
-                )
-              ))}
+                  );
+                }
+                return null;
+              })}
             </div>
 
-            <div className="service-center__pagination">
+            {/* service-center__pagination */}
+            <div className="mt-6 flex items-center justify-center gap-2">
+
+              {/* service-center__pagination-arrow */}
               <button
-                className="service-center__pagination-arrow"
+                className={`${paginationBaseClass} text-xs disabled:cursor-not-allowed disabled:opacity-50`}
                 disabled={currentPage === 1}
                 onClick={() => handlePageChange(currentPage - 1)}
               >
                 &lt;&lt;
               </button>
+
+              {/* service-center__pagination-btn */}
               {pageNumbers.map(number => (
                 <button
                   key={number}
-                  className={`service-center__pagination-btn ${currentPage === number ? 'active' : ''}`}
+                  className={`${paginationBaseClass} text-[0.8125rem] lg:text-sm
+                    ${currentPage === number ? '!bg-primary !text-white !border-primary' : ''}`}
                   onClick={() => handlePageChange(number)}
                 >
                   {number}
                 </button>
               ))}
+
+              {/* service-center__pagination-arrow */}
               <button
-                className="service-center__pagination-arrow"
+                className={`${paginationBaseClass} text-xs disabled:cursor-not-allowed disabled:opacity-50`}
                 disabled={currentPage === totalPages}
                 onClick={() => handlePageChange(currentPage + 1)}
               >

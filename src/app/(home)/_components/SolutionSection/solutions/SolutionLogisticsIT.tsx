@@ -30,15 +30,38 @@ export default function SolutionLogisticsIT({ id, index }: Props) {
               OMS, WMS, TMS를 통합한 원스톱 물류 솔루션으로 물류 전 과정을 민첩하게 유기적으로 관리합니다.
             </p>
         </div>
-        <div className="logistics-cards">
+
+        {/* logistics-cards: grid mobile, 3-column grid desktop */}
+        <div className="grid gap-1 lg:grid-cols-3 lg:gap-8">
           {logisticsCards.map((card, idx) => (
-            <div key={idx} className="logistics-card">
-              <div className="logistics-card__image">
-                {/* 이미지 placeholder */}
+            // logistics-card: flex row mobile, flex col desktop
+            <div
+              key={idx}
+              className="group flex items-center overflow-hidden rounded-xl border border-border-light bg-card-light transition-all duration-300 hover:shadow-lg hover:border-primary/50 lg:flex-col"
+            >
+
+              {/* logistics-card__image: circle mobile, full-width placeholder desktop */}
+              <div className="relative mx-3 my-2 flex h-[90px] min-w-[80px] w-[90px] items-center justify-center rounded-full bg-gray-100 lg:mx-auto lg:my-0 lg:mt-6 lg:mb-4 lg:aspect-square lg:h-auto lg:max-w-[160px] lg:w-full">
+
+                {/* logistics-card__image::before: inner gradient circle */}
+                <div
+                    className="h-[80%] w-[80%] rounded-full bg-gradient-to-br from-gray-200 to-gray-300"
+                    aria-hidden="true"
+                />
               </div>
-              <div className="logistics-card__content">
-                <h4 className="logistics-card__title">{card.title}</h4>
-                <p className="logistics-card__description">{card.description}</p>
+
+              {/* logistics-card__content: padding and alignment */}
+              <div className="flex-1 p-4 lg:px-6 lg:pb-6 lg:pt-0 lg:text-center">
+
+                {/* logistics-card__title: font size change on desktop */}
+                <h4 className="mb-1 font-semibold text-foreground-light text-base lg:text-lg">
+                  {card.title}
+                </h4>
+
+                {/* logistics-card__description: font size and line height */}
+                <p className="text-sm leading-relaxed text-muted-foreground-light break-keep">
+                  {card.description}
+                </p>
               </div>
             </div>
           ))}

@@ -37,21 +37,9 @@ const logisticsCards = [
   },
 ];
 
-// (중략: interfaces and default data remain the same)
-
-// 행성별 초기 회전 각도 정의 (SCSS orbit-system과 일치해야 함)
-// OMS: 0deg, WMS: 120deg, TMS: 240deg
-const PLANET_ROTATIONS: { [key: string]: number } = {
-  'OMS': 0,
-  'WMS': 120,
-  'TMS': 240,
-};
-
-
 export default function ServiceB2bThree({ id, index }: Props) {
   const [hovered, setHovered] = useState<{ type: 'planet' | 'card'; id: string } | null>(null);
 
-  // (중략: handleEnter/handleLeave, isPlanetHighlighted, isCardHighlighted remain the same)
   const handlePlanetEnter = (planetId: string) => {
     setHovered({ type: 'planet', id: planetId });
   };
@@ -94,6 +82,7 @@ export default function ServiceB2bThree({ id, index }: Props) {
           OMS, WMS, TMS를 통합한 원스톱 솔루션으로 복잡한 물류 과정을 단순화합니다.
         </p>
       </div>
+      {/* 특장점 영역 */}
 
       {/* 다이어그램 영역 */}
       <div className="logistics-diagram">
@@ -116,32 +105,39 @@ export default function ServiceB2bThree({ id, index }: Props) {
 
             {/* 회전하는 컨테이너 */}
             <div className="planet-container">
-              {['OMS', 'WMS', 'TMS'].map((solution) => {
-                const rotation = PLANET_ROTATIONS[solution];
-                // 텍스트를 수평으로 유지하기 위해 역회전 스타일을 계산합니다.
-                const counterRotationStyle = {
-                  transform: `rotate(-${rotation}deg)`
-                };
-
-                return (
-                  <div
-                    key={solution}
-                    className={`planet-wrapper type-${solution.toLowerCase()} ${isPlanetHighlighted(solution) ? 'is-highlighted' : ''}`}
-                    data-solutions={solution}
-                    onMouseEnter={() => handlePlanetEnter(solution)}
-                    onMouseLeave={handleLeave}
-                  >
-                    {/*
-                      수정 포인트: planet 요소에 역회전 스타일을 적용하여
-                      planet-wrapper의 궤도 회전을 상쇄시킵니다.
-                    */}
-                    <div className="planet" style={counterRotationStyle}>
-                      <span className="planet-icon">{solution === 'OMS' ? '📦' : solution === 'WMS' ? '🏭' : '🚚'}</span>
-                      <span className="planet-text">{solution}</span>
-                    </div>
-                  </div>
-                );
-              })}
+              <div
+                className={`planet-wrapper type-oms ${isPlanetHighlighted('OMS') ? 'is-highlighted' : ''}`}
+                data-solutions="OMS"
+                onMouseEnter={() => handlePlanetEnter('OMS')}
+                onMouseLeave={handleLeave}
+              >
+                <div className="planet">
+                  <span className="planet-icon">📦</span>
+                  <span className="planet-text">OMS</span>
+                </div>
+              </div>
+              <div
+                className={`planet-wrapper type-wms ${isPlanetHighlighted('WMS') ? 'is-highlighted' : ''}`}
+                data-solutions="WMS"
+                onMouseEnter={() => handlePlanetEnter('WMS')}
+                onMouseLeave={handleLeave}
+              >
+                <div className="planet">
+                  <span className="planet-icon">🏭</span>
+                  <span className="planet-text">WMS</span>
+                </div>
+              </div>
+              <div
+                className={`planet-wrapper type-tms ${isPlanetHighlighted('TMS') ? 'is-highlighted' : ''}`}
+                data-solutions="TMS"
+                onMouseEnter={() => handlePlanetEnter('TMS')}
+                onMouseLeave={handleLeave}
+              >
+                <div className="planet">
+                  <span className="planet-icon">🚚</span>
+                  <span className="planet-text">TMS</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -151,22 +147,19 @@ export default function ServiceB2bThree({ id, index }: Props) {
           {logisticsCards.map((card) => (
             <div
               key={card.id}
-              className={`logistics-card rounded-lg border border-border-light bg-card-light p-4 shadow-md transition-all duration-300 hover:shadow-xl lg:p-6
-                position-${card.position}
-                ${isCardHighlighted(card) ? 'is-highlighted border-primary' : 'border-border-light'}
-              `}
+              className={`logistics-card position-${card.position} ${isCardHighlighted(card) ? 'is-highlighted' : ''}`}
               onMouseEnter={() => handleCardEnter(card.id)}
               onMouseLeave={handleLeave}
             >
-              {/* 연결선 (CSS로 그려짐) */}
+              {/* 연결선 */}
               <div className="connection-line"></div>
 
               <div className="logistics-card__content">
-                <div className="logistics-card__icon-placeholder mb-2 flex h-8 w-8 items-center justify-center rounded-md bg-gray-100 text-sm font-semibold text-gray-700">
+                <div className="logistics-card__icon-placeholder">
                   <span>IMG</span>
                 </div>
-                <h4 className="logistics-card__title text-base font-semibold text-foreground-light mb-1">{card.title}</h4>
-                <p className="logistics-card__description text-sm text-muted-foreground-light">{card.description}</p>
+                <h4 className="logistics-card__title">{card.title}</h4>
+                <p className="logistics-card__description">{card.description}</p>
               </div>
             </div>
           ))}

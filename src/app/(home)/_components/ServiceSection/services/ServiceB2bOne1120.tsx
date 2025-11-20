@@ -68,7 +68,6 @@ export default function ServiceB2bOne({
   const chatBubbleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // (중략: useEffect for talk reordering and animation logic remains the same)
   // Reorder talks based on problem sequence
   useEffect(() => {
     const ordered: Array<{ text: string, originalIndex: number }> = [];
@@ -136,7 +135,6 @@ export default function ServiceB2bOne({
     return () => observer.disconnect();
   }, [problems.length, currentLoadingProblem]);
 
-  // (중략: scroll functions and highlighting/visibility checks remain the same)
   // Scroll functions
   const scrollToTop = () => {
     if (chatMessagesRef.current) {
@@ -194,43 +192,26 @@ export default function ServiceB2bOne({
         </p>
       </div>
       {/* Main Content Grid */}
-      <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-8 lg:items-stretch">
-
+      <div className="service-problem__main-grid">
         {/* Problem List - Left on desktop, Top on mobile */}
-        {/*
-          **수정 사항:**
-          1. 데스크탑의 고정 높이 `lg:h-[50vh]`를 제거했습니다. -> `lg:h-[fit-content]`로 동작하도록 하여, 모든 항목이 화면에 즉시 노출되도록 합니다.
-          2. 모바일/데스크탑 모두에서 스크롤바를 숨기는 스타일을 제거하여 (기존 SCSS에서 주석 처리되었던 부분), 컴포넌트 높이의 문제를 유발하지 않도록 합니다.
-          3. `overflow-y-auto` 대신 `overflow-visible`을 사용하여 모션이 잘리거나 숨겨지지 않도록 합니다.
-        */}
-        <div className="grid grid-cols-2 gap-4 flex-shrink-0 order-3 lg:order-1 lg:grid-cols-1 lg:gap-6 lg:pr-1 overflow-visible">
+        <div className="service-problem__problem-list">
           {problems.map((problem, idx) => (
             <div
               key={idx}
               ref={(el) => { problemRefs.current[idx] = el; }}
-              // service-problem__problem-item
-              className={`flex cursor-pointer gap-4 rounded-lg border border-border-light bg-card-light p-4 shadow-sm transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] lg:gap-6 lg:p-6
-                ${visibleProblems[idx] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-20%]'}
-                hover:translate-y-[-4px] hover:shadow-lg hover:border-primary
-                `}
+              className={`service-problem__problem-item ${visibleProblems[idx] ? 'service-problem__problem-item--visible' : ''
+                }`}
               onMouseEnter={() => allProblemsLoaded ? setHoveredProblemIndex(idx) : null}
               onMouseLeave={() => setHoveredProblemIndex(null)}
             >
-              {/* service-problem__problem-number (Hidden mobile, Flex desktop) */}
-              <div
-                className={`hidden h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-muted-light text-sm font-bold text-primary transition-all duration-300 hover:bg-primary hover:text-white hover:scale-110 lg:flex lg:h-10 lg:w-10 lg:text-base`}
-              >
+              <div className="service-problem__problem-number">
                 {String(idx + 1).padStart(2, '0')}
               </div>
-
-              {/* service-problem__problem-content */}
-              <div className="flex flex-1 flex-col gap-1">
-                {/* service-problem__problem-title */}
-                <h3 className="text-[0.8125rem] font-bold leading-tight text-foreground-light lg:text-[0.9375rem]">
+              <div className="service-problem__problem-content">
+                <h3 className="service-problem__problem-title">
                   {problem.title}
                 </h3>
-                {/* service-problem__problem-description */}
-                <p className="text-xs leading-snug text-muted-foreground-light lg:text-[0.8125rem]">
+                <p className="service-problem__problem-description">
                   {problem.description}
                 </p>
               </div>
@@ -239,49 +220,34 @@ export default function ServiceB2bOne({
         </div>
 
         {/* Center Divider - Responsive */}
-        <div className="order-2 flex flex-shrink-0 items-center justify-center gap-2 lg:flex-col lg:gap-3 lg:px-2">
-          {/* service-problem__divider-icon */}
-          <span
-            className="text-2xl animate-[bounce_2s_ease-in-out_infinite] lg:text-4xl lg:animate-[slide-right_2s_ease-in-out_infinite]"
-          >
-            🧐
-          </span>
-          {/* service-problem__divider-text */}
-          <p className="m-0 text-base font-semibold text-primary lg:text-lg lg:whitespace-nowrap">우리가 해결하는 문제</p>
+        <div className="service-problem__divider">
+          <span className="service-problem__divider-icon">🧐</span>
+          <p className="service-problem__divider-text">우리가 해결하는 문제</p>
         </div>
 
         {/* Chat Box - Right on desktop, Bottom on mobile */}
-        {/* Chat Box는 기존대로 높이를 유지하여 스크롤 가능한 컨테이너 역할을 합니다. */}
-        <div className="relative order-1 flex h-[20vh] flex-col overflow-auto rounded-lg border border-border-light bg-card-light shadow-xl lg:order-3 lg:h-[50vh]">
-          <div className="flex flex-shrink-0 items-center gap-2 border-b border-border-light bg-muted-light py-1 px-4 lg:px-6 lg:py-3">
-            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
-            <span className="text-xs font-semibold text-foreground-light lg:text-[0.9375rem]">
+        <div className="service-problem__chat-box">
+          <div className="service-problem__chat-header">
+            <div className="service-problem__chat-status"></div>
+            <span className="service-problem__chat-title">
               실제 현장의 목소리
             </span>
           </div>
-
-          <div className="min-h-0 flex-1 overflow-y-auto bg-gradient-to-b from-gray-50 to-white p-4 scroll-smooth lg:p-6" ref={chatMessagesRef}>
+          <div className="service-problem__chat-messages" ref={chatMessagesRef}>
             {reorderedTalks.map((talk, idx) => {
               const isHighlighted = isChatHighlighted(talk.originalIndex);
               const isVisible = isChatVisible(talk.originalIndex);
-              const isRightSide = idx % 2 === 1;
 
               return (
                 <div
                   key={idx}
                   ref={(el) => { chatBubbleRefs.current[idx] = el; }}
-                  className={`flex gap-2 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]
-                    ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-100%]'}
-                    ${isRightSide ? 'justify-end' : ''}
-                  `}
-                  style={{ marginBottom: '8px' }}
+                  className={`service-problem__chat-bubble ${isVisible ? 'service-problem__chat-bubble--visible' : ''
+                    }${isHighlighted ? 'service-problem__chat-bubble--highlighted' : ''
+                    } ${idx % 2 === 1 ? 'service-problem__chat-bubble--left' : 'service-problem__chat-bubble--right'}`}
                 >
-                  <div
-                    className={`w-[85%] rounded-lg border border-border-light bg-white p-2 shadow-sm transition-all duration-300 lg:p-3 lg:px-4
-                      ${isHighlighted ? 'bg-purple-50 border-primary shadow-xl shadow-primary/30 scale-[1.02]' : ''}
-                    `}
-                  >
-                    <p className="m-0 text-[0.8125rem] leading-snug text-foreground-light lg:text-sm lg:leading-relaxed">{talk.text}</p>
+                  <div className="service-problem__bubble-content">
+                    <p>{talk.text}</p>
                   </div>
                 </div>
               );
@@ -289,14 +255,13 @@ export default function ServiceB2bOne({
           </div>
 
           {/* Scroll Buttons */}
-          <div className="absolute bottom-4 right-4 z-10 flex flex-col gap-2 lg:bottom-6 lg:right-6">
-
+          <div className="service-problem__scroll-buttons">
             <button
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white shadow-md transition-all duration-300 hover:scale-110 hover:bg-primary-hover hover:shadow-lg active:scale-95 lg:h-10 lg:w-10"
+              className="service-problem__scroll-button service-problem__scroll-button--up"
               onClick={scrollToTop}
               aria-label="Scroll to top"
             >
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className='h-4 w-4 lg:h-5 lg:w-5'>
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M12 19V5M12 5L5 12M12 5L19 12"
                   stroke="currentColor"
@@ -306,13 +271,12 @@ export default function ServiceB2bOne({
                 />
               </svg>
             </button>
-
             <button
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-white shadow-md transition-all duration-300 hover:scale-110 hover:bg-primary-hover hover:shadow-lg active:scale-95 lg:h-10 lg:w-10"
+              className="service-problem__scroll-button service-problem__scroll-button--down"
               onClick={scrollToBottom}
               aria-label="Scroll to bottom"
             >
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className='h-4 w-4 lg:h-5 lg:w-5'>
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M12 5V19M12 19L5 12M12 19L19 12"
                   stroke="currentColor"

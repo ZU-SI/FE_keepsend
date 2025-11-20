@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
 import { motion, useScroll } from 'framer-motion';
+import React, { useRef } from 'react';
 
 interface ServiceProcessProps {
   id: string;
@@ -12,7 +12,7 @@ interface ProcessStep {
   description: string;
 }
 
-const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
+export default function ServiceProcess ({ id, index }): React.FC<ServiceProcessProps> {
   const containerRef = useRef<HTMLElement>(null);
 
   const processSteps: ProcessStep[] = [
@@ -122,23 +122,7 @@ const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
             }}
           >
             <div
-              style={{
-                width: "180px",
-                height: "180px",
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)", // Blue gradient
-                boxShadow: "0 10px 25px rgba(59, 130, 246, 0.4)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-                color: "white",
-                fontWeight: "bold",
-                fontSize: "1.25rem",
-                lineHeight: "1.4",
-                zIndex: 10,
-                border: "4px solid white"
-              }}
+              className="w-[180px] h-[180px] rounded-full bg-gradient-to-br from-blue-500 to-blue-700 shadow-xl shadow-blue-500/40 flex items-center justify-center text-center text-xl font-bold text-white leading-tight z-10 border-4 border-white"
             >
               keepsend
               <br />
@@ -151,13 +135,12 @@ const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
   );
 };
 
+
+
 // 개별 단계 컴포넌트
 function ProcessStepItem({ step, index }: { step: ProcessStep; index: number }) {
-  // 지그재그 배치를 위한 로직 (짝수: 왼쪽 / 홀수: 오른쪽)
-  // index 0: isEven=true -> flex-end (Right side)
-  // index 1: isEven=false -> flex-start (Left side)
-  const isEven = index % 2 === 0;
-  const isRightSide = isEven;
+  // 지그재그 배치를 위한 로직 (짝수: 오른쪽 / 홀수: 왼쪽)
+  const isRightSide = index % 2 === 0;
 
   return (
     <motion.div
@@ -174,53 +157,53 @@ function ProcessStepItem({ step, index }: { step: ProcessStep; index: number }) 
     >
       {/* 중앙 노드 (원형 점) */}
       <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "20px",
-          height: "20px",
-          background: "#fff",
-          border: "4px solid #3b82f6",
-          borderRadius: "50%",
-          zIndex: 10
-        }}
+        className="absolute left-1/2 -translate-x-1/2 w-5 h-5 bg-white border-4 border-blue-500 rounded-full z-10"
       />
 
-      {/* 텍스트 카드 (기존 UI 컴포넌트 재사용) */}
+      {/* 텍스트 카드 */}
       <div
-        className="service-process__item-wrapper"
+        // service-process__item-wrapper: width: 40% (base)
+        className="w-2/5 min-w-[25%] max-w-[40%]"
         style={{
-          // Spacing from center rail
+          // Spacing from center rail (80px)
           marginRight: isRightSide ? "0" : "80px",
           marginLeft: isRightSide ? "80px" : "0"
         }}
       >
         <div
-          className="service-process__step visible"
+          // service-process__step
+          className="flex w-full gap-3 opacity-100 translate-y-0"
           style={{
-            width: '100%',
-            // Right side: Image Left (Row)
-            // Left side: Image Right (Row Reverse)
             flexDirection: isRightSide ? 'row' : 'row-reverse',
             alignItems: 'center',
             textAlign: isRightSide ? 'left' : 'right'
           }}
         >
-          <div className="service-process__step-img" style={{ margin: 0, flexShrink: 0 }}>
-            img
-            <span className="service-process__step-num">
+          {/* service-process__step-img */}
+          <div className="relative z-20 flex h-[60px] w-[60px] flex-shrink-0 items-center justify-center rounded-full lg:h-[80px] lg:w-[80px]">
+            {/* service-process__step-img::before */}
+            <div className="absolute inset-[-5px] rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 z-0" aria-hidden="true"></div>
+
+            {/* img placeholder */}
+            <span className="text-xl text-foreground font-semibold">
+                {step.id}
+            </span>
+
+            {/* service-process__step-num */}
+            <span className="absolute top-[-20px] right-[-20px] flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary text-lg font-bold text-white shadow-lg shadow-primary/30">
               {step.id}
             </span>
           </div>
-          <div className="service-process__step-content" style={{ textAlign: isRightSide ? 'left' : 'right' }}>
-            <h3 className="service-process__step-title">{step.title}</h3>
-            <p className="service-process__step-description">{step.description}</p>
+
+          {/* service-process__step-content */}
+          <div className="max-w-none" style={{ textAlign: isRightSide ? 'left' : 'right' }}>
+            {/* service-process__step-title */}
+            <h3 className="mb-1 text-lg font-semibold leading-tight text-foreground">{step.title}</h3>
+            {/* service-process__step-description */}
+            <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
           </div>
         </div>
       </div>
     </motion.div>
   );
 }
-
-export default ServiceProcess;

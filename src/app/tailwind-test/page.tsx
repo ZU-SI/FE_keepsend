@@ -1,6 +1,6 @@
 export default function TailwindTestPage() {
     return (
-        <div className="min-h-screen bg-background text-foreground p-8">
+        <div className="min-h-screen bg-background text-foreground p-32">
             <h1 className="text-4xl font-bold text-primary mb-4">Tailwind CSS Integration Test</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-6 bg-card rounded-lg shadow-lg border border-border">
@@ -10,7 +10,7 @@ export default function TailwindTestPage() {
                         Primary Button
                     </button>
                 </div>
-                <div className="p-6 bg-secondary rounded-lg shadow-lg text-secondary-foreground">
+                <div className="p-10 bg-secondary rounded-lg shadow-lg text-secondary-foreground">
                     <h2 className="text-2xl font-semibold mb-2">Secondary Component</h2>
                     <p>This component uses the secondary color scheme.</p>
                     <div className="mt-4 p-2 bg-accent text-accent-foreground rounded">
@@ -19,7 +19,7 @@ export default function TailwindTestPage() {
                 </div>
             </div>
             <div className="mt-8">
-                <h3 className="text-xl font-bold mb-4">Typography Test</h3>
+                <h3 className="text-2xl font-bold mb-4">Typography Test</h3>
                 <p className="font-sans mb-2">This should be the Sans font (Suite, etc.)</p>
                 <p className="font-mono">This should be the Mono font (Geist Mono, etc.)</p>
             </div>

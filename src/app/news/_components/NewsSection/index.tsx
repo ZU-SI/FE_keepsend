@@ -39,19 +39,24 @@ export default function NewsSection() {
 
   return (
     <>
-      <section className="n-section">
-        {/* Banner */}
-        <div className="n-section__banner">
-          <h1 className="n-section__title">NEWS & BLOG</h1>
-          <p className="n-section__subtitle">최신 물류 및 IT 소식을 전합니다</p>
+      {/* News Section */}
+      <section className="min-h-screen bg-background-light">
+        {/* Banner (Dark Theme) */}
+        <div className="mx-auto py-32 px-5 text-center bg-background md:py-48">
+          <h1 className="text-4xl font-bold text-foreground mb-4 md:text-6xl">
+            NEWS & BLOG
+          </h1>
+          <p className="text-base text-muted-foreground md:text-lg">
+            최신 물류 및 IT 소식을 전합니다
+          </p>
         </div>
 
-        {/* Filter and Search */}
-        <div className="n-section__filter-bar">
-          <div className="n-section__filter-container">
-            <div className="n-section__filter-content">
+        {/* Filter Bar (Dark Theme, Sticky) */}
+        <div className="sticky top-[60px] z-40 bg-background/95 backdrop-blur py-2 border-b border-border mb-0 md:py-4 md:h-[65px]">
+          <div className="max-w-container mx-auto px-5">
+            <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
               {/* Filter Pills */}
-              <div className="n-section__filters">
+              <div className="flex gap-3">
                 {["전체", "뉴스", "블로그"].map((filter) => (
                   <button
                     key={filter}
@@ -59,11 +64,15 @@ export default function NewsSection() {
                       setSelectedFilter(filter);
                       setDisplayedCards(6);
                     }}
-                    className={`n-section__filter-button ${
-                      selectedFilter === filter
-                        ? "n-section__filter-button--active"
-                        : "n-section__filter-button--inactive"
-                    }`}
+                    className={`
+                      px-4 py-2 rounded-full text-sm font-medium
+                      transition-all duration-300 cursor-pointer border-none
+                      ${
+                        selectedFilter === filter
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground hover:bg-gray-700"
+                      }
+                    `}
                   >
                     {filter}
                   </button>
@@ -71,7 +80,7 @@ export default function NewsSection() {
               </div>
 
               {/* Search Input */}
-              <div className="n-section__search">
+              <div className="relative w-full md:w-64">
                 <input
                   type="text"
                   placeholder="검색..."
@@ -80,10 +89,16 @@ export default function NewsSection() {
                     setSearchQuery(e.target.value);
                     setDisplayedCards(6);
                   }}
-                  className="n-section__search-input"
+                  className="
+                    w-full px-4 py-2 pr-10
+                    bg-input border border-border rounded-sm
+                    text-sm text-foreground
+                    placeholder:text-muted-foreground
+                    focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/20
+                  "
                 />
                 <svg
-                  className="n-section__search-icon"
+                  className="absolute right-3 top-2.5 w-5 h-5 text-muted-foreground"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -100,21 +115,24 @@ export default function NewsSection() {
           </div>
         </div>
 
-        {/* News Grid */}
-        <div className="n-section__grid-wrapper">
-          <div ref={containerRef} className="n-section__grid">
+        {/* News Grid (Light Background) */}
+        <div className="max-w-container mx-auto mb-12 py-12 px-5 bg-background-light">
+          <div
+            ref={containerRef}
+            className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+          >
             {filteredNews.slice(0, displayedCards).map((item) => (
               <div
                 key={item.id}
-                className="n-section__card"
+                className="n-section__card cursor-pointer group"
                 onClick={() => setSelectedArticle(item)}
               >
-                <div className="n-section__card-inner">
-                  {/* Placeholder Image */}
-                  <div className="n-section__card-image">
-                    <div className="n-section__card-image-pattern">
+                <div className="bg-card-light rounded-lg overflow-hidden border border-border-light transition-all duration-300 shadow-card group-hover:border-primary group-hover:-translate-y-2 group-hover:shadow-card-hover">
+                  {/* Card Image */}
+                  <div className="w-full h-48 bg-gradient-light flex items-center justify-center relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-40">
                       <svg
-                        className="n-section__card-image-svg"
+                        className="w-full h-full"
                         viewBox="0 0 400 300"
                         fill="none"
                       >
@@ -124,7 +142,7 @@ export default function NewsSection() {
                           r="50"
                           stroke="currentColor"
                           strokeWidth="1"
-                          className="n-section__card-image-circle-1"
+                          className="text-primary"
                         />
                         <circle
                           cx="300"
@@ -132,7 +150,7 @@ export default function NewsSection() {
                           r="40"
                           stroke="currentColor"
                           strokeWidth="1"
-                          className="n-section__card-image-circle-2"
+                          className="text-accent"
                         />
                         <rect
                           x="150"
@@ -141,34 +159,45 @@ export default function NewsSection() {
                           height="100"
                           stroke="currentColor"
                           strokeWidth="1"
-                          className="n-section__card-image-rect"
+                          className="text-purple-500"
                         />
                       </svg>
                     </div>
-                    <span className="n-section__card-image-text">이미지</span>
+                    <span className="text-gray-400 text-sm relative z-[1]">
+                      이미지
+                    </span>
                   </div>
 
-                  {/* Content */}
-                  <div className="n-section__card-content">
+                  {/* Card Content */}
+                  <div className="p-5">
                     {/* Category Badge */}
-                    <div className="n-section__card-badge-wrapper">
+                    <div className="mb-3">
                       <span
-                        className={`n-section__card-badge ${
-                          item.type === "뉴스"
-                            ? "n-section__card-badge--news"
-                            : "n-section__card-badge--blog"
-                        }`}
+                        className={`
+                          inline-block px-3 py-1 rounded-full text-xs font-semibold
+                          ${
+                            item.type === "뉴스"
+                              ? "bg-primary/10 text-primary"
+                              : "bg-purple-600/10 text-purple-600"
+                          }
+                        `}
                       >
                         {item.type}
                       </span>
                     </div>
 
                     {/* Title */}
-                    <h3 className="n-section__card-title">{item.title}</h3>
+                    <h3 className="text-base font-bold text-foreground-light mb-3 line-clamp-2 transition-colors duration-300 group-hover:text-primary md:text-lg">
+                      {item.title}
+                    </h3>
 
-                    {/* Date and Excerpt */}
-                    <p className="n-section__card-date">{item.date}</p>
-                    <p className="n-section__card-excerpt">{item.excerpt}</p>
+                    {/* Date */}
+                    <p className="text-xs text-gray-500 mb-2">{item.date}</p>
+
+                    {/* Excerpt */}
+                    <p className="text-sm text-gray-600 line-clamp-2">
+                      {item.excerpt}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -178,10 +207,16 @@ export default function NewsSection() {
 
         {/* Load More Button */}
         {displayedCards < filteredNews.length && (
-          <div className="n-section__load-more">
+          <div className="flex justify-center pb-12 bg-background-light">
             <button
               onClick={handleLoadMore}
-              className="n-section__load-more-button"
+              className="
+                px-8 py-3
+                bg-primary text-primary-foreground font-semibold
+                rounded-full border-none cursor-pointer
+                text-base transition-all duration-300
+                hover:bg-primary-hover hover:shadow-button-hover hover:-translate-y-0.5
+              "
             >
               더보기
             </button>
@@ -192,80 +227,99 @@ export default function NewsSection() {
       {/* Detail Modal Overlay */}
       {selectedArticle && (
         <div
-          className="n-modal"
+          className="fixed inset-0 w-screen h-screen bg-black/30 backdrop-blur-xs z-navigation overflow-y-auto flex items-center justify-center p-4"
           onClick={(e) => {
-            if((e.target as HTMLElement).closest('#news-details')) return;
-            setSelectedArticle(null)
+            if ((e.target as HTMLElement).closest("#news-details")) return;
+            setSelectedArticle(null);
           }}
           onKeyDown={(e) => e.key === "Escape" && setSelectedArticle(null)}
         >
-          
-            <div className="n-modal__container" id="news-details">
-              {/* Header */}
-              <div className="n-modal__header">
-                <button
-                  onClick={() => setSelectedArticle(null)}
-                  className="n-modal__back-button"
+          {/* Modal Container */}
+          <div
+            className="w-full max-w-[768px] rounded-xl overflow-hidden max-h-[90vh] h-[768px] flex flex-col"
+            id="news-details"
+          >
+            {/* Header (Dark Theme, Sticky) */}
+            <div className="flex-shrink-0 h-[60px] bg-background/95 backdrop-blur border-b border-border px-6 py-4 flex items-center justify-between">
+              <button
+                onClick={() => setSelectedArticle(null)}
+                className="
+                  flex items-center gap-2
+                  text-muted-foreground bg-transparent border-none cursor-pointer
+                  text-sm transition-colors duration-300
+                  hover:text-primary
+                "
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    className="n-modal__back-icon"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 19l-7-7 7-7"
-                    />
-                  </svg>
-                  Go back
-                </button>
-              </div>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+                Go back
+              </button>
+            </div>
 
-              {/* Content */}
-              <div className="n-modal__content">
-                <div className="contents">                  
-                  {/* Meta */}
-                  <div className="n-modal__meta">
-                    <span
-                      className={`n-modal__badge ${
+            {/* Content (Light Theme) - Scrollable */}
+            <div className="flex-1 overflow-y-auto bg-card-light">
+              <div className="p-6 md:p-12">
+                {/* Meta */}
+                <div className="mb-6 flex items-center gap-4">
+                  <span
+                    className={`
+                      inline-block px-3 py-1 rounded-full text-xs font-semibold
+                      ${
                         selectedArticle.type === "뉴스"
-                          ? "n-modal__badge--news"
-                          : "n-modal__badge--blog"
-                      }`}
-                    >
-                      {selectedArticle.type}
-                    </span>
-                    <span className="n-modal__date">{selectedArticle.date}</span>
-                  </div>
+                          ? "bg-primary/10 text-primary"
+                          : "bg-purple-600/10 text-purple-600"
+                      }
+                    `}
+                  >
+                    {selectedArticle.type}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    {selectedArticle.date}
+                  </span>
+                </div>
 
-                  {/* Title */}
-                  <h1 className="n-modal__title">{selectedArticle.title}</h1>
+                {/* Title */}
+                <h1 className="text-4xl font-bold text-foreground-light mb-6 leading-tight md:text-5xl">
+                  {selectedArticle.title}
+                </h1>
 
-                  {/* Summary */}
-                  <p className="n-modal__summary">{selectedArticle.summary}</p>
+                {/* Summary */}
+                <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                  {selectedArticle.summary}
+                </p>
 
-                  {/* Main Image */}
-                  <div className="n-modal__image">
-                    <span className="n-modal__image-text">이미지</span>
-                  </div>
+                {/* Main Image */}
+                <div className="w-full h-96 bg-gradient-light rounded-lg mb-8 flex items-center justify-center">
+                  <span className="text-gray-400 text-base">이미지</span>
+                </div>
 
-                  {/* Content Sections */}
-                  <div className="n-modal__sections">
-                    {selectedArticle.content.map((section, idx) => (
-                      <div key={idx} className="n-modal__section">
-                        <h2 className="n-modal__section-heading">
-                          {section.heading}
-                        </h2>
-                        <p className="n-modal__section-text">{section.text}</p>
-                      </div>
-                    ))}
-                  </div>
+                {/* Content Sections */}
+                <div className="flex flex-col gap-8">
+                  {selectedArticle.content.map((section, idx) => (
+                    <div key={idx}>
+                      <h2 className="text-2xl font-bold text-foreground-light mb-4">
+                        {section.heading}
+                      </h2>
+                      <p className="text-gray-600 leading-relaxed text-base">
+                        {section.text}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
+          </div>
         </div>
       )}
     </>

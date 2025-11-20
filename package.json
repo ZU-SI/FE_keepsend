@@ -24,11 +24,9 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
-    "@tailwindcss/postcss": "^4.1.17",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "autoprefixer": "^10.4.22",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9.35.0",
     "eslint-config-next": "^15.5.5",
@@ -36,9 +34,10 @@
     "eslint-plugin-promise": "^7.2.1",
     "eslint-plugin-unused-imports": "^4.2.0",
     "globals": "^16.5.0",
-    "postcss": "^8.5.6",
     "prettier": "^3.6.2",
-    "tailwindcss": "^4.1.17",
+    "tailwindcss": "^3.4.4",
+    "postcss": "^8.4.38",
+    "autoprefixer": "^10.4.19",
     "typescript": "^5"
   },
   "browserslist": [

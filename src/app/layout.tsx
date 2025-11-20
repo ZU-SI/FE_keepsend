@@ -4,8 +4,8 @@ import GlobalModals from "@/components/layouts/GlobalModals";
 import type { Metadata } from "next";
 import { Rajdhani } from 'next/font/google';
 import localFont from 'next/font/local';
-import "../styles/tailwind.css";
 import "../styles/globals.scss";
+import "../styles/tailwind.css";
 
 /** ------------------------------
  * 폰트 설정

@@ -1,8 +1,8 @@
 "use client";
 
-import { Fragment } from "react";
+import { contactModalOpenAtom } from "@/store/global-modal.store";
 import { useSetAtom } from "jotai";
-import { contactModalOpenAtom } from "@/store/contact.store";
+import { Fragment } from "react";
 
 interface Banner {
   id: number;

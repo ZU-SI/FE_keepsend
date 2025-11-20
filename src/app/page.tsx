@@ -4,7 +4,7 @@ import BannerSection from "@/app/(home)/_components/BannerSection";
 import ServiceSection from "@/app/(home)/_components/ServiceSection";
 import SolutionSection from "@/app/(home)/_components/SolutionSection";
 import GlobalHeader from "@/components/layouts/GlobalHeader";
-import { contactModalOpenAtom } from "@/store/contact.store";
+import { contactModalOpenAtom } from "@/store/global-modal.store";
 import gsap from "gsap";
 import ScrollToPlugin from "gsap/ScrollToPlugin";
 import { useAtomValue } from "jotai";
@@ -143,12 +143,12 @@ export default function Home() {
       if (direction > 0) {
         // 아래로 스크롤
         const distanceToBottom = currentBottom - viewportBottom;
-        
+
         // 마지막 섹션에서 아래로 스크롤하고 섹션의 끝에 도달했으면 footer로 자연스럽게
         if (currentIndex === total - 1 && distanceToBottom <= threshold) {
           return;
         }
-        
+
         // 큰 섹션 내부에서 아래로 스크롤할 여지가 있으면 자연스럽게
         if (distanceToBottom > threshold && currentHeight > window.innerHeight) {
           return;
@@ -156,7 +156,7 @@ export default function Home() {
       } else {
         // 위로 스크롤
         const distanceFromTop = viewportTop - currentTop;
-        
+
         // 큰 섹션 내부에서 위로 스크롤할 여지가 있으면 자연스럽게
         if (distanceFromTop > threshold && currentHeight > window.innerHeight) {
           return;
@@ -247,7 +247,7 @@ export default function Home() {
     const handleResize = () => {
       // 모달이 열려 있으면 크기 조정 시 스크롤 재설정을 건너뛰기
       if (isModalOpen) return;
-      
+
       // 모바일에서는 리사이즈 시 스냅 안함
       if (isMobile()) return;
 

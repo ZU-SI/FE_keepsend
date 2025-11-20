@@ -1,6 +1,6 @@
 "use client";
 
-import { contactModalOpenAtom } from "@/store/contact.store";
+import { contactModalOpenAtom } from "@/store/global-modal.store";
 import { useSetAtom } from "jotai";
 
 export default function GlobalFooter() {

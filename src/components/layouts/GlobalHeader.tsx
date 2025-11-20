@@ -1,6 +1,6 @@
 "use client";
 
-import { contactModalOpenAtom } from "@/store/contact.store";
+import { contactModalOpenAtom } from "@/store/global-modal.store";
 import { activeMenuAtom } from "@/store/menu.store";
 import gsap from "gsap";
 import ScrollToPlugin from "gsap/ScrollToPlugin";

@@ -4,6 +4,7 @@ import GlobalModals from "@/components/layouts/GlobalModals";
 import type { Metadata } from "next";
 import { Rajdhani } from 'next/font/google';
 import localFont from 'next/font/local';
+import "../styles/tailwind.css";
 import "../styles/globals.scss";
 
 /** ------------------------------
@@ -14,18 +15,18 @@ const rajdhani = Rajdhani({
   variable: '--font-rajdhani',
   display: 'swap'
 })
-const suite =  localFont({
-    src: '../../public/fonts/SUITE-Variable.woff2',
-    display: 'swap',
-    weight: '100 900',
-    variable: '--font-suite'
-  })
+const suite = localFont({
+  src: '../../public/fonts/SUITE-Variable.woff2',
+  display: 'swap',
+  weight: '100 900',
+  variable: '--font-suite'
+})
 const suit = localFont({
-    src: '../../public/fonts/SUIT-Variable.woff2',
-    display: 'swap',
-    weight: '100 900',
-    variable: '--font-suit'
-  })
+  src: '../../public/fonts/SUIT-Variable.woff2',
+  display: 'swap',
+  weight: '100 900',
+  variable: '--font-suit'
+})
 
 /** ------------------------------
  * 메타 데이터 설정
@@ -33,6 +34,11 @@ const suit = localFont({
 export const metadata: Metadata = {
   title: "KEEPSEND",
   description: "AI LOGISTICS",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

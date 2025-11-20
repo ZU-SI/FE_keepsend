@@ -31,22 +31,22 @@ const defaultProblems: Problem[] = [
   {
     title: "확장, 예측의 한계",
     description: "멈춰버린 기업 성장, 꽉 막힌 인프라",
-    relatedTalkIndices: [0,1]
+    relatedTalkIndices: [0, 1]
   },
   {
     title: "관리 포인트 과총",
     description: "복잡한 구조, 낮은 효율, 비용 부담",
-    relatedTalkIndices: [2,3]
+    relatedTalkIndices: [2, 3]
   },
   {
     title: "미 검증, 정산",
     description: "불투명한 정산과 데이터",
-    relatedTalkIndices: [4,5]
+    relatedTalkIndices: [4, 5]
   },
   {
     title: "추적 및 보안 취약",
     description: "실시간 모니터링 부재, 정보 보안 리스크",
-    relatedTalkIndices: [6,7]
+    relatedTalkIndices: [6, 7]
   }
 ];
 
@@ -61,7 +61,7 @@ export default function ServiceB2bOne({
   const [allProblemsLoaded, setAllProblemsLoaded] = useState(false);
   const [currentLoadingProblem, setCurrentLoadingProblem] = useState<number>(-1);
   const [hoveredProblemIndex, setHoveredProblemIndex] = useState<number | null>(null);
-  const [reorderedTalks, setReorderedTalks] = useState<Array<{text: string, originalIndex: number}>>([]);
+  const [reorderedTalks, setReorderedTalks] = useState<Array<{ text: string, originalIndex: number }>>([]);
 
   const problemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const chatMessagesRef = useRef<HTMLDivElement>(null);
@@ -70,7 +70,7 @@ export default function ServiceB2bOne({
 
   // Reorder talks based on problem sequence
   useEffect(() => {
-    const ordered: Array<{text: string, originalIndex: number}> = [];
+    const ordered: Array<{ text: string, originalIndex: number }> = [];
     const usedIndices = new Set<number>();
 
     // Add talks in problem order
@@ -181,117 +181,114 @@ export default function ServiceB2bOne({
 
   return (
     <section className="s-section__content" ref={sectionRef} id={id}>
-        {/* Header */}
-        <div className="s-section__header">
-            <h3 className="s-section__subtitle">물류 사업의 고충 및 문제점</h3>
-            <h2 className="s-section__title">
-              B2B 3PL 번거롭고 어려우신가요?
-            </h2>
-            <p className="s-section__description">
-              여러가지 고충으로 지체되는 사업 확장의 목표를 KEEPSEND가 해결하고 성공까지 함께합니다.
-            </p>
-        </div>
-        {/* Main Content Grid */}
-        <div className="service-problem__main-grid">
-          {/* Problem List - Left on desktop, Top on mobile */}
-          <div className="service-problem__problem-list">
-            {problems.map((problem, idx) => (
-              <div
-                key={idx}
-                ref={(el) => (problemRefs.current[idx] = el)}
-                className={`service-problem__problem-item ${
-                  visibleProblems[idx] ? 'service-problem__problem-item--visible' : ''
+      {/* Header */}
+      <div className="s-section__header">
+        <h3 className="s-section__subtitle">물류 사업의 고충 및 문제점</h3>
+        <h2 className="s-section__title">
+          B2B 3PL 번거롭고 어려우신가요?
+        </h2>
+        <p className="s-section__description">
+          여러가지 고충으로 지체되는 사업 확장의 목표를 KEEPSEND가 해결하고 성공까지 함께합니다.
+        </p>
+      </div>
+      {/* Main Content Grid */}
+      <div className="service-problem__main-grid">
+        {/* Problem List - Left on desktop, Top on mobile */}
+        <div className="service-problem__problem-list">
+          {problems.map((problem, idx) => (
+            <div
+              key={idx}
+              ref={(el) => { problemRefs.current[idx] = el; }}
+              className={`service-problem__problem-item ${visibleProblems[idx] ? 'service-problem__problem-item--visible' : ''
                 }`}
-                onMouseEnter={() => allProblemsLoaded ? setHoveredProblemIndex(idx) : null}
-                onMouseLeave={() => setHoveredProblemIndex(null)}
-              >
-                <div className="service-problem__problem-number">
-                  {String(idx + 1).padStart(2, '0')}
-                </div>
-                <div className="service-problem__problem-content">
-                  <h3 className="service-problem__problem-title">
-                    {problem.title}
-                  </h3>
-                  <p className="service-problem__problem-description">
-                    {problem.description}
-                  </p>
-                </div>
+              onMouseEnter={() => allProblemsLoaded ? setHoveredProblemIndex(idx) : null}
+              onMouseLeave={() => setHoveredProblemIndex(null)}
+            >
+              <div className="service-problem__problem-number">
+                {String(idx + 1).padStart(2, '0')}
               </div>
-            ))}
-          </div>
-
-          {/* Center Divider - Responsive */}
-          <div className="service-problem__divider">
-            <span className="service-problem__divider-icon">🧐</span>
-            <p className="service-problem__divider-text">우리가 해결하는 문제</p>
-          </div>
-
-          {/* Chat Box - Right on desktop, Bottom on mobile */}
-          <div className="service-problem__chat-box">
-            <div className="service-problem__chat-header">
-              <div className="service-problem__chat-status"></div>
-              <span className="service-problem__chat-title">
-                실제 현장의 목소리
-              </span>
+              <div className="service-problem__problem-content">
+                <h3 className="service-problem__problem-title">
+                  {problem.title}
+                </h3>
+                <p className="service-problem__problem-description">
+                  {problem.description}
+                </p>
+              </div>
             </div>
-            <div className="service-problem__chat-messages" ref={chatMessagesRef}>
-              {reorderedTalks.map((talk, idx) => {
-                const isHighlighted = isChatHighlighted(talk.originalIndex);
-                const isVisible = isChatVisible(talk.originalIndex);
+          ))}
+        </div>
 
-                return (
-                  <div
-                    key={idx}
-                    ref={(el) => (chatBubbleRefs.current[idx] = el)}
-                    className={`service-problem__chat-bubble ${
-                      isVisible ? 'service-problem__chat-bubble--visible' : ''
-                    }${
-                      isHighlighted ? 'service-problem__chat-bubble--highlighted' : ''
-                    } ${idx % 2 === 1? 'service-problem__chat-bubble--left' : 'service-problem__chat-bubble--right'}`}
-                  >
-                    <div className="service-problem__bubble-content">
-                      <p>{talk.text}</p>
-                    </div>
+        {/* Center Divider - Responsive */}
+        <div className="service-problem__divider">
+          <span className="service-problem__divider-icon">🧐</span>
+          <p className="service-problem__divider-text">우리가 해결하는 문제</p>
+        </div>
+
+        {/* Chat Box - Right on desktop, Bottom on mobile */}
+        <div className="service-problem__chat-box">
+          <div className="service-problem__chat-header">
+            <div className="service-problem__chat-status"></div>
+            <span className="service-problem__chat-title">
+              실제 현장의 목소리
+            </span>
+          </div>
+          <div className="service-problem__chat-messages" ref={chatMessagesRef}>
+            {reorderedTalks.map((talk, idx) => {
+              const isHighlighted = isChatHighlighted(talk.originalIndex);
+              const isVisible = isChatVisible(talk.originalIndex);
+
+              return (
+                <div
+                  key={idx}
+                  ref={(el) => { chatBubbleRefs.current[idx] = el; }}
+                  className={`service-problem__chat-bubble ${isVisible ? 'service-problem__chat-bubble--visible' : ''
+                    }${isHighlighted ? 'service-problem__chat-bubble--highlighted' : ''
+                    } ${idx % 2 === 1 ? 'service-problem__chat-bubble--left' : 'service-problem__chat-bubble--right'}`}
+                >
+                  <div className="service-problem__bubble-content">
+                    <p>{talk.text}</p>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
+          </div>
 
-            {/* Scroll Buttons */}
-            <div className="service-problem__scroll-buttons">
-              <button
-                className="service-problem__scroll-button service-problem__scroll-button--up"
-                onClick={scrollToTop}
-                aria-label="Scroll to top"
-              >
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M12 19V5M12 5L5 12M12 5L19 12"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-              <button
-                className="service-problem__scroll-button service-problem__scroll-button--down"
-                onClick={scrollToBottom}
-                aria-label="Scroll to bottom"
-              >
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M12 5V19M12 19L5 12M12 19L19 12"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-            </div>
+          {/* Scroll Buttons */}
+          <div className="service-problem__scroll-buttons">
+            <button
+              className="service-problem__scroll-button service-problem__scroll-button--up"
+              onClick={scrollToTop}
+              aria-label="Scroll to top"
+            >
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12 19V5M12 5L5 12M12 5L19 12"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+            <button
+              className="service-problem__scroll-button service-problem__scroll-button--down"
+              onClick={scrollToBottom}
+              aria-label="Scroll to bottom"
+            >
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12 5V19M12 19L5 12M12 19L19 12"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
           </div>
         </div>
+      </div>
     </section>
   );
 }

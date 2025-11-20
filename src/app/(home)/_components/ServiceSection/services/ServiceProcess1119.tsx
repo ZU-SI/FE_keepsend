@@ -168,24 +168,68 @@ const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
 
   return (
     <section className="s-section__content" id={id} ref={sectionRef}>
-        <div className="s-section__header">
-          <span className="s-section__subtitle">KEEPSEND 프로세스</span>
-          <h2 className="s-section__title">당신의 브랜드가 닿는 길, 그 안의 모든 과정</h2>
-          <p className="s-section__description">단계마다 검증된 관리 체계로, 신뢰받는 B2B 파트너십을 완성합니다.</p>
+      <div className="s-section__header">
+        <span className="s-section__subtitle">KEEPSEND 프로세스</span>
+        <h2 className="s-section__title">당신의 브랜드가 닿는 길, 그 안의 모든 과정</h2>
+        <p className="s-section__description">단계마다 검증된 관리 체계로, 신뢰받는 B2B 파트너십을 완성합니다.</p>
+      </div>
+      <div className="service-process__flow">
+        <div className="service-process__row service-process__row--first">
+          {processSteps.slice(0, 4).map((step, idx) => (
+            <React.Fragment key={step.id}>
+              <div
+                ref={(el) => { stepRefs.current[idx] = el; }}
+                className={`service-process__step ${visibleSteps.includes(step.id) ? 'visible' : ''}`}
+              >
+                <div className="service-process__step-img">
+                  img
+                  <span className="service-process__step-num">
+                    {step.id}
+                  </span>
+                </div>
+                <div className="service-process__step-content">
+                  <h3 className="service-process__step-title">{step.title}</h3>
+                  <p className="service-process__step-description">{step.description}</p>
+                </div>
+              </div>
+              {idx < 3 && (
+                <div
+                  className={`service-process__line service-process__line--horizontal ${visibleLines.includes(step.id) ? 'visible' : ''}`}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M12 5L19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+              )}
+            </React.Fragment>
+          ))}
         </div>
-        <div className="service-process__flow">
-          <div className="service-process__row service-process__row--first">
-            {processSteps.slice(0, 4).map((step, idx) => (
+
+        {/* 수직 연결선 (위쪽) - 4에서 5로 가는 화살표 */}
+        <div
+          className={`service-process__line service-process__line--vertical service-process__line--top ${visibleLines.includes(4) ? 'visible' : ''}`}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 19V5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M5 12L12 5L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+
+        <div className="service-process__row service-process__row--second">
+          {processSteps.slice(4, 8).reverse().map((step, idx) => {
+            const originalIdx = processSteps.findIndex(s => s.id === step.id);
+            return (
               <React.Fragment key={step.id}>
                 <div
-                  ref={(el) => stepRefs.current[idx] = el}
+                  ref={(el) => { stepRefs.current[originalIdx] = el; }}
                   className={`service-process__step ${visibleSteps.includes(step.id) ? 'visible' : ''}`}
                 >
                   <div className="service-process__step-img">
                     img
-                  <span className="service-process__step-num">
-                    {step.id}
-                  </span>
+                    <span className="service-process__step-num">
+                      {step.id}
+                    </span>
                   </div>
                   <div className="service-process__step-content">
                     <h3 className="service-process__step-title">{step.title}</h3>
@@ -194,63 +238,19 @@ const ServiceProcess: React.FC<ServiceProcessProps> = ({ id, index }) => {
                 </div>
                 {idx < 3 && (
                   <div
-                    className={`service-process__line service-process__line--horizontal ${visibleLines.includes(step.id) ? 'visible' : ''}`}
+                    className={`service-process__line service-process__line--horizontal service-process__line--reverse ${visibleLines.includes(step.id) ? 'visible' : ''}`}
                   >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <path d="M12 5L19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M19 12H5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
                 )}
               </React.Fragment>
-            ))}
-          </div>
-
-          {/* 수직 연결선 (위쪽) - 4에서 5로 가는 화살표 */}
-          <div
-            className={`service-process__line service-process__line--vertical service-process__line--top ${visibleLines.includes(4) ? 'visible' : ''}`}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 19V5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M5 12L12 5L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-
-          <div className="service-process__row service-process__row--second">
-            {processSteps.slice(4, 8).reverse().map((step, idx) => {
-              const originalIdx = processSteps.findIndex(s => s.id === step.id);
-              return (
-                <React.Fragment key={step.id}>
-                  <div
-                    ref={(el) => stepRefs.current[originalIdx] = el}
-                    className={`service-process__step ${visibleSteps.includes(step.id) ? 'visible' : ''}`}
-                  >
-                    <div className="service-process__step-img">
-                      img
-                    <span className="service-process__step-num">
-                      {step.id}
-                    </span>
-                    </div>
-                    <div className="service-process__step-content">
-                      <h3 className="service-process__step-title">{step.title}</h3>
-                      <p className="service-process__step-description">{step.description}</p>
-                    </div>
-                  </div>
-                  {idx < 3 && (
-                    <div
-                      className={`service-process__line service-process__line--horizontal service-process__line--reverse ${visibleLines.includes(step.id) ? 'visible' : ''}`}
-                    >
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 12H5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </div>
+            );
+          })}
         </div>
+      </div>
     </section>
   );
 };

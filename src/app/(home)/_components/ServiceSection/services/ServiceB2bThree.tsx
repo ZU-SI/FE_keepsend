@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 interface Props {
   id?: string;
+  index?: number;
 }
 
 // 위치별 데이터 정의
@@ -36,7 +37,7 @@ const logisticsCards = [
   },
 ];
 
-export default function ServiceB2bThree({ id }: Props) {
+export default function ServiceB2bThree({ id, index }: Props) {
   const [hovered, setHovered] = useState<{ type: 'planet' | 'card'; id: string } | null>(null);
 
   const handlePlanetEnter = (planetId: string) => {

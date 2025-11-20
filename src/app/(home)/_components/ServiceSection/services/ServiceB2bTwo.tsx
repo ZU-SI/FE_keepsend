@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 // import styles from './ProcessFlow.module.scss'; // SCSS 사용 시
 
 const steps = [
@@ -13,7 +13,12 @@ const steps = [
   { id: 6, title: "정산 관리 (Settlement)", desc: "배송 완료 건에 대한 운임 및 정산 내역을 확정합니다.", icon: "💰" },
 ];
 
-export default function ServiceB2bTwo() {
+interface ServiceB2bTwoProps {
+  id?: string;
+  index?: number;
+}
+
+export default function ServiceB2bTwo({ id, index }: ServiceB2bTwoProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // 스크롤 진행률 감지 (0 ~ 1)

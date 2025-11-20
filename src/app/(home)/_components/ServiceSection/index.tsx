@@ -6,12 +6,12 @@ import { useRef } from "react";
 import { useSectionObserver } from "../../_utils/useSectionObserver";
 import ServiceB2bOne from "./services/ServiceB2bOne";
 import ServiceB2bThree from "./services/ServiceB2bThree";
+import ServiceB2bTwo from "./services/ServiceB2bTwo";
 import ServiceCenter from "./services/ServiceCenter";
 import ServiceConsulting from "./services/ServiceConsulting";
 import ServiceIntro from "./services/ServiceIntro";
 import ServicePartner from "./services/ServicePartner";
 import ServiceProcess from "./services/ServiceProcess";
-import ServiceB2bTwo from "./services/ServiceB2bTwo";
 
 interface ServiceSectionProps {
   startIdx: number;
@@ -114,7 +114,7 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-scroll-section
         data-section-index={startIdx + 2}
         data-service-id={"b2b-2"}
-        className="s-section"
+        className="s-section light"
       // style={{ height: "fit-content" }}
       >
         <ServiceB2bTwo id="b2b-2" index={startIdx + 2} />

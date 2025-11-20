@@ -1,5 +1,5 @@
 import { motion, useScroll } from 'framer-motion';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 
 interface ServiceProcessProps {
   id: string;
@@ -12,7 +12,7 @@ interface ProcessStep {
   description: string;
 }
 
-export default function ServiceProcess ({ id, index }): React.FC<ServiceProcessProps> {
+export default function ServiceProcess ({ id, index }) {
   const containerRef = useRef<HTMLElement>(null);
 
   const processSteps: ProcessStep[] = [
@@ -89,7 +89,7 @@ export default function ServiceProcess ({ id, index }): React.FC<ServiceProcessP
         <motion.div
           style={{
             position: "absolute",
-            left: "50%",
+            left: "calc(50% - 2px)",
             top: 0,
             width: "4px",
             background: "#3b82f6", // 브랜드 컬러
@@ -102,7 +102,7 @@ export default function ServiceProcess ({ id, index }): React.FC<ServiceProcessP
         />
 
         {/* 3. 각 단계별 아이템 */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "80px", position: "relative", zIndex: 2 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "100px", position: "relative", zIndex: 2 }}>
           {processSteps.map((step, idx) => (
             <ProcessStepItem key={step.id} step={step} index={idx} />
           ))}
@@ -136,7 +136,6 @@ export default function ServiceProcess ({ id, index }): React.FC<ServiceProcessP
 };
 
 
-
 // 개별 단계 컴포넌트
 function ProcessStepItem({ step, index }: { step: ProcessStep; index: number }) {
   // 지그재그 배치를 위한 로직 (짝수: 오른쪽 / 홀수: 왼쪽)
@@ -156,23 +155,23 @@ function ProcessStepItem({ step, index }: { step: ProcessStep; index: number }) 
       }}
     >
       {/* 중앙 노드 (원형 점) */}
-      <div
+      {/* <div
         className="absolute left-1/2 -translate-x-1/2 w-5 h-5 bg-white border-4 border-blue-500 rounded-full z-10"
-      />
+      /> */}
 
       {/* 텍스트 카드 */}
       <div
         // service-process__item-wrapper: width: 40% (base)
-        className="w-2/5 min-w-[25%] max-w-[40%]"
+        className="w-[90vw] lg:w-[700px]"
         style={{
           // Spacing from center rail (80px)
-          marginRight: isRightSide ? "0" : "80px",
-          marginLeft: isRightSide ? "80px" : "0"
+          marginRight: isRightSide ? "0" : "50%",
+          marginLeft: isRightSide ? "50%" : "0"
         }}
       >
         <div
           // service-process__step
-          className="flex w-full gap-3 opacity-100 translate-y-0"
+          className="flex w-full gap-4 opacity-100 translate-y-0"
           style={{
             flexDirection: isRightSide ? 'row' : 'row-reverse',
             alignItems: 'center',
@@ -180,7 +179,7 @@ function ProcessStepItem({ step, index }: { step: ProcessStep; index: number }) 
           }}
         >
           {/* service-process__step-img */}
-          <div className="relative z-20 flex h-[60px] w-[60px] flex-shrink-0 items-center justify-center rounded-full lg:h-[80px] lg:w-[80px]">
+          <div className="relative z-20 flex h-[80px] w-[80px] flex-shrink-0 items-center justify-center rounded-full lg:h-[80px] lg:w-[80px]">
             {/* service-process__step-img::before */}
             <div className="absolute inset-[-5px] rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 z-0" aria-hidden="true"></div>
 
@@ -190,7 +189,7 @@ function ProcessStepItem({ step, index }: { step: ProcessStep; index: number }) 
             </span>
 
             {/* service-process__step-num */}
-            <span className="absolute top-[-20px] right-[-20px] flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary text-lg font-bold text-white shadow-lg shadow-primary/30">
+            <span className={`absolute top-[-20px] ${isRightSide? 'left-[-20px]' : 'right-[-20px]'} flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary text-lg font-bold text-white shadow-lg shadow-primary/30`}>
               {step.id}
             </span>
           </div>

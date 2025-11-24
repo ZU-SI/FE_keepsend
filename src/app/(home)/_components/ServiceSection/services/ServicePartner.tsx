@@ -18,16 +18,15 @@ interface Partner {
 }
 
 const ServicePartner: React.FC<Props> = ({ id, index }) => {
-  // Swiper 인스턴스를 저장할 State
   const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
 
   const partners: Partner[] = [
-    { name: '쿠팡', logo: '/images/coupang-logo.png', description: '상세 설명'},
-    { name: '롯데글로벌로지스틱스', logo: '/images/lotte-logo.png', description: '상세 설명' },
-    { name: 'CJ대한통운', logo: '/images/cj-logo.png', description: '상세 설명' },
-    { name: '한진', logo: '/images/hanjin-logo.png', description: '상세 설명' },
-    { name: 'GS리테일', logo: '/images/gs-logo.png', description: '상세 설명' },
-    { name: '네이버', logo: '/images/naver-logo.png', description: '상세 설명' }
+    { name: '쿠팡', logo: '/images/coupang-logo.png', description: '빠른 배송과 혁신적인 물류 시스템' },
+    { name: '롯데글로벌로지스틱스', logo: '/images/lotte-logo.png', description: '글로벌 네트워크 기반의 물류 솔루션' },
+    { name: '쿠팡', logo: '/images/coupang-logo.png', description: '빠른 배송과 혁신적인 물류 시스템' },
+    { name: '롯데글로벌로지스틱스', logo: '/images/lotte-logo.png', description: '글로벌 네트워크 기반의 물류 솔루션' },
+    { name: '쿠팡', logo: '/images/coupang-logo.png', description: '빠른 배송과 혁신적인 물류 시스템' },
+    { name: '롯데글로벌로지스틱스', logo: '/images/lotte-logo.png', description: '글로벌 네트워크 기반의 물류 솔루션' },
   ];
 
   const swiperBreakpoints = {
@@ -36,15 +35,15 @@ const ServicePartner: React.FC<Props> = ({ id, index }) => {
     0: { slidesPerView: 3, spaceBetween: 32 },
   };
 
-  // 이벤트 핸들러: 마우스 오버 시 즉시 멈춤
-  const handleMouseEnter = () => {
+  // 카드에 마우스 올렸을 때: 슬라이드 멈춤
+  const handleCardMouseEnter = () => {
     if (swiperInstance) {
       swiperInstance.autoplay.stop();
     }
   };
 
-  // 이벤트 핸들러: 마우스 이탈 시 부드럽게 다시 시작
-  const handleMouseLeave = () => {
+  // 카드에서 마우스 뗐을 때: 슬라이드 재개
+  const handleCardMouseLeave = () => {
     if (swiperInstance) {
       swiperInstance.autoplay.start();
     }
@@ -60,48 +59,66 @@ const ServicePartner: React.FC<Props> = ({ id, index }) => {
         </p>
       </div>
 
-      {/* 컨테이너에 이벤트 핸들러 연결 */}
-      <div
-        className="relative w-full overflow-hidden py-xl rounded-lg bg-card/30 py-8 lg:py-12"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
+      <div className="relative w-full overflow-hidden rounded-lg bg-card/30">
         {/* Fade effects */}
         <div className="pointer-events-none absolute inset-y-0 left-0 z-20 w-[100px] bg-gradient-to-r from-background to-transparent lg:w-[200px]" aria-hidden="true"></div>
         <div className="pointer-events-none absolute inset-y-0 right-0 z-20 w-[100px] bg-gradient-to-l from-background to-transparent lg:w-[200px]" aria-hidden="true"></div>
 
+        {/* Swiper Container */}
         <Swiper
           modules={[Autoplay]}
           loop={true}
-          // 중요: onSwiper로 인스턴스 캡처 및 linear easing 강제 적용
           onSwiper={(swiper) => {
             setSwiperInstance(swiper);
-            // JS로 강제로 wrapper의 트랜지션을 linear로 고정 (CSS 파일 없이 해결)
             swiper.wrapperEl.style.transitionTimingFunction = 'linear';
           }}
           autoplay={{
             delay: 0,
             disableOnInteraction: false,
-            pauseOnMouseEnter: false,
+            pauseOnMouseEnter: false, // 수동 제어를 위해 false 유지
           }}
           speed={5000}
           breakpoints={swiperBreakpoints}
-          allowTouchMove={false} // 마우스 드래그 방지 (Marquee 느낌 유지)
-          className="!ease-linear" // Tailwind 클래스로 보조
+          allowTouchMove={false}
+          className="!ease-linear"
+          // [중요] 툴팁이 잘리지 않도록 상단 패딩(pt-20)을 넉넉하게 확보합니다.
+          style={{ paddingTop: '5rem', paddingBottom: '3rem' }}
         >
           {partners.map((partner, idx) => (
             <SwiperSlide
-              className="!w-auto flex-shrink-0 py-xl"
+              className="!w-auto flex-shrink-0"
               key={`${partner.name}-${idx}`}
             >
-              <div className="flex min-w-[200px] flex-shrink-0 items-center justify-center rounded bg-card border border-gray-800 p-4 transition-all duration-300 hover:translate-y-[-4px] hover:border-cyan-600 hover:shadow-xl hover:shadow-cyan-500/15 lg:min-w-[250px] lg:p-6">
-                <Image
-                  src={partner.logo}
-                  alt={partner.name}
-                  width={180}
-                  height={60}
-                  className="h-auto w-[140px] object-contain opacity-70 grayscale transition-all duration-300 hover:opacity-100 hover:grayscale-0 lg:w-[180px]"
-                />
+              {/* Card Wrapper (Group) */}
+              <div
+                className="group relative flex min-w-[200px] flex-shrink-0 cursor-default flex-col items-center justify-center"
+                onMouseEnter={handleCardMouseEnter}
+                onMouseLeave={handleCardMouseLeave}
+              >
+
+                {/* 1. Description Tooltip (Hover시 노출) */}
+                <div className="pointer-events-none absolute bottom-full mb-4 w-[220px] opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-30">
+                  <div className="relative rounded-lg bg-gray-900 px-4 py-3 text-center text-sm text-white shadow-xl border border-gray-700">
+                    {/* 툴팁 내용 */}
+                    <span className="block font-bold mb-1 text-cyan-400">{partner.name}</span>
+                    <span className="text-gray-300 text-xs">{partner.description}</span>
+
+                    {/* 말풍선 화살표 */}
+                    <div className="absolute -bottom-2 left-1/2 h-4 w-4 -translate-x-1/2 rotate-45 bg-gray-900 border-r border-b border-gray-700"></div>
+                  </div>
+                </div>
+
+                {/* 2. Logo Card Design */}
+                <div className="flex w-full items-center justify-center rounded bg-card border border-gray-800 p-4 transition-all duration-300 group-hover:translate-y-[-4px] group-hover:border-cyan-600 group-hover:shadow-xl group-hover:shadow-cyan-500/15 lg:min-w-[250px] lg:p-6">
+                  <Image
+                    src={partner.logo}
+                    alt={partner.name}
+                    width={180}
+                    height={60}
+                    className="h-auto w-[140px] object-contain opacity-70 grayscale transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0 lg:w-[180px]"
+                  />
+                </div>
+
               </div>
             </SwiperSlide>
           ))}

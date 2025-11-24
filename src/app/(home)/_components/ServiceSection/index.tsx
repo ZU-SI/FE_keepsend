@@ -8,7 +8,6 @@ import ServiceB2bOne from "./services/ServiceB2bOne";
 import ServiceB2bThree from "./services/ServiceB2bThree";
 import ServiceB2bTwo from "./services/ServiceB2bTwo";
 import ServiceCenter from "./services/ServiceCenter";
-import ServiceConsulting from "./services/ServiceConsulting";
 import ServiceIntro from "./services/ServiceIntro";
 import ServicePartner from "./services/ServicePartner";
 import ServiceProcess from "./services/ServiceProcess";
@@ -28,7 +27,6 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
     { id: "process", titleKo: "프로세스", sectionIds: ["process"] },
     { id: "center", titleKo: "물류센터", sectionIds: ["center"] },
     { id: "partner", titleKo: "파트너", sectionIds: ["partner"] },
-    { id: "consulting", titleKo: "컨설팅", sectionIds: ["consulting"] },
   ];
 
   const { showMenu, activeMenuId, sectionRefs } = useSectionObserver({
@@ -107,7 +105,7 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         className="s-section light service-problem"
       // style={{ height: "100vh" }}
       >
-        <ServiceB2bOne id="b2b-1" index={startIdx + 1} />
+        <ServiceB2bOne id="b2b-1" />
       </div>
       {/* B2B section 2 */}
       <div
@@ -127,7 +125,7 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         className="s-section light service-system"
       // style={{ height: "100vh" }}
       >
-        <ServiceB2bThree id="b2b-3" index={startIdx + 3} />
+        <ServiceB2bThree id="b2b-3"  />
       </div>
 
       {/* Process */}
@@ -158,21 +156,10 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-section-index={startIdx + 6}
         data-service-id={"partner"}
         className="s-section service-partner"
+        ref={lastSectionRef}
       // style={{ height: "fit-content" }}
       >
         <ServicePartner id="partner" index={startIdx + 6} />
-      </div>
-
-      {/* Consulting */}
-      <div
-        data-scroll-section
-        data-section-index={startIdx + 7}
-        data-service-id={"consulting"}
-        className="s-section light service-cs"
-        // style={{ height: "100vh" }}
-        ref={lastSectionRef}
-      >
-        <ServiceConsulting id="consulting" index={startIdx + 7} />
       </div>
     </>
   );

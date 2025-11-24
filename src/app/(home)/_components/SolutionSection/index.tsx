@@ -20,7 +20,6 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
   const setActiveMenu = useSetAtom(activeMenuAtom);
 
   const menuGroups = [
-    // Intro는 메뉴에서 제외
     { id: "logistics-it", titleKo: "물류 IT", sectionIds: ["logistics-it"] },
     { id: "settlement", titleKo: "정산 시스템", sectionIds: ["settlement"] },
     { id: "ai-platform", titleKo: "AI 플랫폼", sectionIds: ["ai-platform"] },

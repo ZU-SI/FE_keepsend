@@ -7,13 +7,11 @@ import GlobalHeader from "@/components/layouts/GlobalHeader";
 
 export default function Home() {
   return (
-    // <NavermapsProvider ncpClientId="1chmt7j1tl">
       <main id="main" >
         <GlobalHeader />
         <BannerSection startIdx={0} />
         <ServiceSection startIdx={3} />
-        <SolutionSection startIdx={11} />
+        <SolutionSection startIdx={10} />
       </main>
-    // </NavermapsProvider>
   );
 }

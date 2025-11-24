@@ -40,8 +40,8 @@
     inset: 0;
     background-image:
       linear-gradient(rgba(v.$accent, 0.25) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(v.$accent, 0.25) 1px, transparent 1px);
-    background-size: 50px 50px;
+      linear-gradient(90deg, rgba(v.$accent, 0.25) 1px, transparent 7px);
+    background-size: 40px 40px;
     z-index: 1;
   }
 

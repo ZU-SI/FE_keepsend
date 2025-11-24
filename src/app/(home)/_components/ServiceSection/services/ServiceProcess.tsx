@@ -15,7 +15,7 @@ interface ProcessStep {
   image2?: string;
 }
 
-export default function ServiceProcess ({ id, index }) {
+export default function ServiceProcess ({ id, index } : ServiceProcessProps) {
   const containerRef = useRef<HTMLElement>(null);
 
   const processSteps: ProcessStep[] = [

@@ -252,21 +252,18 @@ export default function ServiceB2bOne({
 
   return (
     <section ref={containerRef} id={id} className="relative w-full h-[700vh]">
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden bg-foreground py-10 lg:py-0">
-        <div className="s-section__container h-full flex flex-col justify-center max-w-screen-xl mx-auto px-4 lg:px-8 w-full">
-
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden bg-foreground">
+        <div className="s-section__content h-full flex flex-col justify-center max-w-screen-xl mx-auto  w-full">
           {/* Header */}
-          <div className="s-section__header mb-4 lg:mb-8 flex-shrink-0">
+          <div className="s-section__header">
             <h3 className="s-section__subtitle">물류 사업의 고충 및 문제점</h3>
             <h2 className="s-section__title">B2B 3PL 번거롭고 어려우신가요?</h2>
             <p className="s-section__description">
               여러가지 고충으로 지체되는 사업 확장의 목표를 KEEPSEND가 해결하고 성공까지 함께합니다.
             </p>
           </div>
-
           {/* Content Grid */}
           <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-8 lg:items-stretch min-h-0 flex-1 lg:h-[60vh]">
-
             {/* Left: Problem List */}
             <div className="relative flex flex-col justify-center order-3 lg:order-1 lg:h-[50vh]">
               <div className="absolute left-[1.25rem] top-6 bottom-6 w-0.5 bg-border-light hidden lg:block z-0" />

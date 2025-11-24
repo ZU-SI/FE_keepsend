@@ -12,33 +12,29 @@ const consultingCards = [
   {
     title: "데이터 기반의 인사이트 설계",
     descriptions: [
-      "실시간 물류 데이터와 운영 지표 분석",
-      "비효율 구간과 개선 우선순위 도출",
-      "정량적 근거 기반의 실행 전략 설계",
+      "실시간 물류 데이터와 운영 지표를 분석하여 비효율 구간과 개선 우선순위를 명확히 도출합니다.",
+      "정량적 근거를 바탕으로 성과 중심의 실행 전략을 설계합니다.",
     ],
   },
   {
-    title: "운영 프로세스 단순화",
+    title: "운영 프로세스 단순화 및 구조 재정립",
     descriptions: [
-      "중복 업무와 병목 구간 제거",
-      "현장 동선 및 배차 체계 전면 진단",
-      "작업 표준화로 처리 속도 향상",
+      "현장의 동선, 작업 단위, 배차 체계를 전면 진단해 중복 업무와 병목 구간을 제거합니다.",
+      "작업 표준화와 프로세스 단순화를 통해 운영 효율과 처리 속도를 동시에 향상시킵니다.",
     ],
   },
   {
-    title: "자동화 단계별 로드맵",
+    title: "자동화 전환을 위한 단계별 로드맵 구축",
     descriptions: [
-      "AI, 로봇, WMS 등 기술 인프라 적용",
-      "단계별 자동화 전략 로드맵 제안",
-      "현장 중심의 실행 가능한 DX 실현",
+      "AI 어시스턴트, 재고관리 로봇, WMS 등 기술 인프라를 단계적으로 적용하는 자동화 전략 로드맵을 제안합니다.",
+      "기존 인력의 역할 재조정과 시스템 연계를 통해 현장 중심의 실행 가능한 디지털 전환을 실현합니다.",
     ],
   },
   {
-    title: "비용·성과 연동형 개선",
+    title: "비용·성과 연동형 개선 모델 제안",
     descriptions: [
-      "성과 기반 컨설팅 체계 운영",
-      "ROI 산출 및 지속적 비용 효율 개선",
-      "핵심 지표(KPI) 기반 성과 관리",
+      "개선 결과를 정량화하여 성과 기반 컨설팅 체계로 운영합니다.",
+      "운영비 절감, 생산성 향상, 재고 회전율 등 핵심 지표에 따라 ROI(Return on Investment )를 산출하고, 지속적인 비용 효율 개선과 운영 최적화를 지원합니다.",
     ],
   },
 ];
@@ -52,12 +48,12 @@ export default function ServiceB2bTwo({ id, index }: Props) {
   });
 
   return (
-    // [Theme Change] Dark(bg-background) -> Light(bg-slate-50)
-    <section ref={containerRef} id={id} className="relative h-[450vh] bg-slate-50">
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-center justify-center py-8 lg:py-20">
-        <div className="mx-auto flex h-full w-full max-w-container flex-col px-4">
 
-          {/* Header: Light Theme Text Colors */}
+    <section ref={containerRef} id={id} className="relative h-[500vh] ">
+      {/* Motion: pin-scroll */}
+      <div className="s-section__content sticky top-0 overflow-hidden h-fit">
+        <div className="mx-auto flex h-full w-full max-w-container flex-col">
+        {/* HEADER */}
           <div className="s-section__header">
             <h3 className="s-section__subtitle">
               하이퍼(Hyper) 물류 컨설팅
@@ -67,14 +63,13 @@ export default function ServiceB2bTwo({ id, index }: Props) {
                 최적화된 물류 전략
               </span>으로 완성
             </h2>
-            <p className="mx-auto max-w-2xl text-sm text-slate-600 lg:text-base font-medium">
+            <p className="s-section__description">
               데이터 분석과 현장 진단을 기반으로 비용 절감과 확장을 실현합니다.
             </p>
           </div>
-
-          {/* Grid Container */}
+          {/* Contents */}
           <div className="relative flex-1 w-full">
-            <div className="grid h-full w-full grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
+            <div className="grid  w-full grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6">
               {consultingCards.map((card, idx) => (
                 <CardItem
                   key={idx}
@@ -85,15 +80,16 @@ export default function ServiceB2bTwo({ id, index }: Props) {
               ))}
             </div>
           </div>
-
         </div>
       </div>
     </section>
   );
 }
 
-// --- Card Component ---
 
+/** ------------------------------
+ * 카드 컴포넌트
+ * ------------------------------ */
 interface CardItemProps {
   card: {
     title: string;
@@ -102,15 +98,13 @@ interface CardItemProps {
   index: number;
   progress: MotionValue<number>;
 }
-
 function CardItem({ card, index, progress }: CardItemProps) {
-  // Grid Position Logic
+  // 카드 그리드:  데스크탑 2*2, 모바일 1*4
   const isLeft = index % 2 === 0;
   const isTop = index < 2;
 
-  // [Stacking Style Logic]
-  // 카드마다 조금씩 다른 회전각도와 위치 오프셋을 주어 "자연스럽게 쌓인" 느낌 연출
-  // Index별 Randomness 부여
+  // 카드 회전 각도: Index별 Randomness 부여
+  // (카드마다 조금씩 다른 회전각도와 위치 오프셋을 주어 "자연스럽게 쌓인" 느낌 연출)
   const randomRotate = [ -4, 3, -5, 4 ][index]; // 회전 각도 (deg)
   const randomJitterX = [ 2, -3, 4, -2 ][index]; // 미세한 좌우 어긋남 (%)
   const randomJitterY = [ -3, 2, -4, 3 ][index]; // 미세한 상하 어긋남 (%)
@@ -123,6 +117,10 @@ function CardItem({ card, index, progress }: CardItemProps) {
 
   // --- Transforms ---
 
+  /** ------------------------------
+   * Transforms
+   * : framer-motion 사용, scroll-progress에 따라서 진행
+   * ------------------------------ */
   // 1. Scale: 0 -> 1 (중앙에서 커지며 등장)
   const scale = useTransform(progress, [0, 0.25], [0, 1]);
 
@@ -148,36 +146,37 @@ function CardItem({ card, index, progress }: CardItemProps) {
         rotate, // 회전 적용
         zIndex: 4 - index // 겹쳐질 때 순서 (위에서부터 아래로 쌓이거나 그 반대)
       }}
-      className="group relative flex h-full w-full flex-col overflow-hidden rounded-2xl bg-white border border-slate-100 transition-colors hover:border-blue-400"
+      className="group relative flex h-full w-full lg:flex-col overflow-hidden shadow-sm rounded-2xl bg-white border border-slate-100 transition-colors hover:border-blue-400"
       // [Shadow] Light Theme에서 깊이감을 주기 위해 강한 그림자 적용
       // 중앙에 모였을 때 서로 구분되도록 함
     >
       {/* Static Shadow Wrapper (Motion transform에 shadow를 넣으면 성능 이슈가 있을 수 있어 클래스로 처리) */}
       <div className="absolute inset-0 rounded-2xl shadow-2xl opacity-80 pointer-events-none mix-blend-multiply" />
-
       {/* Image/Icon Area (Light Theme Background) */}
       <div className="relative flex flex-1 items-center justify-center bg-gradient-to-b from-slate-50 to-white min-h-[80px] lg:min-h-[100px]">
-        {/* 3D Sphere Effect (Light Theme) */}
-        <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] ring-1 ring-slate-100 group-hover:scale-110 transition-transform duration-500 lg:h-20 lg:w-20">
-          {/* Inner Gradient Sphere */}
-          <div className="absolute h-[80%] w-[80%] rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 opacity-90 shadow-inner" />
-          <span className="relative z-10 font-mono text-2xl font-bold text-white drop-shadow-md">
-            {index + 1}
-          </span>
-        </div>
+        image
       </div>
-
       {/* Text Content Area */}
       <div className="relative flex flex-[2] flex-col p-5 lg:p-6 bg-white z-10">
-        <h4 className="mb-3 text-lg font-bold text-slate-900 lg:text-xl group-hover:text-blue-600 transition-colors">
-          {card.title}
-        </h4>
-
-        <ul className="flex flex-col gap-2">
+        <div className="flex items-start gap-3 mb-3">
+          {/* Number */}
+          <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] ring-1 ring-slate-100 group-hover:scale-110 transition-transform duration-500">
+            {/* Inner Gradient Sphere */}
+            <div className="absolute h-[80%] w-[80%] rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 opacity-90 shadow-inner" />
+            <span className="relative z-10 font-mono text-sm font-bold text-white drop-shadow-md">
+              {index + 1}
+            </span>
+          </div>
+          {/* Title */}
+          <h4 className="pt-0.5 text-lg font-bold text-slate-900 lg:text-xl group-hover:text-blue-600 transition-colors">
+            {card.title}
+          </h4>
+        </div>
+        <ul className="flex flex-col gap-2 pl-2">
           {card.descriptions.map((desc, dIdx) => (
             <li key={dIdx} className="flex items-start gap-2">
               {/* Check Icon */}
-              <span className="mt-1 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+              <span className=" mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600">
                 <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
                   <path d="M10 3L4.5 8.5L2 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -189,7 +188,6 @@ function CardItem({ card, index, progress }: CardItemProps) {
           ))}
         </ul>
       </div>
-
       {/* Bottom Highlight Line */}
       <div className="absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r from-blue-500 to-cyan-400 transition-all duration-500 group-hover:w-full z-20" />
     </motion.div>

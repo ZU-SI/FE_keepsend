@@ -29,6 +29,18 @@ export const regions: Region[] = [
   { id: 'jeolla', name: '전라도' },
 ];
 
+interface StatItem {
+  label: string;
+  value: string;
+  unit: string;
+}
+
+const stats: StatItem[] = [
+    { label: '물류 센터', value: '0,000', unit: '개' },
+    { label: '1일 투입 인원', value: '0,000', unit: '명' },
+    { label: '일 평균 배송량', value: '0,000', unit: '건' },
+  ];
+
 export const centers: Center[] = [
   // 서울/경기
   { id: 1, name: '중구1캠프', region: '서울/경기', code: [37.5665, 126.9780] },
@@ -324,6 +336,32 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
           </div>
         </div>
       </div>
+
+      <div className="flex flex-col gap-4 mt-20">
+          <div className="s-section__header">
+              <h2 className="s-section__description text-xl">
+                효율적인 인력 배치와 차량 운용으로 신속하고 정밀한 물류 서비스를 제공합니다.
+              </h2>
+          </div>
+          {/* service-partner__stats: grid 2-col mobile, 4-col desktop */}
+          <div className="grid grid-cols-3 gap-x-4 gap-y-6 ">
+            {stats.map((stat, idx) => (
+              <div className="flex flex-col gap-2 items-center text-center" key={idx}>
+                  <span className="text-sm lg:text-2xl">⚙️</span>
+                {/* service-partner__stat-label */}
+                <span className="mb-px text-sm font-medium text-primary lg:mb-1">
+                  {stat.label}
+                </span>
+                {/* service-partner__stat-value */}
+                <div className="text-xl font-bold leading-none text-foreground-light lg:text-3xl">
+                  {stat.value}
+                  {/* service-partner__stat-unit */}
+                  <span className="ml-2 text-base opacity-80 lg:text-lg">{stat.unit}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
     </section>
   );
 };

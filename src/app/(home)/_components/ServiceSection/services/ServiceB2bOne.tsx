@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 
 // --- Interfaces ---
 interface Problem {
@@ -29,14 +29,14 @@ const defaultTalks: string[] = [
 
 const defaultProblems: Problem[] = [
   {
-    title: "확장, 예측의 한계",
-    description: "멈춰버린 기업 성장, 꽉 막힌 인프라",
-    relatedTalkIndices: [0, 1]
-  },
-  {
     title: "관리 포인트 고충",
     description: "복잡한 구조, 낮은 효율, 비용 부담",
     relatedTalkIndices: [2, 3]
+  },
+  {
+    title: "확장, 예측의 한계",
+    description: "멈춰버린 기업 성장, 꽉 막힌 인프라",
+    relatedTalkIndices: [0, 1]
   },
   {
     title: "미 검증 운임, 정산",
@@ -263,7 +263,7 @@ export default function ServiceB2bOne({
             </p>
           </div>
           {/* Content Grid */}
-          <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-8 lg:items-stretch min-h-0 flex-1 lg:h-[60vh]">
+          <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:gap-8 lg:items-stretch min-h-0 flex-1 lg:h-[60vh] w-full">
             {/* Left: Problem List */}
             <div className="relative flex flex-col justify-center order-3 lg:order-1 lg:h-[50vh]">
               <div className="absolute left-[1.25rem] top-6 bottom-6 w-0.5 bg-border-light hidden lg:block z-0" />

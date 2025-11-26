@@ -1,30 +1,25 @@
 "use client";
 
 import { Label, SelectWithCustom, TextField, Textarea } from "@/components/ui/form";
+import { ContactSubmitData, submitContactForm } from "@/lib/notion.contact"; // [NEW] 서버 액션 임포트
 import { policyModalOpenAtom } from "@/store/global-modal.store";
 import { useSetAtom } from "jotai";
 import type React from "react";
 import { useState } from "react";
 import { PRODUCT_TYPE_OPTIONS, REGION_OPTIONS, SERVICE_TYPE_OPTIONS } from "./option.constants";
 
+// ContactFormData 인터페이스 유지
 interface ContactFormData {
-  // Section 1: 물류 정보
-  serviceTypes: string[]; // 복수 선택
+  serviceTypes: string[];
   productType: string;
   productTypeCustom: string;
   monthlyShipment: string;
-
-  // Section 2: 담당자 정보
   companyName: string;
   contactPerson: string;
   phone: string;
   email: string;
   region: string;
-
-  // Section 3: 문의 내용
   inquiryContent: string;
-
-  // Privacy
   privacyAgreed: boolean;
 }
 
@@ -50,17 +45,18 @@ interface ContactModalProps {
 export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [formData, setFormData] = useState<ContactFormData>({ ...initialForm });
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  // UI
+
+  // [NEW] 전송 중 상태 관리
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const setPolicyModalOpen = useSetAtom(policyModalOpenAtom);
 
-
-
   // 섹션 토글 상태 관리
   const [sectionState, setSectionState] = useState({
-    logisticsInfo: true, // 물류 정보
-    contactInfo: true,   // 담당자 정보
-    inquiryInfo: true,   // 문의 내용
+    logisticsInfo: true,
+    contactInfo: true,
+    inquiryInfo: true,
   });
 
   const toggleSection = (section: keyof typeof sectionState) => {
@@ -78,7 +74,6 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     setHasUnsavedChanges(true);
   };
 
-  // 서비스 분류 토글 (Checkbox)
   const toggleServiceType = (type: string) => {
     setFormData((prev) => {
       const isSelected = prev.serviceTypes.includes(type);
@@ -123,7 +118,8 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     onClose();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // [MODIFIED] 비동기 함수로 변경 및 Notion 연동
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validation
@@ -156,7 +152,11 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         return;
     }
 
-    const submittedData = {
+    // [NEW] 전송 시작
+    setIsSubmitting(true);
+
+    // 데이터 정제 (직접 입력 처리)
+    const submittedData: ContactSubmitData = {
       ...formData,
       productType:
         formData.productType === "직접 입력"
@@ -164,24 +164,34 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
           : formData.productType,
     };
 
-    console.log("[Form] Submitted:", submittedData);
-    alert("문의가 접수되었습니다.");
+    try {
+      // [NEW] Server Action 호출
+      const result = await submitContactForm(submittedData);
 
-    setFormData({ ...initialForm });
-    setHasUnsavedChanges(false);
-    onClose();
+      if (result.success) {
+        alert("문의가 접수되었습니다. 담당자가 빠르게 연락드리겠습니다.");
+        setFormData({ ...initialForm });
+        setHasUnsavedChanges(false);
+        onClose();
+      } else {
+        alert(`접수 실패: ${result.message}`);
+      }
+    } catch (error) {
+      console.error("Submit Error:", error);
+      alert("네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setIsSubmitting(false); // 전송 완료 (성공/실패 무관)
+    }
   };
 
   if (!isOpen) return null;
 
   return (
     <>
-      {/* Modal Overlay */}
       <div
         className="fixed inset-0 z-navigation flex items-center justify-center bg-black/30 backdrop-blur-xs"
         onClick={handleClose}
       >
-        {/* Modal Container */}
         <div
           id="contact-form"
           className="flex h-[768px] max-h-[90vh] w-[90vw] max-w-screen-md flex-col overflow-hidden rounded-xl bg-white shadow-2xl"
@@ -201,14 +211,17 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             </button>
           </div>
 
-          {/* Form Content */}
           <form
             onSubmit={handleSubmit}
             className="flex flex-grow flex-col overflow-hidden bg-card-light"
           >
+            {/* ... 중간 Form Content 코드는 기존과 동일하므로 생략 ... */}
+            {/* ... Section 1, 2, 3 및 Privacy Checkbox 유지 ... */}
             <div className="flex flex-grow flex-col gap-6 overflow-y-auto p-6 md:p-8">
 
-              {/* Section 1: 물류 정보 */}
+              {/* (기존 코드 Section 1 ~ 3, Privacy 부분 여기에 그대로 유지) */}
+
+               {/* Section 1: 물류 정보 */}
               <div className="flex flex-col gap-6 rounded-md bg-gray-50 p-6">
                 <div className="mb-1 flex cursor-pointer items-center justify-between" onClick={() => toggleSection("logisticsInfo")}>
                   <h3 className="m-0 p-0 text-lg font-bold text-foreground-light">
@@ -236,17 +249,11 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <div className={`overflow-hidden transition-all duration-300 ease-in-out ${sectionState.logisticsInfo ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-70"}`}>
                   {sectionState.logisticsInfo && (
                     <div className="flex flex-col gap-6">
-                        {/* 서비스 분류 (Checkbox Grid) */}
                         <div className="flex flex-col gap-2">
                             <div className="flex items-center justify-between">
                                 <Label text="서비스 분류" />
                                 <span className="text-xs text-primary">* 복수 선택</span>
                             </div>
-
-                            {/* 변경 사항:
-                                1. Grid Layout: grid-cols-3 (3열), 총 6개 항목이므로 자연스럽게 2행이 됨.
-                                2. Element: button -> label + input[type=checkbox]
-                            */}
                             <div className="grid grid-cols-3 gap-y-3 gap-x-2">
                                 {SERVICE_TYPE_OPTIONS.map((option) => {
                                     const isSelected = formData.serviceTypes.includes(option);
@@ -270,7 +277,6 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                             </div>
                         </div>
 
-                        {/* 상품 유형 & 월 출고량 */}
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
                             <div className="flex flex-col">
                                 <Label text="상품 유형" htmlFor="productType" />
@@ -299,7 +305,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 </div>
               </div>
 
-              {/* Section 2: 담당자 정보 (유지) */}
+              {/* Section 2: 담당자 정보 */}
               <div className="flex flex-col gap-6 rounded-md bg-gray-50 p-6">
                 <div className="mb-1 flex cursor-pointer items-center justify-between" onClick={() => toggleSection("contactInfo")}>
                   <h3 className="m-0 p-0 text-lg font-bold text-foreground-light">
@@ -377,7 +383,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 </div>
               </div>
 
-              {/* Section 3: 문의 내용 (유지) */}
+              {/* Section 3: 문의 내용 */}
               <div className="flex flex-col gap-6 rounded-md bg-gray-50 p-6">
                 <div className="mb-1 flex cursor-pointer items-center justify-between" onClick={() => toggleSection("inquiryInfo")}>
                   <h3 className="m-0 p-0 text-lg font-bold text-foreground-light">
@@ -415,7 +421,6 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 </div>
               </div>
 
-              {/* Privacy Checkbox (유지) */}
                <div className="flex items-center justify-between px-2">
                     <div className="flex items-center gap-2">
                         <input
@@ -441,15 +446,17 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 <button
                   type="button"
                   onClick={handleCancelClick}
-                  className="cancel-button flex-1 cursor-pointer rounded-full bg-gray-200 px-6 py-3 text-base font-semibold text-foreground-light transition-all duration-300 hover:bg-gray-300 active:bg-gray-400"
+                  disabled={isSubmitting} // 비활성화 추가
+                  className="cancel-button flex-1 cursor-pointer rounded-full bg-gray-200 px-6 py-3 text-base font-semibold text-foreground-light transition-all duration-300 hover:bg-gray-300 active:bg-gray-400 disabled:opacity-50"
                 >
                   취소
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 cursor-pointer rounded-full bg-primary px-6 py-3 text-base font-semibold text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow-button-hover active:translate-y-0"
+                  disabled={isSubmitting} // 비활성화 추가
+                  className="flex-1 cursor-pointer rounded-full bg-primary px-6 py-3 text-base font-semibold text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow-button-hover active:translate-y-0 disabled:bg-gray-400 disabled:hover:translate-y-0 disabled:cursor-not-allowed"
                 >
-                  문의 하기
+                  {isSubmitting ? "전송 중..." : "문의 하기"}
                 </button>
               </div>
             </div>
@@ -457,7 +464,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         </div>
       </div>
 
-      {/* Confirmation Dialog */}
+      {/* Confirmation Dialog (기존 코드 유지) */}
       {showConfirmDialog && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-6 backdrop-blur-xs">
           <div className="w-full max-w-sm rounded-lg border border-border-light bg-card-light p-6 shadow-2xl">

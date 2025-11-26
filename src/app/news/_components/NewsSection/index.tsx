@@ -1,10 +1,11 @@
 "use client";
 
+import { NoticeItem } from "@/lib/notion.news";
 import gsap from "gsap";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { newsList } from "../../_data/newsList";
 
-export default function NewsSection() {
+export default function NewsSection({data}: {data: NoticeItem[]}) {
   const [displayedCards, setDisplayedCards] = useState(6);
   const [selectedFilter, setSelectedFilter] = useState("전체");
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,13 +14,13 @@ export default function NewsSection() {
   >(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const filteredNews = newsList
-    .filter((item) => selectedFilter === "전체" || item.type === selectedFilter)
+  const filteredNews = useMemo(() => newsList
+    .filter((item) => selectedFilter === "전체"? true : item.type === selectedFilter)
     .filter(
       (item) =>
         item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    ), [selectedFilter]);
 
   useEffect(() => {
     if (containerRef.current) {

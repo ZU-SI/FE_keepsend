@@ -1,0 +1,164 @@
+"use client";
+
+import { NoticeItem } from "@/lib/notion.news";
+import gsap from "gsap";
+import { useEffect, useRef, useState } from "react";
+import NewsDetail from "./NewsDetail";
+
+
+interface NewsListProps {
+  initialData: NoticeItem[];
+}
+
+export default function NewsList({ initialData }: NewsListProps) {
+  // State
+  const [displayedCards, setDisplayedCards] = useState(6);
+  const [selectedFilter, setSelectedFilter] = useState("전체");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedArticle, setSelectedArticle] = useState<NoticeItem | null>(null);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Filtering Logic
+  // Notion 데이터의 'category' 등을 활용. 없을 경우 대비해 기본값 처리
+  const filteredNews = initialData
+    .filter((item) => selectedFilter === "전체" || item.category === selectedFilter)
+    .filter((item) =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+
+  // GSAP Animation
+  useEffect(() => {
+    if (containerRef.current) {
+      const cards = containerRef.current.querySelectorAll(".n-section__card");
+      if (cards.length > 0) {
+        gsap.fromTo(
+          cards,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: "power2.out" }
+        );
+      }
+    }
+  }, [displayedCards, selectedFilter, searchQuery]); // 의존성 배열 유지
+
+  const handleLoadMore = () => {
+    setDisplayedCards((prev) => prev + 6);
+  };
+
+  return (
+    <>
+      <section className="min-h-screen bg-gray-50">
+        {/* Banner */}
+        <div className="mx-auto py-32 px-5 text-center bg-gray-900 md:py-48 text-white">
+          <h1 className="text-4xl font-bold mb-4 md:text-6xl">NEWS & BLOG</h1>
+          <p className="text-base text-gray-400 md:text-lg">최신 물류 및 IT 소식을 전합니다</p>
+        </div>
+
+        {/* Filter Bar */}
+        <div className="sticky top-[60px] z-40 bg-white/95 backdrop-blur py-2 border-b border-gray-200 mb-0 md:py-4">
+          <div className="max-w-7xl mx-auto px-5">
+            <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+              {/* Filter Pills */}
+              <div className="flex gap-3">
+                {["전체", "뉴스", "블로그"].map((filter) => (
+                  <button
+                    key={filter}
+                    onClick={() => {
+                      setSelectedFilter(filter);
+                      setDisplayedCards(6);
+                    }}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                      selectedFilter === filter
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
+                  >
+                    {filter}
+                  </button>
+                ))}
+              </div>
+
+              {/* Search Input */}
+              <div className="relative w-full md:w-64">
+                <input
+                  type="text"
+                  placeholder="검색..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setDisplayedCards(6);
+                  }}
+                  className="w-full px-4 py-2 pr-10 bg-white border border-gray-300 rounded-sm text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* News Grid */}
+        <div className="max-w-7xl mx-auto mb-12 py-12 px-5 bg-gray-50">
+          <div ref={containerRef} className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {filteredNews.slice(0, displayedCards).map((item) => (
+              <div
+                key={item.id}
+                className="n-section__card cursor-pointer group bg-white rounded-lg overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                onClick={() => setSelectedArticle(item)}
+              >
+                {/* Thumbnail */}
+                <div className="w-full h-48 bg-gray-100 flex items-center justify-center relative overflow-hidden">
+                  {item.thumbnail ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={item.thumbnail} alt={item.title} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-gray-400 text-sm">No Image</span>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="p-5">
+                  <div className="mb-3">
+                    <span
+                      className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                        item.category === "뉴스"
+                          ? "bg-blue-100 text-blue-600"
+                          : "bg-purple-100 text-purple-600"
+                      }`}
+                    >
+                      {item.category || "일반"}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-gray-500 mb-2">{item.date}</p>
+                  <p className="text-sm text-gray-600 line-clamp-2">{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Load More */}
+        {displayedCards < filteredNews.length && (
+          <div className="flex justify-center pb-12 bg-gray-50">
+            <button
+              onClick={handleLoadMore}
+              className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-all"
+            >
+              더보기
+            </button>
+          </div>
+        )}
+      </section>
+
+      {/* Detail Modal */}
+      {selectedArticle && (
+        <NewsDetail
+          article={selectedArticle}
+          onClose={() => setSelectedArticle(null)}
+        />
+      )}
+    </>
+  );
+}

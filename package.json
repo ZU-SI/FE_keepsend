@@ -11,6 +11,7 @@
     "lint:unused": "eslint --ext .ts,.tsx src --fix"
   },
   "dependencies": {
+    "@notionhq/client": "^5.4.0",
     "framer-motion": "^12.23.24",
     "gsap": "^3.13.0",
     "jotai": "^2.15.1",

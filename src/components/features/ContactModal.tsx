@@ -1,14 +1,13 @@
 "use client";
 
 import { Label, SelectWithCustom, TextField, Textarea } from "@/components/ui/form";
-import { ContactSubmitData, submitContactForm } from "@/lib/notion.contact"; // [NEW] 서버 액션 임포트
+import { ContactSubmitData, submitContactForm } from "@/lib/notion.contact";
 import { policyModalOpenAtom } from "@/store/global-modal.store";
 import { useSetAtom } from "jotai";
 import type React from "react";
 import { useState } from "react";
 import { PRODUCT_TYPE_OPTIONS, REGION_OPTIONS, SERVICE_TYPE_OPTIONS } from "./option.constants";
 
-// ContactFormData 인터페이스 유지
 interface ContactFormData {
   serviceTypes: string[];
   productType: string;
@@ -45,14 +44,10 @@ interface ContactModalProps {
 export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [formData, setFormData] = useState<ContactFormData>({ ...initialForm });
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-
-  // [NEW] 전송 중 상태 관리
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const setPolicyModalOpen = useSetAtom(policyModalOpenAtom);
 
-  // 섹션 토글 상태 관리
   const [sectionState, setSectionState] = useState({
     logisticsInfo: true,
     contactInfo: true,
@@ -118,18 +113,16 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     onClose();
   };
 
-  // [MODIFIED] 비동기 함수로 변경 및 Notion 연동
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
     if (formData.serviceTypes.length === 0) {
-        alert("서비스 분류를 하나 이상 선택해주세요.");
-        return;
+      alert("서비스 분류를 하나 이상 선택해주세요.");
+      return;
     }
     if (!formData.companyName.trim()) {
-        alert("회사명을 입력해주세요.");
-        return;
+      alert("회사명을 입력해주세요.");
+      return;
     }
     if (!formData.contactPerson.trim()) {
       alert("담당자명을 입력해주세요.");
@@ -140,22 +133,20 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
       return;
     }
     if (!formData.email.trim()) {
-        alert("이메일을 입력해주세요.");
-        return;
+      alert("이메일을 입력해주세요.");
+      return;
     }
     if (!formData.region) {
-        alert("문의 지역을 선택해주세요.");
-        return;
+      alert("문의 지역을 선택해주세요.");
+      return;
     }
     if (!formData.privacyAgreed) {
-        alert("개인정보 수집 및 이용에 동의해주세요.");
-        return;
+      alert("개인정보 수집 및 이용에 동의해주세요.");
+      return;
     }
 
-    // [NEW] 전송 시작
     setIsSubmitting(true);
 
-    // 데이터 정제 (직접 입력 처리)
     const submittedData: ContactSubmitData = {
       ...formData,
       productType:
@@ -165,7 +156,6 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     };
 
     try {
-      // [NEW] Server Action 호출
       const result = await submitContactForm(submittedData);
 
       if (result.success) {
@@ -180,7 +170,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
       console.error("Submit Error:", error);
       alert("네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     } finally {
-      setIsSubmitting(false); // 전송 완료 (성공/실패 무관)
+      setIsSubmitting(false);
     }
   };
 
@@ -189,23 +179,23 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   return (
     <>
       <div
-        className="fixed inset-0 z-navigation flex items-center justify-center bg-black/30 backdrop-blur-xs"
+        className="fixed inset-0 z-navigation flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm transition-all"
         onClick={handleClose}
       >
         <div
           id="contact-form"
-          className="flex h-[768px] max-h-[90vh] w-[90vw] max-w-screen-md flex-col overflow-hidden rounded-xl bg-white shadow-2xl"
+          className="flex flex-col w-full max-w-[95vw] md:max-w-screen-md h-[85vh] md:h-[768px] max-h-[90vh] overflow-hidden rounded-xl shadow-2xl transition-all"
         >
           {/* Header */}
-          <div className="sticky top-0 z-10 flex h-[60px] items-center justify-between border-b border-border bg-background/95 px-6 py-4 backdrop-blur md:px-8">
-            <h2 className="text-[20px] font-bold text-foreground">견적 문의</h2>
+          <div className="sticky top-0 z-10 flex h-14 md:h-[60px] items-center justify-between  bg-background px-4 md:px-8 backdrop-blur shrink-0">
+            <h2 className="text-lg md:text-[20px] font-bold text-foreground">견적 문의</h2>
             <button
               type="button"
               onClick={handleClose}
-              className="rounded-sm p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground active:bg-gray-100"
               aria-label="Close"
             >
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-5 w-5 md:h-6 md:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -213,23 +203,22 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
           <form
             onSubmit={handleSubmit}
-            className="flex flex-grow flex-col overflow-hidden bg-card-light"
+            className="flex flex-grow flex-col overflow-hidden bg-white relative"
           >
-            {/* ... 중간 Form Content 코드는 기존과 동일하므로 생략 ... */}
-            {/* ... Section 1, 2, 3 및 Privacy Checkbox 유지 ... */}
-            <div className="flex flex-grow flex-col gap-6 overflow-y-auto p-6 md:p-8">
+            <div className="flex flex-grow flex-col gap-4 md:gap-6 overflow-y-auto p-4 md:p-8 scroll-smooth">
 
-              {/* (기존 코드 Section 1 ~ 3, Privacy 부분 여기에 그대로 유지) */}
-
-               {/* Section 1: 물류 정보 */}
-              <div className="flex flex-col gap-6 rounded-md bg-gray-50 p-6">
-                <div className="mb-1 flex cursor-pointer items-center justify-between" onClick={() => toggleSection("logisticsInfo")}>
-                  <h3 className="m-0 p-0 text-lg font-bold text-foreground-light">
+              {/* Section 1: 물류 정보 */}
+              <div className="flex flex-col gap-4 md:gap-6 rounded-lg bg-gray-50 p-4 md:p-6 border border-gray-100">
+                <div
+                  className="flex cursor-pointer items-center justify-between py-1"
+                  onClick={() => toggleSection("logisticsInfo")}
+                >
+                  <h3 className="text-base md:text-lg font-bold text-foreground-light">
                     물류 정보
                   </h3>
                   <button
                     type="button"
-                    className="flex h-6 w-6 items-center justify-center border-none bg-transparent p-0 text-gray-600"
+                    className="flex h-8 w-8 items-center justify-center text-gray-500 transition-colors hover:text-gray-800"
                   >
                     <svg
                       className={`transform transition-transform duration-300 ${
@@ -246,74 +235,78 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   </button>
                 </div>
 
-                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${sectionState.logisticsInfo ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-70"}`}>
-                  {sectionState.logisticsInfo && (
-                    <div className="flex flex-col gap-6">
-                        <div className="flex flex-col gap-2">
-                            <div className="flex items-center justify-between">
-                                <Label text="서비스 분류" />
-                                <span className="text-xs text-primary">* 복수 선택</span>
-                            </div>
-                            <div className="grid grid-cols-3 gap-y-3 gap-x-2">
-                                {SERVICE_TYPE_OPTIONS.map((option) => {
-                                    const isSelected = formData.serviceTypes.includes(option);
-                                    return (
-                                    <label
-                                        key={option}
-                                        className="flex cursor-pointer items-center gap-2"
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={isSelected}
-                                            onChange={() => toggleServiceType(option)}
-                                            className="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary"
-                                        />
-                                        <span className="text-sm font-medium text-gray-700">
-                                            {option}
-                                        </span>
-                                    </label>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
-                            <div className="flex flex-col">
-                                <Label text="상품 유형" htmlFor="productType" />
-                                <SelectWithCustom
-                                    options={PRODUCT_TYPE_OPTIONS}
-                                    value={formData.productType}
-                                    customValue={formData.productTypeCustom}
-                                    onSelectChange={(v) => handleInputChange("productType", v)}
-                                    onCustomChange={(v) => handleInputChange("productTypeCustom", v)}
-                                    placeholder="선택해 주세요."
-                                />
-                            </div>
-                            <div className="flex flex-col">
-                                <Label text="월 출고량" htmlFor="monthlyShipment" />
-                                <TextField
-                                    id="monthlyShipment"
-                                    type="text"
-                                    value={formData.monthlyShipment}
-                                    onChange={(v) => handleInputChange("monthlyShipment", v)}
-                                    placeholder="입력해 주세요."
-                                />
-                            </div>
-                        </div>
+                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${sectionState.logisticsInfo ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-70"}`}>
+                  <div className="flex flex-col gap-5 md:gap-6 pb-2">
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center justify-between">
+                        <Label text="서비스 분류" />
+                        <span className="text-[11px] md:text-xs text-primary font-medium">* 복수 선택</span>
+                      </div>
+                      {/* Grid 조정: 모바일 2열, 태블릿 이상 3열 */}
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
+                        {SERVICE_TYPE_OPTIONS.map((option) => {
+                          const isSelected = formData.serviceTypes.includes(option);
+                          return (
+                            <label
+                              key={option}
+                              className={`flex cursor-pointer items-center gap-2 rounded-md border p-2 transition-all ${
+                                isSelected ? "border-primary/30 bg-primary/5" : "border-transparent hover:bg-gray-100"
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() => toggleServiceType(option)}
+                                className="h-4 w-4 md:h-5 md:w-5 rounded border-gray-300 text-primary focus:ring-primary shrink-0"
+                              />
+                              <span className="text-sm font-medium text-gray-700 break-keep">
+                                {option}
+                              </span>
+                            </label>
+                          );
+                        })}
+                      </div>
                     </div>
-                  )}
+
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+                      <div className="flex flex-col">
+                        <Label text="상품 유형" htmlFor="productType" />
+                        <SelectWithCustom
+                          options={PRODUCT_TYPE_OPTIONS}
+                          value={formData.productType}
+                          customValue={formData.productTypeCustom}
+                          onSelectChange={(v) => handleInputChange("productType", v)}
+                          onCustomChange={(v) => handleInputChange("productTypeCustom", v)}
+                          placeholder="선택해 주세요."
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <Label text="월 출고량" htmlFor="monthlyShipment" />
+                        <TextField
+                          id="monthlyShipment"
+                          type="text"
+                          value={formData.monthlyShipment}
+                          onChange={(v) => handleInputChange("monthlyShipment", v)}
+                          placeholder="입력해 주세요."
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* Section 2: 담당자 정보 */}
-              <div className="flex flex-col gap-6 rounded-md bg-gray-50 p-6">
-                <div className="mb-1 flex cursor-pointer items-center justify-between" onClick={() => toggleSection("contactInfo")}>
-                  <h3 className="m-0 p-0 text-lg font-bold text-foreground-light">
+              <div className="flex flex-col gap-4 md:gap-6 rounded-lg bg-gray-50 p-4 md:p-6 border border-gray-100">
+                <div
+                  className="flex cursor-pointer items-center justify-between py-1"
+                  onClick={() => toggleSection("contactInfo")}
+                >
+                  <h3 className="text-base md:text-lg font-bold text-foreground-light">
                     담당자 정보
                   </h3>
                   <button
                     type="button"
-                    className="flex h-6 w-6 items-center justify-center border-none bg-transparent p-0 text-gray-600"
+                    className="flex h-8 w-8 items-center justify-center text-gray-500 transition-colors hover:text-gray-800"
                   >
                     <svg
                       className={`transform transition-transform duration-300 ${
@@ -330,68 +323,69 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   </button>
                 </div>
 
-                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${sectionState.contactInfo ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-70"}`}>
-                  {sectionState.contactInfo && (
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
-                         <div className="flex flex-col md:col-span-2">
-                            <Label text="회사 명" required />
-                            <TextField
-                                type="text"
-                                value={formData.companyName}
-                                onChange={(v) => handleInputChange("companyName", v)}
-                                placeholder="입력해 주세요."
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <Label text="담당자 명" required />
-                            <TextField
-                                type="text"
-                                value={formData.contactPerson}
-                                onChange={(v) => handleInputChange("contactPerson", v)}
-                                placeholder="입력해 주세요."
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <Label text="연락처" required />
-                            <TextField
-                                type="tel"
-                                value={formData.phone}
-                                onChange={(v) => handleInputChange("phone", v)}
-                                placeholder="입력해 주세요."
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <Label text="이메일" required />
-                            <TextField
-                                type="email"
-                                value={formData.email}
-                                onChange={(v) => handleInputChange("email", v)}
-                                placeholder="입력해 주세요."
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <Label text="문의 지역" required />
-                            <SelectWithCustom
-                                options={REGION_OPTIONS}
-                                value={formData.region}
-                                onSelectChange={(v) => handleInputChange("region", v)}
-                                placeholder="선택해 주세요."
-                            />
-                        </div>
+                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${sectionState.contactInfo ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-70"}`}>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 pb-2">
+                    <div className="flex flex-col md:col-span-2">
+                      <Label text="회사 명" required />
+                      <TextField
+                        type="text"
+                        value={formData.companyName}
+                        onChange={(v) => handleInputChange("companyName", v)}
+                        placeholder="입력해 주세요."
+                      />
                     </div>
-                  )}
+                    <div className="flex flex-col">
+                      <Label text="담당자 명" required />
+                      <TextField
+                        type="text"
+                        value={formData.contactPerson}
+                        onChange={(v) => handleInputChange("contactPerson", v)}
+                        placeholder="입력해 주세요."
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <Label text="연락처" required />
+                      <TextField
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(v) => handleInputChange("phone", v)}
+                        placeholder="입력해 주세요."
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <Label text="이메일" required />
+                      <TextField
+                        type="email"
+                        value={formData.email}
+                        onChange={(v) => handleInputChange("email", v)}
+                        placeholder="입력해 주세요."
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <Label text="문의 지역" required />
+                      <SelectWithCustom
+                        options={REGION_OPTIONS}
+                        value={formData.region}
+                        onSelectChange={(v) => handleInputChange("region", v)}
+                        placeholder="선택해 주세요."
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
               {/* Section 3: 문의 내용 */}
-              <div className="flex flex-col gap-6 rounded-md bg-gray-50 p-6">
-                <div className="mb-1 flex cursor-pointer items-center justify-between" onClick={() => toggleSection("inquiryInfo")}>
-                  <h3 className="m-0 p-0 text-lg font-bold text-foreground-light">
+              <div className="flex flex-col gap-4 md:gap-6 rounded-lg bg-gray-50 p-4 md:p-6 border border-gray-100">
+                <div
+                  className="flex cursor-pointer items-center justify-between py-1"
+                  onClick={() => toggleSection("inquiryInfo")}
+                >
+                  <h3 className="text-base md:text-lg font-bold text-foreground-light">
                     문의 내용
                   </h3>
                   <button
                     type="button"
-                    className="flex h-6 w-6 items-center justify-center border-none bg-transparent p-0 text-gray-600"
+                    className="flex h-8 w-8 items-center justify-center text-gray-500 transition-colors hover:text-gray-800"
                   >
                     <svg
                       className={`transform transition-transform duration-300 ${
@@ -407,83 +401,84 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                     </svg>
                   </button>
                 </div>
-                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${sectionState.inquiryInfo ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-70"}`}>
-                  {sectionState.inquiryInfo && (
-                    <div className="flex flex-col">
-                      <Textarea
-                        value={formData.inquiryContent}
-                        onChange={(v) => handleInputChange("inquiryContent", v)}
-                        placeholder="문의 내용을 입력해 주세요."
-                        rows={5}
-                      />
-                    </div>
-                  )}
+                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${sectionState.inquiryInfo ? "max-h-[500px] opacity-100" : "max-h-0 opacity-70"}`}>
+                  <div className="flex flex-col pb-2">
+                    <Textarea
+                      value={formData.inquiryContent}
+                      onChange={(v) => handleInputChange("inquiryContent", v)}
+                      placeholder="문의 내용을 입력해 주세요."
+                      rows={5}
+                    />
+                  </div>
                 </div>
               </div>
 
-               <div className="flex items-center justify-between px-2">
-                    <div className="flex items-center gap-2">
-                        <input
-                            type="checkbox"
-                            id="privacy-check"
-                            className="h-5 w-5 cursor-pointer rounded border-gray-300 text-primary focus:ring-primary"
-                            checked={formData.privacyAgreed}
-                            onChange={(e) => handleInputChange("privacyAgreed", e.target.checked)}
-                        />
-                        <label htmlFor="privacy-check" className="cursor-pointer text-sm font-medium text-gray-700">
-                            <span className="flex items-center gap-2">
-                                개인정보 수집 및 이용에 동의합니다. <span className="text-primary">*</span>
-                            </span>
-                        </label>
-                    </div>
-                    <button type="button" onClick={() => setPolicyModalOpen(true)} className="text-sm font-medium text-primary underline underline-offset-4">
-                        전문보기
-                    </button>
+              {/* Privacy Check */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 px-1 md:px-2 pt-2">
+                <div className="flex items-start md:items-center gap-2.5">
+                  <input
+                    type="checkbox"
+                    id="privacy-check"
+                    className="mt-0.5 md:mt-0 h-5 w-5 cursor-pointer rounded border-gray-300 text-primary focus:ring-primary shrink-0"
+                    checked={formData.privacyAgreed}
+                    onChange={(e) => handleInputChange("privacyAgreed", e.target.checked)}
+                  />
+                  <label htmlFor="privacy-check" className="cursor-pointer text-sm font-medium text-gray-700 leading-tight">
+                    개인정보 수집 및 이용에 동의합니다. <span className="text-primary">*</span>
+                  </label>
                 </div>
-
-              {/* Submit Button */}
-              <div className="flex flex-col gap-4 border-t border-border-light bg-white py-4 md:flex-row">
                 <button
                   type="button"
-                  onClick={handleCancelClick}
-                  disabled={isSubmitting} // 비활성화 추가
-                  className="cancel-button flex-1 cursor-pointer rounded-full bg-gray-200 px-6 py-3 text-base font-semibold text-foreground-light transition-all duration-300 hover:bg-gray-300 active:bg-gray-400 disabled:opacity-50"
+                  onClick={() => setPolicyModalOpen(true)}
+                  className="text-xs md:text-sm font-medium text-gray-500 underline underline-offset-4 self-end md:self-auto hover:text-primary transition-colors"
                 >
-                  취소
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting} // 비활성화 추가
-                  className="flex-1 cursor-pointer rounded-full bg-primary px-6 py-3 text-base font-semibold text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow-button-hover active:translate-y-0 disabled:bg-gray-400 disabled:hover:translate-y-0 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? "전송 중..." : "문의 하기"}
+                  전문보기
                 </button>
               </div>
+
             </div>
+              {/* Submit Button Area */}
+              <div className="sticky flex gap-3 bottom-0 bg-white p-4 border-t border-border-light mt-2 z-10">
+                  <button
+                    type="button"
+                    onClick={handleCancelClick}
+                    disabled={isSubmitting}
+                    className="cancel-button flex-1 cursor-pointer rounded-full bg-gray-100 border border-gray-200 px-6 py-3.5 text-sm md:text-base font-semibold text-gray-600 transition-all duration-300 hover:bg-gray-200 active:bg-gray-300 disabled:opacity-50"
+                  >
+                    취소
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1 cursor-pointer rounded-full bg-primary px-6 py-3.5 text-sm md:text-base font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow-lg active:translate-y-0 disabled:bg-gray-400 disabled:hover:translate-y-0 disabled:cursor-not-allowed shadow-md shadow-primary/20"
+                  >
+                    {isSubmitting ? "전송 중..." : "문의 하기"}
+                  </button>
+              </div>
           </form>
         </div>
       </div>
 
-      {/* Confirmation Dialog (기존 코드 유지) */}
+      {/* Confirmation Dialog */}
       {showConfirmDialog && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-6 backdrop-blur-xs">
-          <div className="w-full max-w-sm rounded-lg border border-border-light bg-card-light p-6 shadow-2xl">
-            <h3 className="mb-4 text-lg font-bold text-foreground-light">
-              확인
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-6 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-sm rounded-xl border border-border-light bg-white p-6 shadow-2xl">
+            <h3 className="mb-3 text-lg font-bold text-gray-900">
+              안내
             </h3>
             <p className="mb-6 text-sm leading-relaxed text-gray-600">
-              작성 중입니다. 닫으시겠습니까?
+              작성 중인 내용이 있습니다. 정말 닫으시겠습니까?
             </p>
-            <div className="flex flex-col gap-4 md:flex-row">
+            <div className="flex flex-col gap-3 md:flex-row">
               <button
                 onClick={() => setShowConfirmDialog(false)}
-                className="flex-1 cursor-pointer rounded-md bg-gray-200 px-4 py-2 text-sm font-semibold text-foreground-light transition-all duration-300 hover:bg-gray-300 active:bg-gray-400"
+                className="flex-1 cursor-pointer rounded-lg bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-200"
               >
                 취소
               </button>
               <button
                 onClick={handleConfirmClose}
-                className="flex-1 cursor-pointer rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-all duration-300 hover:-translate-y-px hover:bg-primary-hover active:translate-y-0"
+                className="flex-1 cursor-pointer rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
               >
                 닫기
               </button>

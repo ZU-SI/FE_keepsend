@@ -148,7 +148,7 @@ export default function ServiceB2bThree() {
                <div className="relative w-full h-full flex flex-col items-center justify-center">
 
                  {/* 1. Core System & Orbit */}
-                 <div className="relative flex-none lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 z-10 mb-8 lg:mb-0 transition-all duration-500 scale-90 lg:scale-100">
+                 <div className="relative flex-none top-[100px] lg:absolute lg:top-1/2 lg:left-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 z-10 mb-8 lg:mb-0 transition-all duration-500 scale-90 lg:scale-100">
 
                     {/* Center Node (Dark Tech Style) */}
                     <div className="relative z-20 flex flex-col items-center justify-center w-[200px] h-[200px] rounded-full text-white shadow-[0_0_50px_rgba(59,130,246,0.3)] border border-indigo-500/30 backdrop-blur-md overflow-hidden">

@@ -43,8 +43,8 @@ const problemsData: Problem[] = [
 function ChatBubble({ text, positionIdx }: { text: string; positionIdx: number }) {
   const positions = [
     { top: '15%', left: '20%' },
-    { bottom: '10%', left: '10%' }, // 우측 상단
-    { bottom: '20%', right: '10%' }, // 약간 아래
+    { bottom: '10%', right: '10%' }, // 약간 아래
+    { bottom: '20%', left: '10%' }, // 우측 상단
   ];
 
   const pos = positions[positionIdx % positions.length];
@@ -175,7 +175,7 @@ export default function ServiceB2bMotion() {
   });
 
   return (
-    <section ref={containerRef} className="relative h-[600vh] bg-slate-50">
+    <section ref={containerRef} className="relative h-[600vh]">
       <div className="sticky top-0 s-section__content overflow-hidden h-screen">
         {/* Header Section */}
           <motion.div

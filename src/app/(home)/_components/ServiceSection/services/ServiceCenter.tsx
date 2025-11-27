@@ -3,10 +3,10 @@
 
 import dynamic from 'next/dynamic';
 import React, { useState } from 'react';
-import { NavermapsProvider } from 'react-naver-maps';
 
-
-// types/center.ts
+/* ------------------------------
+ * Type Definitions
+ * ------------------------------ */
 export interface Center {
   id: number;
   name: string;
@@ -19,7 +19,15 @@ export interface Region {
   name: string;
 }
 
+interface StatItem {
+  label: string;
+  value: string;
+  unit: string;
+}
 
+/* ------------------------------
+ * Constants
+ * ------------------------------ */
 export const regions: Region[] = [
   { id: 'all', name: '전체' },
   { id: 'seoul', name: '서울/경기' },
@@ -29,17 +37,11 @@ export const regions: Region[] = [
   { id: 'jeolla', name: '전라도' },
 ];
 
-interface StatItem {
-  label: string;
-  value: string;
-  unit: string;
-}
-
 const stats: StatItem[] = [
-    { label: '물류 센터', value: '0,000', unit: '개' },
-    { label: '1일 투입 인원', value: '0,000', unit: '명' },
-    { label: '일 평균 배송량', value: '0,000', unit: '건' },
-  ];
+  { label: '물류 센터', value: '0,000', unit: '개' },
+  { label: '1일 투입 인원', value: '0,000', unit: '명' },
+  { label: '일 평균 배송량', value: '0,000', unit: '건' },
+];
 
 export const centers: Center[] = [
   // 서울/경기
@@ -79,8 +81,8 @@ export const centers: Center[] = [
   { id: 28, name: '부산4', region: '경상도', code: [35.1796, 129.0756] },
   { id: 29, name: 'M양주', region: '경상도', code: [35.6870, 127.9095] },
   { id: 30, name: 'M포항', region: '경상도', code: [36.0190, 129.3435] },
-  { id: 31, name: 'M_평택1', region: '경상도', code: [36.9921, 127.1128] },
-  { id: 32, name: 'M_평택2', region: '경상도', code: [36.9921, 127.1128] },
+  { id: 31, name: 'M_평탁1', region: '경상도', code: [36.9921, 127.1128] },
+  { id: 32, name: 'M_평탁2', region: '경상도', code: [36.9921, 127.1128] },
 
   // 전라도
   { id: 33, name: '전주1', region: '전라도', code: [35.8242, 127.1479] },
@@ -89,9 +91,11 @@ export const centers: Center[] = [
   { id: 36, name: '순천1', region: '전라도', code: [34.9506, 127.4872] },
 ];
 
-
-
-// Dynamic import로 NaverMapComponent 불러오기
+/* ------------------------------
+ * Dynamic Import - NaverMap Component
+ * - SSR 비활성화 (window 객체 사용)
+ * - 로딩 중 스피너 표시
+ * ------------------------------ */
 const NaverMapComponent = dynamic(() => import('../../../../../components/ui/map/NaverMap'), {
   ssr: false,
   loading: () => (
@@ -104,12 +108,25 @@ const NaverMapComponent = dynamic(() => import('../../../../../components/ui/map
   ),
 });
 
+/* ------------------------------
+ * Props Interface
+ * ------------------------------ */
 interface ServiceCenterProps {
   id: string;
   index: number;
 }
 
+/* ------------------------------
+ * Main Component
+ * - 전국 물류센터 지도 및 목록 표시
+ * - 지역별 필터링 기능
+ * - 페이지네이션
+ * - 지도-리스트 상호작용
+ * ------------------------------ */
 const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
+  /* ------------------------------
+   * Component State
+   * ------------------------------ */
   const [activeRegion, setActiveRegion] = useState<string>('전체');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedCenter, setSelectedCenter] = useState<number | null>(null);
@@ -121,33 +138,43 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
 
   const centersPerPage = 10;
 
-  // 지역별 필터링
+  /* ------------------------------
+   * Filtered Centers
+   * - 선택된 지역에 따라 센터 필터링
+   * ------------------------------ */
   const filteredCenters =
     activeRegion === '전체'
       ? centers
       : centers.filter((center) => center.region === activeRegion);
 
-  // 현재 페이지의 센터 목록
+  /* ------------------------------
+   * Pagination
+   * - 현재 페이지의 센터 목록 계산
+   * ------------------------------ */
   const indexOfLastCenter = currentPage * centersPerPage;
   const indexOfFirstCenter = indexOfLastCenter - centersPerPage;
   const currentCenters = filteredCenters.slice(indexOfFirstCenter, indexOfLastCenter);
 
-  // 페이지네이션
   const totalPages = Math.ceil(filteredCenters.length / centersPerPage);
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
-  // Center 클릭 핸들러
+  /* ------------------------------
+   * Event Handlers
+   * ------------------------------ */
+
+  // 센터 클릭 핸들러 (리스트에서)
   const handleCenterClick = (center: Center) => {
     setSelectedCenter(center.id);
+    // 선택한 센터 위치로 지도 이동 및 줌 인
     setMapCenter({ lat: center.code[0], lng: center.code[1] });
-    setMapZoom(14);
+    setMapZoom(16); // 더 가까이 줌 인 (14 -> 16)
   };
 
-  // Marker 클릭 핸들러
+  // 마커 클릭 핸들러 (지도에서)
   const handleMarkerClick = (center: Center) => {
     setSelectedCenter(center.id);
 
-    // Center list로 스크롤
+    // 센터 리스트로 스크롤
     setTimeout(() => {
       const centerElement = document.getElementById(`center-${center.id}`);
       if (centerElement) {
@@ -155,7 +182,7 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
       }
     }, 100);
 
-    // 해당 center가 현재 페이지에 없으면 페이지 이동
+    // 해당 센터가 현재 페이지에 없으면 페이지 이동
     const centerIndex = filteredCenters.findIndex((c) => c.id === center.id);
     if (centerIndex !== -1) {
       const targetPage = Math.floor(centerIndex / centersPerPage) + 1;
@@ -165,25 +192,25 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
     }
   };
 
-  // Region 변경 핸들러
+  // 지역 변경 핸들러
   const handleRegionChange = (regionName: string) => {
     setActiveRegion(regionName);
     setCurrentPage(1);
-    setSelectedCenter(null);
 
-    // 해당 region의 centers로 중심 계산
+    // 해당 지역의 센터들 필터링
     const regionCenters =
       regionName === '전체' ? centers : centers.filter((c) => c.region === regionName);
 
     if (regionCenters.length > 0) {
-      // 모든 센터의 평균 위치 계산
-      const avgLat =
-        regionCenters.reduce((sum, c) => sum + c.code[0], 0) / regionCenters.length;
-      const avgLng =
-        regionCenters.reduce((sum, c) => sum + c.code[1], 0) / regionCenters.length;
+      // 첫 번째 센터 자동 선택
+      const firstCenter = regionCenters[0];
+      setSelectedCenter(firstCenter.id);
 
-      setMapCenter({ lat: avgLat, lng: avgLng });
-      setMapZoom(regionName === '전체' ? 7 : 9);
+      // 첫 번째 센터 위치로 지도 이동
+      setMapCenter({ lat: firstCenter.code[0], lng: firstCenter.code[1] });
+      setMapZoom(regionName === '전체' ? 7 : 12); // 지역 선택 시 적당한 줌 레벨
+    } else {
+      setSelectedCenter(null);
     }
   };
 
@@ -193,11 +220,18 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
     setSelectedCenter(null);
   };
 
+  /* ------------------------------
+   * Styles
+   * ------------------------------ */
   const paginationBaseClass =
     'w-[30px] h-[30px] flex items-center justify-center rounded-sm border border-border-light bg-card-light text-muted-foreground-light cursor-pointer transition-all duration-300 hover:bg-muted-light lg:w-9 lg:h-9';
 
+  /* ------------------------------
+   * JSX Render
+   * ------------------------------ */
   return (
     <section className="s-section__content" id={id}>
+      {/* Section Header */}
       <div className="s-section__header">
         <span className="s-section__subtitle">물류 센터</span>
         <h2 className="s-section__title">전국을 잇는 네트워크, 효율이 시작되는 곳</h2>
@@ -209,18 +243,17 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
         </p>
       </div>
 
+      {/* Map & Center List Grid */}
       <div className="grid gap-4 lg:grid-cols-2 lg:gap-8 lg:h-[50vh]">
         {/* Map Container */}
         <div className="relative overflow-hidden rounded shadow-lg shadow-black/10 border border-border-light bg-card-light h-full min-h-[30vh]">
-          <NavermapsProvider ncpClientId={process.env.NEXT_PUBLIC_NAVER_CLIENT_ID || ''}>
-            <NaverMapComponent
-              filteredCenters={filteredCenters}
-              selectedCenter={selectedCenter}
-              onMarkerClick={handleMarkerClick}
-              mapCenter={mapCenter}
-              mapZoom={mapZoom}
-            />
-          </NavermapsProvider>
+          <NaverMapComponent
+            filteredCenters={filteredCenters}
+            selectedCenter={selectedCenter}
+            onMarkerClick={handleMarkerClick}
+            mapCenter={mapCenter}
+            mapZoom={mapZoom}
+          />
         </div>
 
         {/* Center List */}
@@ -253,7 +286,7 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
                     {[center, center2].filter((c) => c).map((c) => (
                       <div
                         id={`center-${c.id}`}
-                        className={`group flex gap-3 rounded border bg-card-light p-2 shadow-sm transition-all duration-300 cursor-pointer lg:p-4
+                        className={`group flex gap-2 rounded border bg-card-light p-2 shadow-sm transition-all duration-300 cursor-pointer lg:gap-3 lg:p-3
                           ${
                             selectedCenter === c.id
                               ? 'border-primary bg-primary/5 shadow-md translate-y-[-4px]'
@@ -263,23 +296,23 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
                         onClick={() => handleCenterClick(c)}
                       >
                         <div
-                          className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full transition-colors duration-300 lg:h-11 lg:w-11
+                          className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-colors duration-300 lg:h-9 lg:w-9
                           ${
                             selectedCenter === c.id
                               ? 'bg-primary'
                               : 'bg-primary-hover group-hover:bg-primary'
                           }`}
                         >
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="lg:w-5 lg:h-5">
                             <path
                               d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"
                               fill="#fff"
                             />
                           </svg>
                         </div>
-                        <div className="flex flex-col gap-0 lg:gap-1">
+                        <div className="flex flex-col gap-0 justify-center">
                           <h3
-                            className={`text-[0.9375rem] font-semibold lg:text-[1.0625rem]
+                            className={`text-[0.8125rem] font-semibold leading-tight lg:text-[0.9375rem]
                             ${
                               selectedCenter === c.id
                                 ? 'text-primary'
@@ -288,7 +321,7 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
                           >
                             {c.name}
                           </h3>
-                          <p className="text-xs text-muted-foreground-light lg:text-sm">
+                          <p className="text-[0.6875rem] text-muted-foreground-light lg:text-xs">
                             {c.region}
                           </p>
                         </div>
@@ -337,31 +370,28 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
         </div>
       </div>
 
+      {/* Statistics Section */}
       <div className="flex flex-col gap-4 mt-20">
-          <div className="s-section__header">
-              <h2 className="s-section__description text-xl">
-                효율적인 인력 배치와 차량 운용으로 신속하고 정밀한 물류 서비스를 제공합니다.
-              </h2>
-          </div>
-          {/* service-partner__stats: grid 2-col mobile, 4-col desktop */}
-          <div className="grid grid-cols-3 gap-x-4 gap-y-6 ">
-            {stats.map((stat, idx) => (
-              <div className="flex flex-col gap-2 items-center text-center" key={idx}>
-                  <span className="text-sm lg:text-2xl">⚙️</span>
-                {/* service-partner__stat-label */}
-                <span className="mb-px text-sm font-medium text-primary lg:mb-1">
-                  {stat.label}
-                </span>
-                {/* service-partner__stat-value */}
-                <div className="text-xl font-bold leading-none text-foreground-light lg:text-3xl">
-                  {stat.value}
-                  {/* service-partner__stat-unit */}
-                  <span className="ml-2 text-base opacity-80 lg:text-lg">{stat.unit}</span>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="s-section__header">
+          <h2 className="s-section__description">
+            효율적인 인력 배치와 차량 운용으로 신속하고 정밀한 물류 서비스를 제공합니다.
+          </h2>
         </div>
+        <div className="grid grid-cols-3 gap-x-4 gap-y-6">
+          {stats.map((stat, idx) => (
+            <div className="flex flex-col gap-2 items-center text-center" key={idx}>
+              <span className="text-sm lg:text-2xl">⚙️</span>
+              <span className="mb-px text-sm font-medium text-primary lg:mb-1">
+                {stat.label}
+              </span>
+              <div className="text-xl font-bold leading-none lg:text-4xl">
+                {stat.value}
+                <span className="ml-px text-base opacity-80 lg:text-lg">{stat.unit}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 };

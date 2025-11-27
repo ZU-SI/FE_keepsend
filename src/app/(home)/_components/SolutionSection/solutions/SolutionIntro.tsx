@@ -21,7 +21,7 @@ export default function SolutionIntro() {
   const backgroundColor = useTransform(
     scrollYProgress,
     [0.4, 0.6],
-    ["#020617", "#ffffff"]
+    ["#020617", "#f8fafc"]
   );
 
   // 2. 텍스트 색상 변환 (배경과 동일한 타이밍)

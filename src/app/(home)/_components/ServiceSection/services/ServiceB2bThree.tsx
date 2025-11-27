@@ -180,8 +180,8 @@ export default function ServiceB2bThree({ id }: Props) {
                  </div>
 
                  {/* 2. Description Cards (Tech/Glass Style) */}
-                 <div className="w-full px-6 max-w-5xl lg:max-w-none lg:w-full lg:h-full lg:absolute lg:inset-0 pointer-events-none">
-                    <div className="grid grid-cols-2 gap-4 lg:block lg:w-full lg:h-full">
+                 <div className="w-full s-section__content !min-h-0 lg:!min-h-[100vh] lg:absolute lg:inset-0 pointer-events-none">
+                    <div className="grid grid-cols-2 gap-4 w-full">
                     {logisticsCards.map((card) => (
                       <motion.div
                         key={card.id}
@@ -189,22 +189,22 @@ export default function ServiceB2bThree({ id }: Props) {
                         className={`
                           relative lg:absolute
                           bg-white/80 backdrop-blur-md rounded-xl border border-white/60 shadow-xl shadow-indigo-100/50
-                          p-5 lg:p-7 z-10
+                          p-5 z-10
+                          w-full lg:w-[25%]
                           flex flex-col justify-center overflow-hidden group
                           ${card.positionClass}
                         `}
                       >
                         {/* Decorative Gradient Bar */}
                         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-cyan-400 to-indigo-500 opacity-80"></div>
-
                         <h4 className="font-bold mb-3 text-sm lg:text-lg text-slate-800 flex items-center gap-2">
                            <span className="w-2 h-2 rounded-full bg-cyan-500"></span>
                            {card.title}
                         </h4>
-                        <ul className='flex flex-col gap-1.5'>
+                        <ul className='flex flex-col gap-1.5 pl-4'>
                           {card.descriptions.map((item, idx) => (
                             <li key={idx} className="text-slate-600 text-xs lg:text-sm pl-0 relative leading-snug break-keep flex items-start gap-1.5">
-                              <span className='text-indigo-400 mt-0.5 text-[10px]'>●</span> {item}
+                              <span className='text-indigo-400 text-[8px]'>●</span> {item}
                             </li>
                           ))}
                         </ul>

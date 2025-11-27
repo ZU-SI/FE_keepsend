@@ -1,12 +1,12 @@
 'use client';
 
+import { motion, Variants } from 'framer-motion';
 import { useRef, useState } from 'react';
 import type { Swiper as SwiperType } from 'swiper';
-import { Autoplay, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
-
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { Autoplay, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 interface Props {
   id: string;
@@ -32,6 +32,24 @@ const settlementFeatures = [
   },
 ];
 
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 }, // 아래에서 시작 (위에서 떨어지게 하려면 y: -30)
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" }
+  }
+} as Variants;
+
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.2 // 자식 요소들이 0.2초 간격으로 순차 실행
+    }
+  }
+};
+
 export default function SolutionSettlement({ id, index }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const swiperRef = useRef<SwiperType | null>(null);
@@ -48,19 +66,28 @@ export default function SolutionSettlement({ id, index }: Props) {
 
   return (
     <div className="s-section__content">
-      <div className="s-section__header">
-        <h3 className="s-section__subtitle">정산 솔루션</h3>
-        <h2 className="s-section__title">
-          복잡한 물류 정산 대행 솔루션 'ULMA'
-        </h2>
-        <p className="s-section__description">
-          ULMA는 물류 플랫폼과 기업 간 거래 데이터를 자동으로 집계, 정산하는 B2B 특화 정산 솔루션입니다.<br />
-          정확한 데이터 기반으로 정산 오류를 최소화하고, 시간과 비용을 절감하는 지능형 정산 환경을 제공합니다.
-        </p>
-      </div>
+        <motion.div
+            className="s-section__header"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+        >
+            <motion.h3 variants={fadeInUp} className="s-section__subtitle">
+              플랫폼 정산의 새로운 기준
+            </motion.h3>
+            <motion.h2 variants={fadeInUp} className="s-section__title">
+              물류 정산 대행 솔루션 ‘ULMA’
+            </motion.h2>
+            <motion.p variants={fadeInUp} className="s-section__description">
+              물류 플랙폼과 기업 간 거래 데이터를 자동 집계, 정산하는 원스톱 지능형 정산 환경.
+              <br />
+              데이터 기반의 투명한 정산으로 비용 낭비를 막고 비즈니스 신뢰를 높이세요
+            </motion.p>
+        </motion.div>
 
       {/* Container: Flex column mobile, Row desktop */}
-      <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-16">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center w-full">
 
         {/* Slider Section (Order 2 on mobile, 1 on desktop) */}
         <div className="flex-1 w-full order-2 lg:order-1">
@@ -81,15 +108,11 @@ export default function SolutionSettlement({ id, index }: Props) {
             }}
             onSlideChange={handleSlideChange}
             // h-[30vh] mobile, h-[40vh] desktop
-            className="h-[30vh] rounded-xl lg:h-[40vh]"
+            className="h-[30vh] rounded-xl lg:h-[50vh] "
           >
             {settlementFeatures.map((_, idx) => (
               <SwiperSlide key={idx}>
                 <div className="h-full overflow-hidden rounded-xl bg-card shadow-[0_10px_40px_rgba(0,0,0,0.3)]">
-                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 text-2xl font-semibold text-muted-foreground">
-                    {/* 이미지 placeholder */}
-                    ULMA 화면 {idx + 1}
-                  </div>
                 </div>
               </SwiperSlide>
             ))}
@@ -97,14 +120,14 @@ export default function SolutionSettlement({ id, index }: Props) {
         </div>
 
         {/* Features List Section (Order 1 on mobile, 2 on desktop) */}
-        <div className="flex flex-1 flex-col gap-6 order-1 lg:order-2">
+        <div className="flex flex-1 flex-col gap-2 order-1 lg:order-2">
           {settlementFeatures.map((feature, idx) => {
             const isActive = activeIndex === idx;
             return (
               <div
                 key={idx}
                 onClick={() => handleFeatureClick(idx)}
-                className={`flex cursor-pointer gap-4 rounded-lg p-6 transition-all duration-300
+                className={`flex cursor-pointer gap-4 rounded-lg p-3 transition-all duration-300
                   ${isActive
                     ? 'flex opacity-100 bg-primary/10 border border-primary/30'
                     : 'hidden opacity-50 lg:flex border border-transparent'

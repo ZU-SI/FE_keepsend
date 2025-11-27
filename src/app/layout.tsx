@@ -4,6 +4,7 @@ import GlobalModals from "@/components/layouts/GlobalModals";
 import type { Metadata } from "next";
 import { Rajdhani } from 'next/font/google';
 import localFont from 'next/font/local';
+import Script from "next/script";
 import "../styles/globals.scss";
 import "../styles/tailwind.css";
 
@@ -52,6 +53,13 @@ export default function RootLayout({
 
   return (
     <html lang="ko">
+      <head>
+        <Script
+          strategy="beforeInteractive"
+          type="text/javascript"
+          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.NEXT_PUBLIC_NAVER_CLIENT_ID}`}
+        />
+      </head>
       <body
         className={`${suit.variable} ${suite.variable} ${rajdhani.variable} antialiased`}
       >

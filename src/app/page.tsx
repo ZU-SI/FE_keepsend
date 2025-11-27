@@ -9,7 +9,7 @@ export default function Home() {
   return (
       <main id="main" >
         <GlobalHeader />
-        <BannerSection startIdx={0} />
+        <BannerSection />
         <ServiceSection startIdx={3} />
         <SolutionSection startIdx={10} />
       </main>

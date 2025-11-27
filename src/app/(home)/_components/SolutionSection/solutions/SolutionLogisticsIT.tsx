@@ -1,25 +1,30 @@
 'use client';
 
 import { motion, useScroll, useTransform, Variants } from 'framer-motion';
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
 interface Props {
   id: string;
   index: number;
+  image: string;
 }
 
 const logisticsCards = [
   {
     title: "전 과정의 통합 관리",
     description: "자체 개발 OMS·WMS·TMS 간의 데이터 연동으로 실시간 통합 제어",
+    image: '/image/solution-it-01-t.png'
   },
   {
     title: "실시간 가시성 확보",
     description: "재고, 주문, 운송 현황을 실시간 모니터링 및 빠른 대응",
+    image: '/image/solution-it-02-t.png'
   },
   {
     title: "운영 효율성과 확장성 강화",
     description: "업무 자동화로 인력 리소스 최소화 및 유연한 확장, 개방형 구조",
+    image: '/image/solution-it-03-t.png'
   },
 ];
 
@@ -149,21 +154,21 @@ export default function SolutionLogisticsIT({ id, index }: Props) {
               <motion.div
                 key={idx}
                 variants={fadeInUp}
-                className="group flex items-center overflow-hidden rounded-xl border border-border-light bg-card-light transition-all duration-300 hover:shadow-lg hover:border-primary/50 lg:flex-col lg:items-center lg:text-center p-6 lg:p-8"
+                className="group flex items-center gap-4 overflow-hidden rounded-xl border border-border-light bg-card-light transition-all duration-300 hover:shadow-lg hover:border-primary/50 lg:flex-col lg:items-center lg:text-center p-4 lg:p-6"
               >
-                <div className="relative mb-0 mr-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 lg:mb-6 lg:mr-0 lg:h-24 lg:w-24">
                   <motion.div
                       initial={{ scale: 0 }}
                       whileInView={{ scale: 1 }}
                       transition={{ delay: 0.2, duration: 0.5 }}
-                      className="h-[80%] w-[80%] rounded-full bg-gradient-to-br from-gray-200 to-gray-300"
-                  />
-                </div>
+                      className='w-[60px] h-[60px] lg:mb-10 lg:w-[160px] lg:h-[160px]'
+                  >
+                    <Image width={160} height={160} src={card.image} alt={card.title} className='rounded-xl max-w-full max-h-full'/>
+                  </motion.div>
                 <div className="flex-1">
-                  <h4 className="mb-2 text-lg font-bold text-foreground-light lg:text-xl">
+                  <h4 className="mb-2 text-lg font-bold text-foreground-light lg:text-2xl">
                     {card.title}
                   </h4>
-                  <p className="text-sm leading-relaxed text-muted-foreground-light break-keep">
+                  <p className="text-sm lg:text-lg leading-relaxed text-muted-foreground-light break-keep">
                     {card.description}
                   </p>
                 </div>
@@ -199,9 +204,7 @@ export default function SolutionLogisticsIT({ id, index }: Props) {
                 {msCards.map((card, idx) => (
                   <div
                     key={`ms-${idx}`}
-                    // [요청사항] 높이 max 60vh, 너비는 반응형
                     className="group relative flex w-[85vw] flex-col gap-6 rounded-3xl border border-border-light bg-white p-6 shadow-2xl lg:w-[45vw] lg:p-10"
-                    style={{ maxHeight: '60vh' }}
                   >
                      {/* Scrollable Content inside Card */}
                      <div className="flex h-full flex-col  custom-scrollbar">
@@ -224,7 +227,7 @@ export default function SolutionLogisticsIT({ id, index }: Props) {
                         </div>
 
                         {/* Image */}
-                        <div className="mb-6 flex-shrink-0 overflow-hidden rounded-2xl border border-border-light bg-gray-50 shadow-inner">
+                        <div className="h-[30vh] mb-6 flex-shrink-0 overflow-hidden rounded-2xl border border-border-light bg-gray-50 shadow-inner">
                            <div className="relative aspect-[21/9] w-full">
                               <img
                                 src={card.image}

@@ -101,7 +101,7 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-scroll-section
         data-section-index={startIdx + 1}
         data-service-id={"b2b-1"}
-        className="s-section light service-problem"
+        className="s-section light service-problem "
       >
         <ServiceB2bOne />
       </div>
@@ -133,7 +133,7 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         className="s-section"
       // style={{ height: "auto" }}
       >
-        <ServiceProcess id="process" index={startIdx + 4} />
+        <ServiceProcess id="process" />
       </div>
 
       {/* Center */}

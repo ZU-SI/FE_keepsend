@@ -43,7 +43,7 @@ const staggerContainer = {
   }
 };
 
-export default function SolutionAIPlatform({ id, index }: Props) {
+export default function SolutionAIPlatform() {
   return (
     <section className="s-section__content overflow-hidden">
         {/* Header Section: 순차적 등장 (Stagger) */}

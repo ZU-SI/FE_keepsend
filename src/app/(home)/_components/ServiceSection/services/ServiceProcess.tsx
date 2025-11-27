@@ -1,10 +1,8 @@
-import TypoLogo from '@/components/ui/logo/TypoLogo';
 import { motion, useScroll } from 'framer-motion';
 import { useRef } from 'react';
 
 interface ServiceProcessProps {
   id: string;
-  index: number;
 }
 
 interface ProcessStep {
@@ -15,67 +13,68 @@ interface ProcessStep {
   image: string;
 }
 
-export default function ServiceProcess ({ id, index } : ServiceProcessProps) {
+const processSteps: ProcessStep[] = [
+  {
+    id: 1,
+    title: '수요 분석 및 계약 체결',
+    description: '비즈니스 모델 기반 최적화된 물류 설계 시작!',
+    icon: 'https://img.icons8.com/3d-fluency/94/business-report.png',
+    image: '/image/service-process-01.png'
+  },
+  {
+    id: 2,
+    title: '입고 예약 및 상품 등록',
+    description: '입고부터 출고까지 정확한 입고서비스 운영',
+    icon: 'https://img.icons8.com/3d-fluency/94/move-stock.png',
+    image: '/image/service-process-02.png'
+  },
+  {
+    id: 3,
+    title: '보관 및 재고 운영 관리',
+    description: '안전하고 안정적인 최적화된 보관 환경 제공',
+    icon: 'https://img.icons8.com/3d-fluency/94/module.png',
+    image: '/image/service-process-03.png'
+  },
+  {
+    id: 4,
+    title: '주문 접수 및 출고 계획 수립',
+    description: '데이터 기반의 출고 다중 출고 방식 적용',
+    icon: 'https://img.icons8.com/3d-fluency/94/scan-stock.png',
+    image: '/image/service-process-04.png'
+  },
+  {
+    id: 5,
+    title: '피킹 및 출고 준비',
+    description: '데이터 지면화 출고 대응 출고 시스템 적용',
+    icon: 'https://img.icons8.com/3d-fluency/94/robot.png',
+    image: '/image/service-process-05.png'
+  },
+  {
+    id: 6,
+    title: '배송 및 물품 관리',
+    description: '신속하고 투명한 배송추적 즉각 신뢰 관리',
+    icon: 'https://img.icons8.com/glassmorphism/96/drone.png',
+    image: '/image/service-process-06.png'
+  },
+  {
+    id: 7,
+    title: '회수 및 반품 처리',
+    description: '원스탑형 역물류체계 WAB 업무 및 보관',
+    icon: 'https://img.icons8.com/3d-fluency/94/refresh.png',
+    image: '/image/service-process-07.png'
+  },
+  {
+    id: 8,
+    title: '성과 분석 및 CS 관리',
+    description: '정확한 데이터 관리로 신뢰 성과 향상',
+    icon: 'https://img.icons8.com/3d-fluency/94/total-sales.png',
+    image: '/image/service-process-08.png'
+  }
+];
+
+export default function ServiceProcess ({ id } : ServiceProcessProps) {
   const containerRef = useRef<HTMLElement>(null);
 
-  const processSteps: ProcessStep[] = [
-    {
-      id: 1,
-      title: '수요 분석 및 계약 체결',
-      description: '비즈니스 모델 기반 최적화된 물류 설계 시작!',
-      icon: 'https://img.icons8.com/3d-fluency/94/business-report.png',
-      image: '/image/service-process-01.png'
-    },
-    {
-      id: 2,
-      title: '입고 예약 및 상품 등록',
-      description: '입고부터 출고까지 정확한 입고서비스 운영',
-      icon: 'https://img.icons8.com/3d-fluency/94/move-stock.png',
-      image: '/image/service-process-02.png'
-    },
-    {
-      id: 3,
-      title: '보관 및 재고 운영 관리',
-      description: '안전하고 안정적인 최적화된 보관 환경 제공',
-      icon: 'https://img.icons8.com/3d-fluency/94/module.png',
-      image: '/image/service-process-03.png'
-    },
-    {
-      id: 4,
-      title: '주문 접수 및 출고 계획 수립',
-      description: '데이터 기반의 출고 다중 출고 방식 적용',
-      icon: 'https://img.icons8.com/3d-fluency/94/scan-stock.png',
-      image: '/image/service-process-04.png'
-    },
-    {
-      id: 5,
-      title: '피킹 및 출고 준비',
-      description: '데이터 지면화 출고 대응 출고 시스템 적용',
-      icon: 'https://img.icons8.com/3d-fluency/94/robot.png',
-      image: '/image/service-process-05.png'
-    },
-    {
-      id: 6,
-      title: '배송 및 물품 관리',
-      description: '신속하고 투명한 배송추적 즉각 신뢰 관리',
-      icon: 'https://img.icons8.com/glassmorphism/96/drone.png',
-      image: '/image/service-process-06.png'
-    },
-    {
-      id: 7,
-      title: '회수 및 반품 처리',
-      description: '원스탑형 역물류체계 WAB 업무 및 보관',
-      icon: 'https://img.icons8.com/3d-fluency/94/refresh.png',
-      image: '/image/service-process-07.png'
-    },
-    {
-      id: 8,
-      title: '성과 분석 및 CS 관리',
-      description: '정확한 데이터 관리로 신뢰 성과 향상',
-      icon: 'https://img.icons8.com/3d-fluency/94/total-sales.png',
-      image: '/image/service-process-08.png'
-    }
-  ];
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -87,7 +86,7 @@ export default function ServiceProcess ({ id, index } : ServiceProcessProps) {
       className="s-section__content"
       id={id}
       ref={containerRef}
-      style={{ position: "relative", paddingBottom: "150px" }}
+      style={{ position: "relative", paddingBottom: "300px" }}
     >
       <div className="s-section__header">
         <span className="s-section__subtitle">KEEPSEND 프로세스</span>
@@ -98,7 +97,7 @@ export default function ServiceProcess ({ id, index } : ServiceProcessProps) {
       <div style={{ position: "relative", maxWidth: "1200px", margin: "0 auto" }}>
         {/* 1. 배경 라인 (회색 점선) */}
         <div
-          className='absolute top-0 bottom-0 left-[20px] md:left-[50%] w-[2px]'
+          className='absolute top-0 bottom-0 left-[20px] md:left-[50%] w-[2px] h-[calc(100%_-_10px)]'
           style={{
             background: "#e5e7eb", transform: "translateX(-50%)", zIndex: 0
           }}
@@ -116,13 +115,13 @@ export default function ServiceProcess ({ id, index } : ServiceProcessProps) {
           }}
         />
         {/* 3. 각 단계별 아이템 */}
-        <div className='flex flex-col gap-[220px] md:gap-[150px] relative z-[2]'>
+        <div className='flex flex-col gap-[230px] md:gap-[170px] relative z-[2]'>
           {processSteps.map((step, idx) => (
             <ProcessStepItem key={step.id} step={step} index={idx} />
           ))}
 
           {/* 4. Final Step: Keepsend 통합 솔루션 */}
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 1, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, margin: "-100px" }}
@@ -140,7 +139,7 @@ export default function ServiceProcess ({ id, index } : ServiceProcessProps) {
             >
               <TypoLogo />
             </div>
-          </motion.div>
+          </motion.div> */}
         </div>
       </div>
     </section>
@@ -187,8 +186,8 @@ function ProcessStepItem({ step, index }: { step: ProcessStep; index: number }) 
             <h3 className="mb-1.5 text-2xl font-semibold leading-tight text-foreground">{step.title}</h3>
             {/* service-process__step-description */}
             <p className="text-sm leading-relaxed text-foreground">{step.description}</p>
-            <div className="rounded-md absolute top-20 left-20  md:scale-100 md:top-0 md:left-[-80%] overflow-hidden bg-gray-900">
-              <img width="200" height="150" src={step.image} />
+            <div className="rounded-md absolute top-20 left-20  md:scale-100 md:top-0 md:left-[-85%] overflow-hidden bg-gray-900">
+              <img width="280" height="210" src={step.image} />
             </div>
           </div>
         </div>

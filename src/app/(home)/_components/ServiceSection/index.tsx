@@ -90,12 +90,11 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-scroll-section
         data-section-index={startIdx}
         data-service-id={"intro"}
-        className="s-section service-intro"
-        style={{ minHeight: "60vh" }}
+        className="s-section service-intro !h-fit"
         ref={firstSectionRef}
         id="service-intro"
       >
-        <ServiceIntro id="service-intro" index={startIdx} />
+        <ServiceIntro />
       </div>
       {/* B2B section 1 */}
       <div
@@ -103,9 +102,8 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-section-index={startIdx + 1}
         data-service-id={"b2b-1"}
         className="s-section light service-problem"
-      // style={{ height: "100vh" }}
       >
-        <ServiceB2bOne id="b2b-1" />
+        <ServiceB2bOne />
       </div>
       {/* B2B section 2 */}
       <div
@@ -113,9 +111,8 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-section-index={startIdx + 2}
         data-service-id={"b2b-2"}
         className="s-section light"
-      // style={{ height: "fit-content" }}
       >
-        <ServiceB2bTwo id="b2b-2" index={startIdx + 2} />
+        <ServiceB2bTwo  />
       </div>
       {/* B2B section 3 */}
       <div

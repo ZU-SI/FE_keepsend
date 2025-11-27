@@ -84,12 +84,11 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-scroll-section
         data-section-index={startIdx}
         data-solution-id={"solution-intro"}
-        className="s-section solution-intro"
-        style={{ minHeight: "60vh" }}
+        className="s-section bg-white"
         ref={firstSectionRef}
         id="solution-intro"
       >
-        <SolutionIntro id="solution-intro"  index={startIdx} />
+        <SolutionIntro />
       </div>
 
       {/* Logistics IT */}

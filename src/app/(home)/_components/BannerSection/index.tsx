@@ -22,21 +22,21 @@ const banners: Banner[] = [
     subtitle: "LOGISTICS INNOVATION",
     title: "AI로 완성되는<br/>새로운 맞춤 물류의 시작",
     description: "킵센드는 풍부한 물류 경험 노하우와 AI 기술력을 결합하여 저비용, 고효율 그 이상의 가치를 제공합니다.",
-    videoUrl: "/videos/logistics-ai.mp4", // 예시 경로 (실제 파일 필요)
+    videoUrl: "/video/banner-01.mp4",
   },
   {
     id: 2,
     subtitle: "B2B SOLUTIONS",
     title: "기업의 니즈에 맞춘<br/>물류 유형별 해답",
     description: "B2B 거래 특성에 최적화된 유연한 프로세스로 정확한 납기, 투명한 재고, 효율적인 출고를 실현합니다.",
-    videoUrl: "/videos/warehouse-b2b.mp4",
+    videoUrl: "/video/banner-02.mp4",
   },
   {
     id: 3,
     subtitle: "DIGITAL TRANSFORMATION",
     title: "물류 운영 중심에<br/>IT를 통합하다",
     description: "주문, 재고, 출고 데이터를 하나의 흐름으로 연결해 비즈니스 효율을 극대화하는 스마트 플랫폼.",
-    videoUrl: "/videos/digital-platform.mp4",
+    videoUrl: "/video/banner-04.mp4",
   },
 ];
 
@@ -175,14 +175,14 @@ function BackgroundVideo({ isActive, videoUrl, posterUrl }: { isActive: boolean;
           playsInline
           poster={posterUrl}
         >
-             {/* <source src={videoUrl} type="video/mp4" /> */}
+             <source src={videoUrl} type="video/mp4" />
         </video>
         {/* 임시 배경 (비디오 없을 때 확인용) */}
-         <div className={clsx(
+         {/* <div className={clsx(
             "absolute inset-0 bg-gradient-to-br",
             videoUrl.includes('logistics') ? "from-slate-800 to-black" :
             videoUrl.includes('warehouse') ? "from-gray-800 to-black" : "from-indigo-950 to-black"
-         )} />
+         )} /> */}
       </div>
     </motion.div>
   );

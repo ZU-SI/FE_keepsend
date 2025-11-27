@@ -109,21 +109,13 @@ const NaverMapComponent = dynamic(() => import('../../../../../components/ui/map
 });
 
 /* ------------------------------
- * Props Interface
- * ------------------------------ */
-interface ServiceCenterProps {
-  id: string;
-  index: number;
-}
-
-/* ------------------------------
  * Main Component
  * - 전국 물류센터 지도 및 목록 표시
  * - 지역별 필터링 기능
  * - 페이지네이션
  * - 지도-리스트 상호작용
  * ------------------------------ */
-const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
+const ServiceCenter: React.FC = () => {
   /* ------------------------------
    * Component State
    * ------------------------------ */
@@ -230,7 +222,7 @@ const ServiceCenter: React.FC<ServiceCenterProps> = ({ id, index }) => {
    * JSX Render
    * ------------------------------ */
   return (
-    <section className="s-section__content" id={id}>
+    <section className="s-section__content" >
       {/* Section Header */}
       <div className="s-section__header">
         <span className="s-section__subtitle">물류 센터</span>

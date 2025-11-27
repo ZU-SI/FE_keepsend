@@ -98,7 +98,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-solution-id={"logistics-it"}
         className="s-section solution-logistics light"
       >
-        <SolutionLogisticsIT id="logistics-it" index={startIdx + 1} />
+        <SolutionLogisticsIT />
       </div>
 
       {/* Settlement */}
@@ -108,7 +108,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         data-solution-id={"settlement"}
         className="s-section solution-stm"
       >
-        <SolutionSettlement id="settlement" index={startIdx + 2} />
+        <SolutionSettlement />
       </div>
 
       {/* AI Platform */}
@@ -119,7 +119,7 @@ const lastSectionRef = useRef<HTMLDivElement>(null);
         className="s-section light solution-ai"
         ref={lastSectionRef}
       >
-        <SolutionAIPlatform id="ai-platform" index={startIdx + 3} />
+        <SolutionAIPlatform />
       </div>
     </>
   );

@@ -1,10 +1,17 @@
 "use client";
 
-import { contactModalOpenAtom } from "@/store/global-modal.store";
+import { contactModalOpenAtom, policyModalOpenAtom } from "@/store/global-modal.store";
 import { useSetAtom } from "jotai";
 
 export default function GlobalFooter() {
   const setContactModalOpen = useSetAtom(contactModalOpenAtom);
+  const setPolicyModalOpen = useSetAtom(policyModalOpenAtom);
+
+  const handleMenuClick = (link: string) => (e: MouseEvent) => {
+    e.preventDefault();
+    if (!window) return;
+    window.location.href = `${window.location.origin}/${link}`;
+  };
 
   const handleContactClick = () => {
     setContactModalOpen(true);
@@ -26,7 +33,7 @@ export default function GlobalFooter() {
               혁신적인 기술과 신뢰할 수 있는 서비스로 글로벌 물류의 미래를
               만들어갑니다.
             </p>
-            <button onClick={handleContactClick} className="btn btn--primary btn--md">
+            <button onClick={handleContactClick} className="btn btn--primary btn--md mt-4">
               문의하기
             </button>
           </div>
@@ -40,19 +47,19 @@ export default function GlobalFooter() {
                 <h4 className="footer__column__title">메뉴</h4>
                 <ul className="footer__menu">
                   <li className="footer__menu__item">
-                    <a href="#service-intro" className="footer__menu__link">
+                    <button type="button" onClick={handleMenuClick("#service-intro")} className="footer__menu__link">
                       물류 서비스
-                    </a>
+                    </button>
                   </li>
                   <li className="footer__menu__item">
-                    <a href="#solution-intro" className="footer__menu__link">
+                    <button type="button" onClick={ handleMenuClick("#solution-intro")} className="footer__menu__link">
                       IT 솔루션
-                    </a>
+                    </button>
                   </li>
                   <li className="footer__menu__item">
-                    <a href="/news" className="footer__menu__link">
+                    <button type="button" onClick={handleMenuClick("news")} className="footer__menu__link">
                       소식
-                    </a>
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -139,12 +146,9 @@ export default function GlobalFooter() {
               © 2025 KEEPSEND. All rights reserved.
             </p>
             <div className="footer__legal">
-              <a href="#terms" className="footer__legal__link">
-                Terms of Service
-              </a>
-              <a href="#privacy" className="footer__legal__link">
-                Privacy Policy
-              </a>
+              <button type="button" onClick={() => {setPolicyModalOpen(true)}} className="footer__legal__link">
+                개인정보처리방침
+              </button>
             </div>
           </div>
         </div>

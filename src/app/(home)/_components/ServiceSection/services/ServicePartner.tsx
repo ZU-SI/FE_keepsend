@@ -1,15 +1,8 @@
 import Image from 'next/image';
-import React, { useState } from 'react';
-
-import type { Swiper as SwiperType } from 'swiper';
+import React from 'react';
 import 'swiper/css';
 import { Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-interface Props {
-  id: string;
-  index: number;
-}
 
 interface Partner {
   name: string;
@@ -17,8 +10,7 @@ interface Partner {
   description: string;
 }
 
-const ServicePartner: React.FC<Props> = ({ id, index }) => {
-  const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
+const ServicePartner: React.FC = () => {
 
   const partners: Partner[] = [
     { name: '쿠팡', logo: '/image/service-partner-coupang.png', description: '글로벌 네트워크 기반의 물류 솔루션' },

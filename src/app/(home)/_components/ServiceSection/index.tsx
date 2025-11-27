@@ -120,9 +120,8 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-section-index={startIdx + 3}
         data-service-id={"b2b-3"}
         className="s-section light service-system"
-      // style={{ height: "100vh" }}
       >
-        <ServiceB2bThree id="b2b-3"  />
+        <ServiceB2bThree  />
       </div>
 
       {/* Process */}
@@ -131,9 +130,8 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-section-index={startIdx + 4}
         data-service-id={"process"}
         className="s-section"
-      // style={{ height: "auto" }}
       >
-        <ServiceProcess id="process" />
+        <ServiceProcess  />
       </div>
 
       {/* Center */}
@@ -142,9 +140,8 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-section-index={startIdx + 5}
         data-service-id={"center"}
         className="s-section light service-center"
-      // style={{ height: "fit-content" }}
       >
-        <ServiceCenter id="center" index={startIdx + 5} />
+        <ServiceCenter />
       </div>
 
       {/* Partner */}
@@ -154,9 +151,8 @@ export default function ServiceSection({ startIdx }: ServiceSectionProps) {
         data-service-id={"partner"}
         className="s-section service-partner"
         ref={lastSectionRef}
-      // style={{ height: "fit-content" }}
       >
-        <ServicePartner id="partner" index={startIdx + 6} />
+        <ServicePartner />
       </div>
     </>
   );

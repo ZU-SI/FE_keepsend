@@ -146,14 +146,14 @@ export default function GlobalHeader() {
         <div className="header__mobile">
           <button
             type="button"
-            onClick={handleMenuClick("#service")}
+            onClick={handleMenuClick("#service-intro")}
             className="header__mobile-link"
           >
             물류 서비스
           </button>
           <button
             type="button"
-            onClick={handleMenuClick("#solution")}
+            onClick={handleMenuClick("#solution-intro")}
             className="header__mobile-link"
           >
             IT 솔루션

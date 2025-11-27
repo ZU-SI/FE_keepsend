@@ -5,7 +5,7 @@ interface SectionObserverOptions {
   idAttribute: string;
   menuGroups?: { id: string; sectionIds: string[] }[];
   excludeId?: string;
-  onComeIn?: (menuId: string) => void;
+  onComeIn?: () => void;
   onGoOut?: () => void;
   firstSectionRef: React.RefObject<HTMLDivElement | null>;
   lastSectionRef: React.RefObject<HTMLDivElement|null>;
@@ -65,7 +65,9 @@ export function useSectionObserver(options: SectionObserverOptions) {
       if (shouldShowMenu !== showMenu) {
         setShowMenu(shouldShowMenu);
         if (shouldShowMenu) {
-          options.onComeIn?.("service");
+          setTimeout(function() {
+            options.onComeIn?.();
+          }, 100)
         } else {
           options.onGoOut?.();
         }

@@ -7,9 +7,6 @@ import { IntegratedSystem } from '../../icons/IntegratedSystem';
 import { LogisticsInfrastructure } from '../../icons/LogisticsInfrastructure';
 import { PrecisionTracking } from '../../icons/PrecisionTracking';
 
-interface Props {
-  id?: string;
-}
 
 // --- Data ---
 const logisticsCards = [
@@ -53,7 +50,7 @@ const introSatellites = [
   { id: 'sat-6', text: '자동 배차', size: 120, color: '#06b6d4', icon: <AutomatedDispatch/>},
 ];
 
-export default function ServiceB2bThree({ id }: Props) {
+export default function ServiceB2bThree() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -89,7 +86,7 @@ export default function ServiceB2bThree({ id }: Props) {
   const cardY = useTransform(smoothScroll, [0.8, 0.95], [30, 0]);
 
   return (
-    <section className="relative w-full" id={id}>
+    <section className="relative w-full" >
       <div ref={containerRef} className="relative w-full h-[600vh]">
         <motion.div
           className="sticky top-0 h-screen w-full overflow-hidden block transition-colors duration-700"

@@ -14,7 +14,6 @@ export default function NewsList({ initialData }: NewsListProps) {
   // State
   const [displayedCards, setDisplayedCards] = useState(6);
   const [selectedFilter, setSelectedFilter] = useState("전체");
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedArticle, setSelectedArticle] = useState<NoticeItem | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -22,11 +21,7 @@ export default function NewsList({ initialData }: NewsListProps) {
   // Filtering Logic
   // Notion 데이터의 'category' 등을 활용. 없을 경우 대비해 기본값 처리
   const filteredNews = initialData
-    .filter((item) => selectedFilter === "전체" || item.category === selectedFilter)
-    .filter((item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
+    .filter((item) => selectedFilter === "전체" || item.category === selectedFilter);
 
   // GSAP Animation
   useEffect(() => {
@@ -40,7 +35,7 @@ export default function NewsList({ initialData }: NewsListProps) {
         );
       }
     }
-  }, [displayedCards, selectedFilter, searchQuery]); // 의존성 배열 유지
+  }, [displayedCards, selectedFilter]); // 의존성 배열 유지
 
   const handleLoadMore = () => {
     setDisplayedCards((prev) => prev + 6);
@@ -58,7 +53,6 @@ export default function NewsList({ initialData }: NewsListProps) {
         {/* Filter Bar */}
         <div className="sticky top-[60px] z-40 bg-white/95 backdrop-blur py-2 border-b border-gray-200 mb-0 md:py-4">
           <div className="max-w-7xl mx-auto px-5">
-            <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
               {/* Filter Pills */}
               <div className="flex gap-3">
                 {["전체", "뉴스", "블로그"].map((filter) => (
@@ -78,21 +72,6 @@ export default function NewsList({ initialData }: NewsListProps) {
                   </button>
                 ))}
               </div>
-
-              {/* Search Input */}
-              <div className="relative w-full md:w-64">
-                <input
-                  type="text"
-                  placeholder="검색..."
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setDisplayedCards(6);
-                  }}
-                  className="w-full px-4 py-2 pr-10 bg-white border border-gray-300 rounded-sm text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                />
-              </div>
-            </div>
           </div>
         </div>
 

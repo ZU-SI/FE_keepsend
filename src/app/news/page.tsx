@@ -6,7 +6,7 @@ export default async function News() {
   const notices = await getNoticeList();
 
   return (
-    <main>
+    <main id="main">
       <NewsList initialData={notices} />
     </main>
   );

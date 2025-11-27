@@ -4,6 +4,8 @@
    FOOTER COMPONENT (BEM)
    ============================================ */
 .footer {
+  z-index: 10;
+  position: relative;
   background: linear-gradient(to bottom, #0f172a, #000000);
   border-top: 1px solid #1e293b;
 

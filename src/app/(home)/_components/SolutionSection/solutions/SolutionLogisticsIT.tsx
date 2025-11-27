@@ -4,12 +4,6 @@ import { motion, useScroll, useTransform, Variants } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
-interface Props {
-  id: string;
-  index: number;
-  image: string;
-}
-
 const logisticsCards = [
   {
     title: "전 과정의 통합 관리",
@@ -64,7 +58,7 @@ const staggerContainer: Variants = {
   visible: { transition: { staggerChildren: 0.1 } }
 };
 
-export default function SolutionLogisticsIT({ id, index }: Props) {
+export default function SolutionLogisticsIT() {
   // 전체 섹션의 높이와 스크롤을 감지할 Ref
   const containerRef = useRef<HTMLDivElement>(null);
   // 가로 스크롤 길이를 계산할 Ref

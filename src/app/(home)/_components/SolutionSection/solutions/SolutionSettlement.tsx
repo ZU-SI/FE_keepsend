@@ -8,11 +8,6 @@ import 'swiper/css/pagination';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-interface Props {
-  id: string;
-  index: number;
-}
-
 const settlementFeatures = [
   {
     title: "자동 정산",
@@ -50,7 +45,7 @@ const staggerContainer = {
   }
 };
 
-export default function SolutionSettlement({ id, index }: Props) {
+export default function SolutionSettlement() {
   const [activeIndex, setActiveIndex] = useState(0);
   const swiperRef = useRef<SwiperType | null>(null);
 

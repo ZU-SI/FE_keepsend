@@ -1,10 +1,6 @@
 import { motion, useScroll } from 'framer-motion';
 import { useRef } from 'react';
 
-interface ServiceProcessProps {
-  id: string;
-}
-
 interface ProcessStep {
   id: number;
   title: string;
@@ -72,7 +68,7 @@ const processSteps: ProcessStep[] = [
   }
 ];
 
-export default function ServiceProcess ({ id } : ServiceProcessProps) {
+export default function ServiceProcess () {
   const containerRef = useRef<HTMLElement>(null);
 
 
@@ -84,7 +80,6 @@ export default function ServiceProcess ({ id } : ServiceProcessProps) {
   return (
     <section
       className="s-section__content"
-      id={id}
       ref={containerRef}
       style={{ position: "relative", paddingBottom: "300px" }}
     >

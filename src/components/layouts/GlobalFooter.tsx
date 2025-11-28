@@ -25,7 +25,7 @@ export default function GlobalFooter() {
 
   return (
     <footer className="border-t border-border bg-background pt-16 pb-8">
-      <div className="mx-auto max-w-container px-6 md:px-12">
+      <div className="mx-auto max-w-[1280px] px-2">
         {/* Main Grid */}
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
 

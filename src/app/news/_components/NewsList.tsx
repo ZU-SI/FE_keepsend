@@ -52,7 +52,7 @@ export default function NewsList({ initialData }: NewsListProps) {
 
         {/* Filter Bar */}
         <div className="sticky top-[60px] z-40 bg-white/95 backdrop-blur py-2 border-b border-gray-200 mb-0 md:py-4">
-          <div className="max-w-7xl mx-auto px-5">
+          <div className="s-section__content !h-auto !py-0 !items-start !min-h-0 px-5">
               {/* Filter Pills */}
               <div className="flex gap-3">
                 {["전체", "뉴스", "블로그"].map((filter) => (
@@ -76,7 +76,7 @@ export default function NewsList({ initialData }: NewsListProps) {
         </div>
 
         {/* News Grid */}
-        <div className="max-w-7xl mx-auto mb-12 py-12 px-5 bg-gray-50">
+        <div className="s-section__content !min-h-0 light mb-12 py-12 px-5">
           <div ref={containerRef} className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredNews.slice(0, displayedCards).map((item) => (
               <div

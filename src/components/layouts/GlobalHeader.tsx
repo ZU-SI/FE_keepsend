@@ -81,7 +81,7 @@ export default function GlobalHeader() {
         transform: isHidden ? "translateY(-100%)" : "translateY(0)",
       }}
     >
-      <div className="mx-auto flex h-16 max-w-container items-center justify-between px-4 md:px-8">
+      <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-[20px]">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <TypoLogo />

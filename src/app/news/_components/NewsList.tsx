@@ -1,9 +1,12 @@
 "use client";
 
 import { NoticeItem } from "@/lib/notion.news";
+import clsx from "clsx";
+import { motion } from "framer-motion";
 import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
 import NewsDetail from "./NewsDetail";
+
 
 
 interface NewsListProps {
@@ -45,10 +48,30 @@ export default function NewsList({ initialData }: NewsListProps) {
     <>
       <section className="min-h-screen bg-gray-50">
         {/* Banner */}
-        <div className="mx-auto py-32 px-5 text-center bg-gray-900 md:py-48 text-white">
-          <h1 className="text-4xl font-bold mb-4 md:text-6xl">NEWS & BLOG</h1>
-          <p className="text-base text-gray-400 md:text-lg">최신 물류 및 IT 소식을 전합니다</p>
-        </div>
+          <motion.div
+            className="relative w-full mx-auto py-32 px-5 text-center bg-gray-900 md:py-48 text-white"
+            initial={{ opacity: 0}}
+            animate={{ opacity:  1  }}
+            transition={{  ease: "easeInOut" }}
+          >
+            {/* [Mod] 임의의 bg-slate/gray 대신 bg-muted 사용 */}
+            <div className={clsx("z-[10] absolute top-0 left-0 w-full h-full")}>
+              <video
+                className="w-full h-full object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+              >
+                <source src={"/video/news-01.mp4"} type="video/mp4" />
+              </video>
+            </div>
+          {/* Overlay: 브랜드 딥블루 톤 유지를 위해 순수 black보다는 background 컬러 기반 오버레이 권장 */}
+          <div className="absolute inset-0 bg-background/40 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/30 z-10" />
+            <h1 className="relative z-[11] text-4xl font-bold mb-4 md:text-6xl">NEWS & BLOG</h1>
+            <p className="relative z-[12] text-base text-gray-400 md:text-lg">최신 물류 및 IT 소식을 전합니다</p>
+          </motion.div>
 
         {/* Filter Bar */}
         <div className="sticky top-[60px] z-40 bg-white/95 backdrop-blur py-2 border-b border-gray-200 mb-0 md:py-4">
@@ -76,7 +99,7 @@ export default function NewsList({ initialData }: NewsListProps) {
         </div>
 
         {/* News Grid */}
-        <div className="s-section__content !min-h-0 light mb-12 py-12 px-5">
+        <div className="s-section__content !min-h-[100vh] justify-start items-start light mb-12 py-12 px-5">
           <div ref={containerRef} className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredNews.slice(0, displayedCards).map((item) => (
               <div

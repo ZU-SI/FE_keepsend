@@ -113,7 +113,7 @@ export default function SolutionSettlement() {
             {settlementFeatures.map((item, idx) => (
               <SwiperSlide key={idx}>
                 {/* [Mod] bg-gray-100 -> bg-muted-light (Placeholder) */}
-                <div className="relative h-full overflow-hidden rounded-xl bg-muted-light">
+                <div className="relative h-full overflow-hidden  bg-muted-light">
                   <Image width={1200} height={800} src={item.image} alt={item.title} className='min-w-full min-h-full object-cover absolute top-0 left-0' />
                 </div>
               </SwiperSlide>

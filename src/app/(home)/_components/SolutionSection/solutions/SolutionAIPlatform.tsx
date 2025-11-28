@@ -15,7 +15,7 @@ const aiFeatures = [
   },
   {
     tag: "AI Automation",
-    title: "AI·로봇이 스스로 판단하고 움직이는 자동화 물류",
+    title: "AI 로봇이 스스로 결정하고 운행하는 자동화 물류",
     description:
     "AI는 재고 흐름·수요 패턴·현장 데이터를 분석해 최적 경로와 작업 우선순위를 계산하고, 로봇은 이를 바탕으로 이동·적재·정렬까지 자동 수행합니다. 운영자는 전략과 모니터링에 집중하고, 반복 작업과 현장 실행은 시스템이 알아서 처리하는 완전한 자동화 환경을 제공합니다.",
     tags: ["로봇 제어", "자동 경로 최적화", "실시간 작업 자동화"],
@@ -103,7 +103,7 @@ export default function SolutionAIPlatform() {
                           <span
                             key={tagIdx}
                             // [Mod] hover colors: primary brand matching
-                            className="rounded-sm border border-border-light bg-card-light px-3 py-1 text-sm font-medium text-muted-foreground-light transition-all duration-300 hover:border-primary hover:text-primary hover:bg-primary/5"
+                            className="rounded-sm border border-border-light bg-card-light px-3 py-1 text-sm font-medium text-muted-foreground-light transition-all duration-300"
                           >
                             {tag}
                           </span>

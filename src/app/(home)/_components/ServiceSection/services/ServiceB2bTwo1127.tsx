@@ -3,10 +3,6 @@
 import { motion, MotionValue, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 
-interface Props {
-  id?: string;
-  index?: number;
-}
 
 const consultingCards = [
   {
@@ -39,7 +35,7 @@ const consultingCards = [
   },
 ];
 
-export default function ServiceB2bTwo({ id, index }: Props) {
+export default function ServiceB2bTwo() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -49,7 +45,7 @@ export default function ServiceB2bTwo({ id, index }: Props) {
 
   return (
 
-    <section ref={containerRef} id={id} className="relative h-[500vh] ">
+    <section ref={containerRef}  className="relative h-[500vh] ">
       {/* Motion: pin-scroll */}
       <div className="s-section__content sticky top-0 overflow-hidden h-fit">
         <div className="mx-auto flex h-full w-full max-w-container flex-col">

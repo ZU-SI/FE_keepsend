@@ -1,6 +1,7 @@
 'use client';
 
 import { motion, Variants } from 'framer-motion';
+import Image from 'next/image';
 import { useRef, useState } from 'react';
 import type { Swiper as SwiperType } from 'swiper';
 import 'swiper/css';
@@ -12,18 +13,22 @@ const settlementFeatures = [
   {
     title: "자동 정산",
     description: "플랫폼별 거래 데이터를 자동 수집하고 정확하게 계산합니다.",
+    image: '/image/solution-ulma-01.png'
   },
   {
     title: "정확한 검증",
     description: "시스템 기반의 오류 감지와 중복 방지로 신뢰성을 높입니다.",
+    image: '/image/solution-ulma-02.png'
   },
   {
     title: "운영 부담 절감",
     description: "수작업과 엑셀 업무를 제거하여 관리 효율을 극대화합니다.",
+    image: '/image/solution-ulma-03.png'
   },
   {
     title: "투명한 데이터 관리",
     description: "정산 내역을 실시간으로 확인하고 리포트를 자동 생성합니다.",
+    image: '/image/solution-ulma-04.png'
   },
 ];
 
@@ -105,9 +110,10 @@ export default function SolutionSettlement() {
             // h-[30vh] mobile, h-[40vh] desktop
             className="h-[30vh] rounded-xl lg:h-[50vh] "
           >
-            {settlementFeatures.map((_, idx) => (
+            {settlementFeatures.map((item, idx) => (
               <SwiperSlide key={idx}>
-                <div className="h-full overflow-hidden rounded-xl bg-card shadow-[0_10px_40px_rgba(0,0,0,0.3)]">
+                <div className="relative h-full overflow-hidden rounded-xl ">
+                  <Image width={1200} height={800} src={item.image} alt={item.title} className='min-w-full min-h-full object-cover absolute top-0 left-0' />
                 </div>
               </SwiperSlide>
             ))}

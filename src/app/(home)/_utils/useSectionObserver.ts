@@ -107,7 +107,7 @@ export function useSectionObserver(options: SectionObserverOptions) {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
     };
-  }, [showMenu, activeMenuId, options.sectionSelector, options.idAttribute, options.excludeId, options.menuGroups, options.firstSectionRef, options.lastSectionRef]);
+  }, [showMenu, activeMenuId, options]);
 
   return { showMenu, activeMenuId, sectionRefs };
 }

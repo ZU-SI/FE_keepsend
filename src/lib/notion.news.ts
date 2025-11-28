@@ -59,7 +59,7 @@ export const getNoticeList = async (): Promise<NoticeItem[]> => {
     const data = await response.json();
 
     // 3. 데이터 매핑 (Notion 구조 -> UI 구조)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     return data.results.map((page: any) => {
 
       return {

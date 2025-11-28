@@ -62,7 +62,7 @@ export const getPolicyList = async (): Promise<PolicyListItem[]> => {
     const data = await response.json();
 
     // 데이터 매핑
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     return data.results.map((page: any) => ({
       id: page.id,
       title: page.properties["약관명"]?.title[0]?.plain_text || "제목 없음",
@@ -96,7 +96,7 @@ export const getPolicyContent = async (pageId: string): Promise<string> => {
     let htmlContent = `<div class="space-y-4 text-sm text-gray-700 leading-relaxed">`;
 
     // 블록을 순회하며 HTML로 변환
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     data.results.forEach((block: any) => {
       const type = block.type;
 

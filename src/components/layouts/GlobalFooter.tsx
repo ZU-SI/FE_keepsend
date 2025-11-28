@@ -119,20 +119,20 @@ export default function GlobalFooter() {
                     href="mailto:contact@keepsend.com"
                     className="footer__contact__link"
                   >
-                    contact@keepsend.com
+                    manager@keepsend.com
                   </a>
                 </li>
                 <li className="footer__contact__item">
                   <span className="footer__contact-label">Phone:</span>
                   <br />
                   <a href="tel:0200000000" className="footer__contact__link">
-                    02-xxxx-xxxx
+                    031-xxxx-xxxx
                   </a>
                 </li>
                 <li className="footer__contact__item">
                   <span className="footer__contact-label">Address:</span>
                   <br />
-                  서울특별시 강남구
+                  경기도 하남시 미사강변한강로
                 </li>
               </ul>
             </div>

@@ -24,19 +24,19 @@ const logisticsCards = [
 
 const msCards = [
   {
-    image: "/images/solution-logistics-ms-1.png",
+    image: "/image/solution-tms-01.webp",
     title: "주문의 시작부터 정확하게!",
     description: ["고객 주문·상품·재고 정보를 한 흐름으로 연결해 실시간으로 수요를 파악하고, 오류 없는 주문 처리를 지원합니다.", "수요 변동 대응, 주문 오류 감소, 서비스 품질 향상에 강점을 가집니다."],
     tags: ["OMS", "#주문리스트"],
   },
   {
-    image: "/images/solution-logistics-ms-2.png",
+    image: "/image/solution-tms-02.webp",
     title: "창고 운영의 자동화•표준화",
     description: ["현재 가상 재고를 통해 주문·예약·입출고 예정 수량을 반영해 실제 출고 가능한 재고를 실시간으로 예측하여 현황을 파악합니다.", "전 과정을 시스템으로 표준화하여 가시성 및 운영의 최적화 환경을 확보합니다."],
     tags: ["WMS", "#재고현황", "#현재가상재고"],
   },
   {
-    image: "/images/solution-logistics-ms-3.png",
+    image: "/image/solution-tms-03.webp",
     title: "지능형 배차•배송 관리",
     description: ["배송기사 지정 배송을 통해 기사 별 경로, 물량, 제약 조건을 분석힌 최적의 배차를 지정하고 현장을 실시간으로 제어합니다.", "계획·배차·추적·정산을 통합해 배송 품질을 높이고 운송 비용을 절감합니다."],
     tags: ["TMS", "#배송관리", "#기사지정배송"],
@@ -221,15 +221,15 @@ export default function SolutionLogisticsIT() {
                         </div>
 
                         {/* Image */}
-                        <div className="h-[30vh] mb-6 flex-shrink-0 overflow-hidden rounded-2xl border border-border-light bg-gray-50 shadow-inner">
-                           <div className="relative aspect-[21/9] w-full">
-                              <img
-                                src={card.image}
-                                alt={card.title}
-                                className="absolute inset-0 h-full w-full object-cover"
-                              />
-                           </div>
-                        </div>
+                          <div className="relative h-[30vh] mb-6 flex-shrink-0 overflow-hidden rounded-2xl border border-border-light bg-gray-50 shadow-inner">
+                            <Image
+                              src={card.image}
+                              alt={card.title}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            />
+                          </div>
 
                         {/* Content */}
                         <div className="flex flex-col gap-3">

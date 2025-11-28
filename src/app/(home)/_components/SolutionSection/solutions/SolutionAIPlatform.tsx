@@ -1,28 +1,29 @@
 'use client'; // Framer Motion은 클라이언트 컴포넌트에서 동작합니다.
 
 import { motion, Variants } from 'framer-motion';
-
-interface Props {
-  id: string;
-  index: number;
-}
+import Image from 'next/image';
 
 const aiFeatures = [
   {
     tag: "AI Assistant",
-    title: "AI 비서와 함께 움직이는 스마트 물류",
-    description: "음성·채팅 기반의 AI 어시스턴트가 현장 운영자의 질문에 즉시 응답하고, 업무 지시부터 일정 관리, 데이터 분석까지 비서처럼 지원합니다. 동시에 재고관리 로봇이 창고 내 이동과 적재를 자동으로 수행하여, 사람은 판단에 집중하고 시스템은 실행을 담당하는 지능형 물류 환경을 완성합니다.",
-    tags: ["음성 인식", "데이터 분석", "실시간 응답"],
+    title: "현장을 이해하고 즉시 응답하는 AI 비서",
+    description:
+      "음성·챗 기반의 AI 어시스턴트가 작업자의 질문에 즉시 응답하고, SOP 안내·업무 지시 생성·장비 상태 조회 등 운영자의 의사결정을 보조합니다. 사람과 시스템을 연결하는 ‘지능형 인터페이스’로서, 누구나 전문 운영자처럼 현장을 이해하고 빠르게 대응할 수 있도록 지원합니다.",
+    tags: ["음성 인식", "운영 지식 제공", "업무 지시 생성"],
+    image: '/image/solution-ai-01.png',
     imagePosition: "right" as const,
   },
   {
     tag: "AI Automation",
-    title: "AI와 로봇이 만드는 새로운 물류 현장",
-    description: "지능형 어시스턴트는 현장 이슈를 실시간으로 파악하고, 로봇은 데이터를 기반으로 재고를 정확하게 이동·배치합니다. AI와 자동화 기술이 결합된 차세대 물류 혁신 서비스, 사람은 전략에 집중하고, 시스템이 나머지를 해결합니다.",
-    tags: ["자동화", "로봇 관리", "실시간 모니터링"],
+    title: "AI·로봇이 스스로 판단하고 움직이는 자동화 물류",
+    description:
+    "AI는 재고 흐름·수요 패턴·현장 데이터를 분석해 최적 경로와 작업 우선순위를 계산하고, 로봇은 이를 바탕으로 이동·적재·정렬까지 자동 수행합니다. 운영자는 전략과 모니터링에 집중하고, 반복 작업과 현장 실행은 시스템이 알아서 처리하는 완전한 자동화 환경을 제공합니다.",
+    tags: ["로봇 제어", "자동 경로 최적화", "실시간 작업 자동화"],
+    image: '/image/solution-ai-02.png',
     imagePosition: "left" as const,
   },
 ];
+
 
 // Animation Variants 정의
 const fadeInUp = {
@@ -115,27 +116,24 @@ export default function SolutionAIPlatform() {
                     className="flex-1 w-full order-2"
                     variants={fadeInUp} // 이미지도 부드럽게 등장
                 >
-                  <div
-                    className="relative flex w-full items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200 text-xl font-semibold text-gray-600 aspect-[4/3] shadow-lg"
+                <div
+                  className="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200 shadow-lg aspect-[4/3]"
+                >
+                  <motion.div
+                      initial={{ scale: 1.1 }}
+                      whileInView={{ scale: 1 }}
+                      transition={{ duration: 1.5 }}
+                      className="z-10 h-full w-full"
                   >
-                    <div
-                        className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-accent/20"
-                        aria-hidden="true"
-                    />
-                    <div
-                        className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-gradient-to-br from-transparent via-white/10 to-transparent animate-spin-slow"
-                        aria-hidden="true"
-                    />
-                    {/* 이미지 로드 시 스케일 효과 추가 (선택 사항) */}
-                    <motion.div
-                        initial={{ scale: 1.1 }}
-                        whileInView={{ scale: 1 }}
-                        transition={{ duration: 1.5 }}
-                        className="z-10"
-                    >
-                        AI 이미지 {idx + 1}
-                    </motion.div>
-                  </div>
+                      <Image
+                          src={feature.image}
+                          alt={feature.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                  </motion.div>
+                </div>
                 </motion.div>
               </motion.div>
             );

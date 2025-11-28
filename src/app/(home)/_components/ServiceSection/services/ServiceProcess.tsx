@@ -1,4 +1,5 @@
 import { motion, useScroll } from 'framer-motion';
+import Image from 'next/image';
 import { useRef } from 'react';
 
 interface ProcessStep {
@@ -111,30 +112,9 @@ export default function ServiceProcess () {
         />
         {/* 3. 각 단계별 아이템 */}
         <div className='flex flex-col gap-[230px] md:gap-[170px] relative z-[2]'>
-          {processSteps.map((step, idx) => (
-            <ProcessStepItem key={step.id} step={step} index={idx} />
+          {processSteps.map((step) => (
+            <ProcessStepItem key={step.id} step={step}  />
           ))}
-
-          {/* 4. Final Step: Keepsend 통합 솔루션 */}
-          {/* <motion.div
-            initial={{ opacity: 1, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, margin: "-100px" }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              position: "relative",
-              marginTop: "40px"
-            }}
-          >
-            <div
-              className="w-[180px] h-[180px] rounded-full  flex items-center justify-center  z-10 bg-gradient-to-br from-primary to-secondary  shadow-lg shadow-primary/30"
-            >
-              <TypoLogo />
-            </div>
-          </motion.div> */}
         </div>
       </div>
     </section>
@@ -143,7 +123,7 @@ export default function ServiceProcess () {
 
 
 // 개별 단계 컴포넌트
-function ProcessStepItem({ step, index }: { step: ProcessStep; index: number }) {
+function ProcessStepItem({ step }: { step: ProcessStep;  }) {
   // 지그재그 배치를 위한 로직 (짝수: 오른쪽 / 홀수: 왼쪽)
   // const isRightSide = index % 2 === 0;
   const isRightSide = true;
@@ -172,7 +152,7 @@ function ProcessStepItem({ step, index }: { step: ProcessStep; index: number }) 
           {/* service-process__step-img */}
           <div className="relative z-20 flex h-[50px] w-[50px] flex-shrink-0 items-center justify-center rounded-full">
             <span className={`absolute top-[-20px] left-[-34px] flex p-3 items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary text-md font-bold text-white shadow-lg shadow-primary/30`}>
-                <img width="50" height="50" src={step.icon} alt="total-sales" className='relative z-22'/>
+                <img width="50" height="50" src={step.icon}  className='relative z-22' alt={step.title}/>
             </span>
           </div>
           {/* service-process__step-content */}
@@ -182,7 +162,7 @@ function ProcessStepItem({ step, index }: { step: ProcessStep; index: number }) 
             {/* service-process__step-description */}
             <p className="text-sm leading-relaxed text-foreground">{step.description}</p>
             <div className="rounded-md absolute top-20 left-20  md:scale-100 md:top-0 md:left-[-85%] overflow-hidden bg-gray-900">
-              <img width="280" height="210" src={step.image} />
+              <Image width="280" height="210" src={step.image}  alt={step.title}/>
             </div>
           </div>
         </div>

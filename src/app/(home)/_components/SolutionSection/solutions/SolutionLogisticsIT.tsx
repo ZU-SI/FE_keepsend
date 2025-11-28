@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
 const logisticsCards = [
+  // ... (데이터 동일)
   {
     title: "전 과정의 통합 관리",
     description: "자체 개발 OMS·WMS·TMS 간의 데이터 연동으로 실시간 통합 제어",
@@ -23,6 +24,7 @@ const logisticsCards = [
 ];
 
 const msCards = [
+  // ... (데이터 동일)
   {
     image: "/image/solution-tms-01.webp",
     title: "주문의 시작부터 정확하게!",
@@ -43,7 +45,6 @@ const msCards = [
   },
 ];
 
-// Animation Variants (초기 등장용)
 const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 50 },
   visible: {
@@ -59,20 +60,15 @@ const staggerContainer: Variants = {
 };
 
 export default function SolutionLogisticsIT() {
-  // 전체 섹션의 높이와 스크롤을 감지할 Ref
   const containerRef = useRef<HTMLDivElement>(null);
-  // 가로 스크롤 길이를 계산할 Ref
   const horizontalTrackRef = useRef<HTMLDivElement>(null);
-
   const [scrollRange, setScrollRange] = useState(0);
 
-  // 1. 가로 이동 거리 계산 (Resize 대응)
   useEffect(() => {
     const handleResize = () => {
       if (horizontalTrackRef.current) {
         const totalWidth = horizontalTrackRef.current.scrollWidth;
         const viewportWidth = window.innerWidth;
-        // 전체 길이 - 화면 너비 + 여백 보정
         setScrollRange(totalWidth - viewportWidth + 100);
       }
     };
@@ -81,34 +77,24 @@ export default function SolutionLogisticsIT() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 2. 스크롤 진행률 감지 (0 ~ 1)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
-  // 3. 애니메이션 매핑
-
-  // (1) Logistics Grid Opacity: 0% ~ 15% 구간에서 보이다가 사라짐
   const logisticsOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const logisticsScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.95]); // 살짝 작아지며 사라짐
-  const logisticsPointerEvents = useTransform(scrollYProgress, (v) => v > 0.15 ? 'none' : 'auto'); // 안 보일 땐 클릭 방지
+  const logisticsScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.95]);
+  const logisticsPointerEvents = useTransform(scrollYProgress, (v) => v > 0.15 ? 'none' : 'auto');
 
-  // (2) MS Cards Opacity: 15% ~ 25% 구간에서 나타남
   const msOpacity = useTransform(scrollYProgress, [0.15, 0.25], [0, 1]);
-
-  // (3) MS Cards Horizontal Slide: 25% ~ 100% 구간에서 이동
-  // 25% 지점까지는 0px 유지, 그 이후부터 scrollRange만큼 이동
   const msX = useTransform(scrollYProgress, [0.25, 1], ["0px", `-${scrollRange}px`]);
 
   return (
-    // 전체 트랙: 500vh (스크롤 할 공간 확보)
     <section ref={containerRef} className="relative h-[500vh]">
 
-      {/* 뷰포트 고정 (Sticky Viewport) */}
       <div className="sticky top-0 flex h-screen w-full flex-col items-center justify-center overflow-hidden px-4 lg:px-8">
 
-        {/* ================= Layer 1: Logistics Grid (Initial View) ================= */}
+        {/* ================= Layer 1: Logistics Grid ================= */}
         <motion.div
           className="absolute inset-0 s-section__content z-10 mx-auto"
           style={{
@@ -172,35 +158,36 @@ export default function SolutionLogisticsIT() {
         </motion.div>
 
 
-        {/* ================= Layer 2: MS Horizontal Slider (Second View) ================= */}
+        {/* ================= Layer 2: MS Horizontal Slider ================= */}
         <motion.div
           className="absolute inset-0 z-20 flex items-center h-full w-full"
           style={{ opacity: msOpacity }}
         >
-           {/* Horizontal Track Container */}
            <div className="w-full h-auto">
              <motion.div
                 ref={horizontalTrackRef}
                 style={{ x: msX }}
                 className="flex gap-8 pl-[10vw] pr-[10vw] w-max items-center"
              >
-                {/* Header Card for MS Section (Optional: Slide 시작 전 제목 역할) */}
+                {/* Header Card */}
                 <div className="flex w-[30vw] min-w-[300px] flex-col justify-center px-4">
-                  <h3 className="text-3xl font-bold leading-tight text-gray-900 lg:text-4xl">
+                  {/* [Mod] text-gray-900 -> text-foreground-light */}
+                  <h3 className="text-3xl font-bold leading-tight text-foreground-light lg:text-4xl">
                     올인원 물류<br/>물류 시스템
                   </h3>
-                  <p className="mt-4 text-gray-600">
+                  {/* [Mod] text-gray-600 -> text-muted-foreground-light */}
+                  <p className="mt-4 text-muted-foreground-light">
                     주문부터 배송, 재고관리까지,<br/>각 단계별 전문 솔루션을 확인하세요.
                   </p>
                 </div>
 
-                {/* MS Cards Loop */}
+                {/* MS Cards */}
                 {msCards.map((card, idx) => (
                   <div
                     key={`ms-${idx}`}
-                    className="group relative flex w-[85vw] flex-col gap-6 rounded-3xl border border-border-light bg-white p-6 shadow-2xl lg:w-[45vw] lg:p-10"
+                    // [Mod] bg-white -> bg-card-light
+                    className="group relative flex w-[85vw] flex-col gap-6 rounded-3xl border border-border-light bg-card-light p-6 shadow-2xl lg:w-[45vw] lg:p-10"
                   >
-                     {/* Scrollable Content inside Card */}
                      <div className="flex h-full flex-col  custom-scrollbar">
 
                         {/* Tags */}
@@ -210,8 +197,9 @@ export default function SolutionLogisticsIT() {
                             return (
                               <span
                                 key={tIdx}
+                                // [Mod] bg-white -> bg-card-light
                                 className={`inline-flex items-center justify-center rounded-full px-3 py-1 text-sm font-bold transition-colors duration-300
-                                  ${isPrimary ? 'bg-primary text-white' : 'bg-white border border-primary/30 text-primary'}
+                                  ${isPrimary ? 'bg-primary text-white' : 'bg-card-light border border-primary/30 text-primary'}
                                 `}
                               >
                                 {tag}
@@ -220,8 +208,8 @@ export default function SolutionLogisticsIT() {
                           })}
                         </div>
 
-                        {/* Image */}
-                          <div className="relative h-[30vh] mb-6 flex-shrink-0 overflow-hidden rounded-2xl border border-border-light bg-gray-50 shadow-inner">
+                        {/* Image - [Mod] bg-gray-50 -> bg-muted-light */}
+                          <div className="relative h-[30vh] mb-6 flex-shrink-0 overflow-hidden rounded-2xl border border-border-light bg-muted-light shadow-inner">
                             <Image
                               src={card.image}
                               alt={card.title}
@@ -233,12 +221,14 @@ export default function SolutionLogisticsIT() {
 
                         {/* Content */}
                         <div className="flex flex-col gap-3">
-                          <h3 className="text-xl font-bold text-gray-900 lg:text-2xl">
+                          {/* [Mod] text-gray-900 -> text-foreground-light */}
+                          <h3 className="text-xl font-bold text-foreground-light lg:text-2xl">
                             {card.title}
                           </h3>
                           <ul className="flex flex-col gap-2">
                             {card.description.map((desc, dIdx) => (
-                              <li key={dIdx} className="flex items-start gap-2 text-[0.9375rem] leading-relaxed text-gray-600">
+                              // [Mod] text-gray-600 -> text-muted-foreground-light
+                              <li key={dIdx} className="flex items-start gap-2 text-[0.9375rem] leading-relaxed text-muted-foreground-light">
                                 <svg className="mt-1 h-4 w-4 min-w-[1rem] text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
                                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                                 </svg>

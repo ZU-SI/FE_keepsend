@@ -84,13 +84,13 @@ Import trace:
 Error evaluating Node.js code
 Error: @use rules must be written before any other rules.
   ╷
-5 │ @use './cofigs/base';
+5 │ @use './configs/base';
   │ ^^^^^^^^^^^^^^^^^^^^
   ╵
   src/styles/globals.scss 5:1  root stylesheet
 Caused by: Error: @use rules must be written before any other rules.
   ╷
-5 │ @use './cofigs/base';
+5 │ @use './configs/base';
   │ ^^^^^^^^^^^^^^^^^^^^
   ╵
   src/styles/globals.scss 5:1  root stylesheet

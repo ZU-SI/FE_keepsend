@@ -1,180 +1,158 @@
 // components/ServiceCenter.tsx
 'use client';
 
-import dynamic from 'next/dynamic';
-import React, { useState } from 'react';
+import Script from 'next/script';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-/* ------------------------------
- * Type Definitions
- * ------------------------------ */
+// ... (Type Definitions, Constants, Data 부분은 동일 유지) ...
+// (regions, centers, stats 배열 생략)
+// NOTE: stats의 value 등은 실제 데이터로 교체 필요
+
 export interface Center {
-  id: number;
-  name: string;
-  region: string;
-  code: [number, number]; // [latitude, longitude]
-}
+    id: number;
+    name: string;
+    region: string;
+    code: [number, number]; // [latitude, longitude]
+  }
 
-export interface Region {
-  id: string;
-  name: string;
-}
+  export interface Region {
+    id: string;
+    name: string;
+  }
 
-interface StatItem {
-  label: string;
-  value: string;
-  unit: string;
-}
+  interface StatItem {
+    label: string;
+    value: string;
+    unit: string;
+  }
 
-/* ------------------------------
- * Constants
- * ------------------------------ */
-export const regions: Region[] = [
-  { id: 'all', name: '전체' },
-  { id: 'seoul', name: '서울/경기' },
-  { id: 'gangwon', name: '강원도' },
-  { id: 'chungcheong', name: '충청도' },
-  { id: 'gyeongsang', name: '경상도' },
-  { id: 'jeolla', name: '전라도' },
-];
+  // Window 객체에 naver 타입 확장 (TS 에러 방지용)
+  declare global {
+    interface Window {
+      naver: any;
+    }
+  }
 
-const stats: StatItem[] = [
-  { label: '물류 센터', value: '0,000', unit: '개' },
-  { label: '1일 투입 인원', value: '0,000', unit: '명' },
-  { label: '일 평균 배송량', value: '0,000', unit: '건' },
-];
+  /* ------------------------------
+   * Constants
+   * ------------------------------ */
+  const FOCUS_ZOOM_LEVEL = 16;
+  const DEFAULT_ZOOM_LEVEL = 7;
 
-export const centers: Center[] = [
-  // 서울/경기
-  { id: 1, name: '중구1캠프', region: '서울/경기', code: [37.5665, 126.9780] },
-  { id: 2, name: '중구1 인터캠프', region: '서울/경기', code: [37.5502, 127.0285] },
-  { id: 3, name: '동대문주(성동MB)', region: '서울/경기', code: [37.5388, 127.0839] },
-  { id: 4, name: '구의2(성수동A)', region: '서울/경기', code: [37.5443, 127.0557] },
-  { id: 5, name: '구의2(성수동C)', region: '서울/경기', code: [37.5443, 127.0557] },
-  { id: 6, name: '양주1', region: '서울/경기', code: [37.7854, 127.0456] },
-  { id: 7, name: '남양주2(아영)', region: '서울/경기', code: [37.6358, 127.2167] },
-  { id: 8, name: '용인2', region: '서울/경기', code: [37.2636, 127.1089] },
+  // 네이버 클라우드 플랫폼에서 발급받은 Client ID를 입력하세요.
+  const NAVER_CLIENT_ID = 'YOUR_CLIENT_ID';
 
-  // 강원도
-  { id: 9, name: '일산', region: '강원도', code: [37.6350, 126.7157] },
-  { id: 10, name: '일산6', region: '강원도', code: [37.6350, 126.7157] },
-  { id: 11, name: '일산8', region: '강원도', code: [37.6350, 126.7157] },
-  { id: 12, name: '동탄1', region: '강원도', code: [37.2005, 127.0752] },
-  { id: 13, name: 'M창동', region: '강원도', code: [37.6539, 127.0473] },
-  { id: 14, name: 'M삼척', region: '강원도', code: [37.4498, 129.1656] },
+  export const regions: Region[] = [
+    { id: 'all', name: '전체' },
+    { id: 'seoul', name: '서울/경기' },
+    { id: 'gangwon', name: '강원도' },
+    { id: 'chungcheong', name: '충청도' },
+    { id: 'gyeongsang', name: '경상도' },
+    { id: 'jeolla', name: '전라도' },
+  ];
 
-  // 충청도
-  { id: 15, name: '천안1(주안)', region: '충청도', code: [36.8151, 127.1139] },
-  { id: 16, name: '천안1(아산)', region: '충청도', code: [36.8151, 127.1139] },
-  { id: 17, name: '대전1(대흥동MB)', region: '충청도', code: [36.3273, 127.4264] },
-  { id: 18, name: '대전3(대흥MB)', region: '충청도', code: [36.3504, 127.3845] },
-  { id: 19, name: '대전3(성남동MB)', region: '충청도', code: [36.3504, 127.3845] },
-  { id: 20, name: '청와1', region: '충청도', code: [36.6424, 127.4890] },
+  const stats: StatItem[] = [
+    { label: '물류 센터', value: '0,000', unit: '개' },
+    { label: '1일 투입 인원', value: '0,000', unit: '명' },
+    { label: '일 평균 배송량', value: '0,000', unit: '건' },
+  ];
 
-  // 경상도
-  { id: 21, name: '고미1(광림)', region: '경상도', code: [35.1379, 128.0896] },
-  { id: 22, name: '고미1(오천)', region: '경상도', code: [35.1379, 128.0896] },
-  { id: 23, name: '대구3캠프', region: '경상도', code: [35.8714, 128.6014] },
-  { id: 24, name: '대구1캠프', region: '경상도', code: [35.8714, 128.6014] },
-  { id: 25, name: '대구3캠프(본관)', region: '경상도', code: [35.8714, 128.6014] },
-  { id: 26, name: '대구3캠프(관평장)', region: '경상도', code: [35.8714, 128.6014] },
-  { id: 27, name: '부산1', region: '경상도', code: [35.1796, 129.0756] },
-  { id: 28, name: '부산4', region: '경상도', code: [35.1796, 129.0756] },
-  { id: 29, name: 'M양주', region: '경상도', code: [35.6870, 127.9095] },
-  { id: 30, name: 'M포항', region: '경상도', code: [36.0190, 129.3435] },
-  { id: 31, name: 'M_평탁1', region: '경상도', code: [36.9921, 127.1128] },
-  { id: 32, name: 'M_평탁2', region: '경상도', code: [36.9921, 127.1128] },
-
-  // 전라도
-  { id: 33, name: '전주1', region: '전라도', code: [35.8242, 127.1479] },
-  { id: 34, name: '광주1', region: '전라도', code: [35.1595, 126.8526] },
-  { id: 35, name: '목포1', region: '전라도', code: [34.8118, 126.3922] },
-  { id: 36, name: '순천1', region: '전라도', code: [34.9506, 127.4872] },
-];
-
-/* ------------------------------
- * Dynamic Import - NaverMap Component
- * - SSR 비활성화 (window 객체 사용)
- * - 로딩 중 스피너 표시
- * ------------------------------ */
-const NaverMapComponent = dynamic(() => import('../../../../../components/ui/map/NaverMap'), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-        <p className="text-sm text-muted-foreground">지도를 불러오는 중...</p>
-      </div>
-    </div>
-  ),
-});
+  export const centers: Center[] = [
+    // 데이터는 기존과 동일
+    { id: 1, name: '중구1캠프', region: '서울/경기', code: [37.5665, 126.9780] },
+    { id: 2, name: '중구1 인터캠프', region: '서울/경기', code: [37.5502, 127.0285] },
+    { id: 3, name: '동대문주(성동MB)', region: '서울/경기', code: [37.5388, 127.0839] },
+    { id: 4, name: '구의2(성수동A)', region: '서울/경기', code: [37.5443, 127.0557] },
+    { id: 5, name: '구의2(성수동C)', region: '서울/경기', code: [37.5443, 127.0557] },
+    { id: 6, name: '양주1', region: '서울/경기', code: [37.7854, 127.0456] },
+    { id: 7, name: '남양주2(아영)', region: '서울/경기', code: [37.6358, 127.2167] },
+    { id: 8, name: '용인2', region: '서울/경기', code: [37.2636, 127.1089] },
+    { id: 9, name: '일산', region: '강원도', code: [37.6350, 126.7157] },
+    { id: 10, name: '일산6', region: '강원도', code: [37.6350, 126.7157] },
+    { id: 11, name: '일산8', region: '강원도', code: [37.6350, 126.7157] },
+    { id: 12, name: '동탄1', region: '강원도', code: [37.2005, 127.0752] },
+    { id: 13, name: 'M창동', region: '강원도', code: [37.6539, 127.0473] },
+    { id: 14, name: 'M삼척', region: '강원도', code: [37.4498, 129.1656] },
+    { id: 15, name: '천안1(주안)', region: '충청도', code: [36.8151, 127.1139] },
+    { id: 16, name: '천안1(아산)', region: '충청도', code: [36.8151, 127.1139] },
+    { id: 17, name: '대전1(대흥동MB)', region: '충청도', code: [36.3273, 127.4264] },
+    { id: 18, name: '대전3(대흥MB)', region: '충청도', code: [36.3504, 127.3845] },
+    { id: 19, name: '대전3(성남동MB)', region: '충청도', code: [36.3504, 127.3845] },
+    { id: 20, name: '청와1', region: '충청도', code: [36.6424, 127.4890] },
+    { id: 21, name: '고미1(광림)', region: '경상도', code: [35.1379, 128.0896] },
+    { id: 22, name: '고미1(오천)', region: '경상도', code: [35.1379, 128.0896] },
+    { id: 23, name: '대구3캠프', region: '경상도', code: [35.8714, 128.6014] },
+    { id: 24, name: '대구1캠프', region: '경상도', code: [35.8714, 128.6014] },
+    { id: 25, name: '대구3캠프(본관)', region: '경상도', code: [35.8714, 128.6014] },
+    { id: 26, name: '대구3캠프(관평장)', region: '경상도', code: [35.8714, 128.6014] },
+    { id: 27, name: '부산1', region: '경상도', code: [35.1796, 129.0756] },
+    { id: 28, name: '부산4', region: '경상도', code: [35.1796, 129.0756] },
+    { id: 29, name: 'M양주', region: '경상도', code: [35.6870, 127.9095] },
+    { id: 30, name: 'M포항', region: '경상도', code: [36.0190, 129.3435] },
+    { id: 31, name: 'M_평탁1', region: '경상도', code: [36.9921, 127.1128] },
+    { id: 32, name: 'M_평탁2', region: '경상도', code: [36.9921, 127.1128] },
+    { id: 33, name: '전주1', region: '전라도', code: [35.8242, 127.1479] },
+    { id: 34, name: '광주1', region: '전라도', code: [35.1595, 126.8526] },
+    { id: 35, name: '목포1', region: '전라도', code: [34.8118, 126.3922] },
+    { id: 36, name: '순천1', region: '전라도', code: [34.9506, 127.4872] },
+  ];
 
 /* ------------------------------
  * Main Component
- * - 전국 물류센터 지도 및 목록 표시
- * - 지역별 필터링 기능
- * - 페이지네이션
- * - 지도-리스트 상호작용
  * ------------------------------ */
 const ServiceCenter: React.FC = () => {
-  /* ------------------------------
-   * Component State
-   * ------------------------------ */
+  // ... (State & Handlers & Logic 동일) ...
   const [activeRegion, setActiveRegion] = useState<string>('전체');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedCenter, setSelectedCenter] = useState<number | null>(null);
+
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({
     lat: 36.5,
     lng: 127.5,
   });
-  const [mapZoom, setMapZoom] = useState<number>(7);
+  const [mapZoom, setMapZoom] = useState<number>(DEFAULT_ZOOM_LEVEL);
+
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<any>(null);
+  const markersRef = useRef<any[]>([]);
+  const isMapLoaded = useRef<boolean>(false);
 
   const centersPerPage = 10;
 
-  /* ------------------------------
-   * Filtered Centers
-   * - 선택된 지역에 따라 센터 필터링
-   * ------------------------------ */
-  const filteredCenters =
-    activeRegion === '전체'
+  const filteredCenters = useMemo(() => {
+    return activeRegion === '전체'
       ? centers
       : centers.filter((center) => center.region === activeRegion);
+  }, [activeRegion]);
 
-  /* ------------------------------
-   * Pagination
-   * - 현재 페이지의 센터 목록 계산
-   * ------------------------------ */
-  const indexOfLastCenter = currentPage * centersPerPage;
-  const indexOfFirstCenter = indexOfLastCenter - centersPerPage;
-  const currentCenters = filteredCenters.slice(indexOfFirstCenter, indexOfLastCenter);
+  const { currentCenters, totalPages, pageNumbers } = useMemo(() => {
+    const indexOfLastCenter = currentPage * centersPerPage;
+    const indexOfFirstCenter = indexOfLastCenter - centersPerPage;
+    const current = filteredCenters.slice(indexOfFirstCenter, indexOfLastCenter);
+    const total = Math.ceil(filteredCenters.length / centersPerPage);
+    const pages = Array.from({ length: total }, (_, i) => i + 1);
 
-  const totalPages = Math.ceil(filteredCenters.length / centersPerPage);
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
+    return { currentCenters: current, totalPages: total, pageNumbers: pages };
+  }, [filteredCenters, currentPage]);
 
-  /* ------------------------------
-   * Event Handlers
-   * ------------------------------ */
-
-  // 센터 클릭 핸들러 (리스트에서)
-  const handleCenterClick = (center: Center) => {
+  const selectAndMoveToCenter = useCallback((center: Center) => {
     setSelectedCenter(center.id);
-    // 선택한 센터 위치로 지도 이동 및 줌 인
     setMapCenter({ lat: center.code[0], lng: center.code[1] });
-    setMapZoom(16); // 더 가까이 줌 인 (14 -> 16)
-  };
+    setMapZoom(FOCUS_ZOOM_LEVEL);
+  }, []);
 
-  // 마커 클릭 핸들러 (지도에서)
-  const handleMarkerClick = (center: Center) => {
-    setSelectedCenter(center.id);
+  const handleCenterClick = useCallback((center: Center) => {
+    selectAndMoveToCenter(center);
+  }, [selectAndMoveToCenter]);
 
-    // 센터 리스트로 스크롤
+  const handleMarkerClick = useCallback((center: Center) => {
+    selectAndMoveToCenter(center);
     setTimeout(() => {
       const centerElement = document.getElementById(`center-${center.id}`);
       if (centerElement) {
         centerElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     }, 100);
-
-    // 해당 센터가 현재 페이지에 없으면 페이지 이동
     const centerIndex = filteredCenters.findIndex((c) => c.id === center.id);
     if (centerIndex !== -1) {
       const targetPage = Math.floor(centerIndex / centersPerPage) + 1;
@@ -182,35 +160,76 @@ const ServiceCenter: React.FC = () => {
         setCurrentPage(targetPage);
       }
     }
-  };
+  }, [filteredCenters, currentPage, selectAndMoveToCenter]);
 
-  // 지역 변경 핸들러
-  const handleRegionChange = (regionName: string) => {
+  const handleRegionChange = useCallback((regionName: string) => {
     setActiveRegion(regionName);
     setCurrentPage(1);
 
-    // 해당 지역의 센터들 필터링
     const regionCenters =
       regionName === '전체' ? centers : centers.filter((c) => c.region === regionName);
 
     if (regionCenters.length > 0) {
-      // 첫 번째 센터 자동 선택
       const firstCenter = regionCenters[0];
-      setSelectedCenter(firstCenter.id);
-
-      // 첫 번째 센터 위치로 지도 이동
-      setMapCenter({ lat: firstCenter.code[0], lng: firstCenter.code[1] });
-      setMapZoom(regionName === '전체' ? 7 : 12); // 지역 선택 시 적당한 줌 레벨
+      selectAndMoveToCenter(firstCenter);
     } else {
       setSelectedCenter(null);
     }
-  };
+  }, [selectAndMoveToCenter]);
 
-  // 페이지 변경 핸들러
-  const handlePageChange = (pageNumber: number) => {
+  const handlePageChange = useCallback((pageNumber: number) => {
     setCurrentPage(pageNumber);
     setSelectedCenter(null);
-  };
+  }, []);
+
+  const initMap = useCallback(() => {
+    if (!mapRef.current || !window.naver) return;
+    const mapOptions = {
+      center: new window.naver.maps.LatLng(mapCenter.lat, mapCenter.lng),
+      zoom: mapZoom,
+      minZoom: 6,
+      scaleControl: false,
+      mapDataControl: false,
+      logoControlOptions: { position: window.naver.maps.Position.BOTTOM_LEFT },
+    };
+    mapInstance.current = new window.naver.maps.Map(mapRef.current, mapOptions);
+    isMapLoaded.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!isMapLoaded.current || !mapInstance.current) return;
+    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current = [];
+
+    filteredCenters.forEach((center) => {
+      const isSelected = selectedCenter === center.id;
+      const marker = new window.naver.maps.Marker({
+        position: new window.naver.maps.LatLng(center.code[0], center.code[1]),
+        map: mapInstance.current,
+        title: center.name,
+        icon: {
+            // [Mod] Selected: Accent (#06b6d4), Default: Primary (#3b82f6)
+            // 인라인 HTML 문자열 내에서는 Tailwind 클래스 사용이 제한적이므로 Hex Code 사용
+            content: isSelected
+              ? `<div style="background-color: #06b6d4; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`
+              : `<div style="background-color: #3b82f6; width: 18px; height: 18px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
+            anchor: new window.naver.maps.Point(12, 12),
+        },
+        zIndex: isSelected ? 100 : 10,
+      });
+      window.naver.maps.Event.addListener(marker, 'click', () => {
+        handleMarkerClick(center);
+      });
+      markersRef.current.push(marker);
+    });
+  }, [filteredCenters, selectedCenter, handleMarkerClick]);
+
+  useEffect(() => {
+    if (!isMapLoaded.current || !mapInstance.current) return;
+    const newCenter = new window.naver.maps.LatLng(mapCenter.lat, mapCenter.lng);
+    mapInstance.current.morph(newCenter, mapZoom);
+  }, [mapCenter, mapZoom]);
+
 
   /* ------------------------------
    * Styles
@@ -218,12 +237,15 @@ const ServiceCenter: React.FC = () => {
   const paginationBaseClass =
     'w-[30px] h-[30px] flex items-center justify-center rounded-sm border border-border-light bg-card-light text-muted-foreground-light cursor-pointer transition-all duration-300 hover:bg-muted-light lg:w-9 lg:h-9';
 
-  /* ------------------------------
-   * JSX Render
-   * ------------------------------ */
   return (
-    <section className="s-section__content" >
-      {/* Section Header */}
+    <section className="s-section__content">
+      <Script
+        strategy="afterInteractive"
+        type="text/javascript"
+        src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${NAVER_CLIENT_ID}`}
+        onLoad={initMap}
+      />
+
       <div className="s-section__header">
         <span className="s-section__subtitle">물류 센터</span>
         <h2 className="s-section__title">전국을 잇는 네트워크, 효율이 시작되는 곳</h2>
@@ -235,20 +257,13 @@ const ServiceCenter: React.FC = () => {
         </p>
       </div>
 
-      {/* Map & Center List Grid */}
       <div className="grid gap-4 lg:grid-cols-2 lg:gap-8 lg:h-[50vh]">
         {/* Map Container */}
-        <div className="relative overflow-hidden rounded shadow-lg shadow-black/10 border border-border-light bg-card-light h-full min-h-[30vh]">
-          <NaverMapComponent
-            filteredCenters={filteredCenters}
-            selectedCenter={selectedCenter}
-            onMarkerClick={handleMarkerClick}
-            mapCenter={mapCenter}
-            mapZoom={mapZoom}
-          />
+        <div className="relative overflow-hidden rounded shadow-card border border-border-light bg-card-light h-full min-h-[30vh]">
+          <div ref={mapRef} className="w-full h-full" id="naver-map" />
         </div>
 
-        {/* Center List */}
+        {/* Center List & Filters */}
         <div className="grid grid-rows-[auto_1fr_auto] gap-4 lg:gap-6 h-full overflow-hidden lg:max-h-[50vh]">
           {/* Region Filter */}
           <div className="flex flex-wrap justify-center gap-2 lg:justify-start">
@@ -268,7 +283,7 @@ const ServiceCenter: React.FC = () => {
             ))}
           </div>
 
-          {/* Center List */}
+          {/* Center List Items */}
           <div className="flex flex-col gap-2 overflow-y-auto p-1 lg:gap-4">
             {currentCenters.map((center, idx) => {
               if (idx % 2 === 0) {
@@ -288,14 +303,15 @@ const ServiceCenter: React.FC = () => {
                         onClick={() => handleCenterClick(c)}
                       >
                         <div
-                          className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-colors duration-300 lg:h-9 lg:w-9
+                          className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full transition-colors duration-300 lg:h-8 lg:w-8
                           ${
                             selectedCenter === c.id
                               ? 'bg-primary'
                               : 'bg-primary-hover group-hover:bg-primary'
                           }`}
                         >
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="lg:w-5 lg:h-5">
+                          {/* SVG Icon */}
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="lg:w-4 lg:h-4">
                             <path
                               d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"
                               fill="#fff"
@@ -362,7 +378,6 @@ const ServiceCenter: React.FC = () => {
         </div>
       </div>
 
-      {/* Statistics Section */}
       <div className="flex flex-col gap-4 mt-20">
         <div className="s-section__header">
           <h2 className="s-section__description">
@@ -376,9 +391,11 @@ const ServiceCenter: React.FC = () => {
               <span className="mb-px text-sm font-medium text-primary lg:mb-1">
                 {stat.label}
               </span>
-              <div className="text-xl font-bold leading-none lg:text-4xl">
+              {/* [Mod] text-black -> text-foreground-light (Light theme section assumed) */}
+              <div className="text-xl text-foreground-light font-bold leading-none lg:text-4xl">
                 {stat.value}
-                <span className="ml-px text-base opacity-80 lg:text-lg">{stat.unit}</span>
+                {/* [Mod] text-gray-500 -> text-muted-foreground-light */}
+                <span className="ml-2 text-base text-muted-foreground-light lg:text-lg">{stat.unit}</span>
               </div>
             </div>
           ))}

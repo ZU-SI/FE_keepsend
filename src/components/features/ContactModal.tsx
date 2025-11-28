@@ -120,30 +120,13 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
       alert("서비스 분류를 하나 이상 선택해주세요.");
       return;
     }
-    if (!formData.companyName.trim()) {
-      alert("회사명을 입력해주세요.");
-      return;
-    }
-    if (!formData.contactPerson.trim()) {
-      alert("담당자명을 입력해주세요.");
-      return;
-    }
-    if (!formData.phone.trim()) {
-      alert("연락처를 입력해주세요.");
-      return;
-    }
-    if (!formData.email.trim()) {
-      alert("이메일을 입력해주세요.");
-      return;
-    }
-    if (!formData.region) {
-      alert("문의 지역을 선택해주세요.");
-      return;
-    }
-    if (!formData.privacyAgreed) {
-      alert("개인정보 수집 및 이용에 동의해주세요.");
-      return;
-    }
+    // ... (Validation logic remains same) ...
+    if (!formData.companyName.trim()) { alert("회사명을 입력해주세요."); return; }
+    if (!formData.contactPerson.trim()) { alert("담당자명을 입력해주세요."); return; }
+    if (!formData.phone.trim()) { alert("연락처를 입력해주세요."); return; }
+    if (!formData.email.trim()) { alert("이메일을 입력해주세요."); return; }
+    if (!formData.region) { alert("문의 지역을 선택해주세요."); return; }
+    if (!formData.privacyAgreed) { alert("개인정보 수집 및 이용에 동의해주세요."); return; }
 
     setIsSubmitting(true);
 
@@ -157,7 +140,6 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
     try {
       const result = await submitContactForm(submittedData);
-
       if (result.success) {
         alert("문의가 접수되었습니다. 담당자가 빠르게 연락드리겠습니다.");
         setFormData({ ...initialForm });
@@ -184,15 +166,19 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
       >
         <div
           id="contact-form"
-          className="flex flex-col w-full max-w-[95vw] md:max-w-screen-md h-[85vh] md:h-[768px] max-h-[90vh] overflow-hidden rounded-xl shadow-2xl transition-all"
+          // [Mod] bg-white -> bg-card-light (Light Theme Semantic)
+          className="flex flex-col w-full max-w-[95vw] md:max-w-screen-md h-[85vh] md:h-[768px] max-h-[90vh] overflow-hidden rounded-xl shadow-2xl transition-all bg-card-light"
         >
           {/* Header */}
-          <div className="sticky top-0 z-10 flex h-14 md:h-[60px] items-center justify-between  bg-background px-4 md:px-8 backdrop-blur shrink-0">
-            <h2 className="text-lg md:text-[20px] font-bold text-foreground">견적 문의</h2>
+          {/* [Mod] bg-background -> bg-card-light (Match Modal) */}
+          <div className="sticky top-0 z-10 flex h-14 md:h-[60px] items-center justify-between bg-card-light px-4 md:px-8 backdrop-blur shrink-0 border-b border-border-light/50">
+            {/* [Mod] text-foreground -> text-foreground-light */}
+            <h2 className="text-lg md:text-[20px] font-bold text-foreground-light">견적 문의</h2>
             <button
               type="button"
               onClick={handleClose}
-              className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground active:bg-gray-100"
+              // [Mod] text-muted-foreground -> text-muted-foreground-light, hover:bg-muted -> hover:bg-muted-light
+              className="rounded-full p-2 text-muted-foreground-light transition-colors hover:bg-muted-light hover:text-foreground-light active:bg-border-light"
               aria-label="Close"
             >
               <svg className="h-5 w-5 md:h-6 md:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -203,12 +189,14 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
           <form
             onSubmit={handleSubmit}
-            className="flex flex-grow flex-col overflow-hidden bg-white relative"
+            // [Mod] bg-white -> bg-card-light
+            className="flex flex-grow flex-col overflow-hidden bg-card-light relative"
           >
             <div className="flex flex-grow flex-col gap-4 md:gap-6 overflow-y-auto p-4 md:p-8 scroll-smooth">
 
               {/* Section 1: 물류 정보 */}
-              <div className="flex flex-col gap-4 md:gap-6 rounded-lg bg-gray-50 p-4 md:p-6 border border-gray-100">
+              {/* [Mod] bg-gray-50 -> bg-muted-light, border-gray-100 -> border-border-light */}
+              <div className="flex flex-col gap-4 md:gap-6 rounded-lg bg-muted-light p-4 md:p-6 border border-border-light">
                 <div
                   className="flex cursor-pointer items-center justify-between py-1"
                   onClick={() => toggleSection("logisticsInfo")}
@@ -218,7 +206,8 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   </h3>
                   <button
                     type="button"
-                    className="flex h-8 w-8 items-center justify-center text-gray-500 transition-colors hover:text-gray-800"
+                    // [Mod] text-gray-500 -> text-muted-foreground-light
+                    className="flex h-8 w-8 items-center justify-center text-muted-foreground-light transition-colors hover:text-foreground-light"
                   >
                     <svg
                       className={`transform transition-transform duration-300 ${
@@ -242,7 +231,6 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                         <Label text="서비스 분류" />
                         <span className="text-[11px] md:text-xs text-primary font-medium">* 복수 선택</span>
                       </div>
-                      {/* Grid 조정: 모바일 2열, 태블릿 이상 3열 */}
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
                         {SERVICE_TYPE_OPTIONS.map((option) => {
                           const isSelected = formData.serviceTypes.includes(option);
@@ -250,16 +238,20 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                             <label
                               key={option}
                               className={`flex cursor-pointer items-center gap-2 rounded-md border p-2 transition-all ${
-                                isSelected ? "border-primary/30 bg-primary/5" : "border-transparent hover:bg-gray-100"
+                                isSelected
+                                  ? "border-primary/30 bg-primary/5"
+                                  // [Mod] hover:bg-gray-100 -> hover:bg-white
+                                  : "border-transparent hover:bg-card-light shadow-sm hover:shadow"
                               }`}
                             >
                               <input
                                 type="checkbox"
                                 checked={isSelected}
                                 onChange={() => toggleServiceType(option)}
-                                className="h-4 w-4 md:h-5 md:w-5 rounded border-gray-300 text-primary focus:ring-primary shrink-0"
+                                className="h-4 w-4 md:h-5 md:w-5 rounded border-border-light text-primary focus:ring-primary shrink-0"
                               />
-                              <span className="text-sm font-medium text-gray-700 break-keep">
+                              {/* [Mod] text-gray-700 -> text-foreground-light */}
+                              <span className="text-sm font-medium text-foreground-light break-keep">
                                 {option}
                               </span>
                             </label>
@@ -296,7 +288,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
               </div>
 
               {/* Section 2: 담당자 정보 */}
-              <div className="flex flex-col gap-4 md:gap-6 rounded-lg bg-gray-50 p-4 md:p-6 border border-gray-100">
+              <div className="flex flex-col gap-4 md:gap-6 rounded-lg bg-muted-light p-4 md:p-6 border border-border-light">
                 <div
                   className="flex cursor-pointer items-center justify-between py-1"
                   onClick={() => toggleSection("contactInfo")}
@@ -306,7 +298,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   </h3>
                   <button
                     type="button"
-                    className="flex h-8 w-8 items-center justify-center text-gray-500 transition-colors hover:text-gray-800"
+                    className="flex h-8 w-8 items-center justify-center text-muted-foreground-light transition-colors hover:text-foreground-light"
                   >
                     <svg
                       className={`transform transition-transform duration-300 ${
@@ -334,6 +326,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                         placeholder="입력해 주세요."
                       />
                     </div>
+                    {/* ... (TextFields should assume Light Theme styles or be transparent) ... */}
                     <div className="flex flex-col">
                       <Label text="담당자 명" required />
                       <TextField
@@ -375,7 +368,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
               </div>
 
               {/* Section 3: 문의 내용 */}
-              <div className="flex flex-col gap-4 md:gap-6 rounded-lg bg-gray-50 p-4 md:p-6 border border-gray-100">
+              <div className="flex flex-col gap-4 md:gap-6 rounded-lg bg-muted-light p-4 md:p-6 border border-border-light">
                 <div
                   className="flex cursor-pointer items-center justify-between py-1"
                   onClick={() => toggleSection("inquiryInfo")}
@@ -385,7 +378,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   </h3>
                   <button
                     type="button"
-                    className="flex h-8 w-8 items-center justify-center text-gray-500 transition-colors hover:text-gray-800"
+                    className="flex h-8 w-8 items-center justify-center text-muted-foreground-light transition-colors hover:text-foreground-light"
                   >
                     <svg
                       className={`transform transition-transform duration-300 ${
@@ -419,18 +412,20 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   <input
                     type="checkbox"
                     id="privacy-check"
-                    className="mt-0.5 md:mt-0 h-5 w-5 cursor-pointer rounded border-gray-300 text-primary focus:ring-primary shrink-0"
+                    className="mt-0.5 md:mt-0 h-5 w-5 cursor-pointer rounded border-border-light text-primary focus:ring-primary shrink-0"
                     checked={formData.privacyAgreed}
                     onChange={(e) => handleInputChange("privacyAgreed", e.target.checked)}
                   />
-                  <label htmlFor="privacy-check" className="cursor-pointer text-sm font-medium text-gray-700 leading-tight">
+                  {/* [Mod] text-gray-700 -> text-muted-foreground-light */}
+                  <label htmlFor="privacy-check" className="cursor-pointer text-sm font-medium text-muted-foreground-light leading-tight">
                     개인정보 수집 및 이용에 동의합니다. <span className="text-primary">*</span>
                   </label>
                 </div>
                 <button
                   type="button"
                   onClick={() => setPolicyModalOpen(true)}
-                  className="text-xs md:text-sm font-medium text-gray-500 underline underline-offset-4 self-end md:self-auto hover:text-primary transition-colors"
+                  // [Mod] text-gray-500 -> text-muted-foreground-light
+                  className="text-xs md:text-sm font-medium text-muted-foreground-light underline underline-offset-4 self-end md:self-auto hover:text-primary transition-colors"
                 >
                   전문보기
                 </button>
@@ -438,19 +433,22 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
             </div>
               {/* Submit Button Area */}
-              <div className="sticky flex gap-3 bottom-0 bg-white p-4 border-t border-border-light mt-2 z-10">
+              {/* [Mod] bg-white -> bg-card-light, border-border-light */}
+              <div className="sticky flex gap-3 bottom-0 bg-card-light p-4 border-t border-border-light mt-2 z-10">
                   <button
                     type="button"
                     onClick={handleCancelClick}
                     disabled={isSubmitting}
-                    className="cancel-button flex-1 cursor-pointer rounded-full bg-gray-100 border border-gray-200 px-6 py-3.5 text-sm md:text-base font-semibold text-gray-600 transition-all duration-300 hover:bg-gray-200 active:bg-gray-300 disabled:opacity-50"
+                    // [Mod] bg-gray-100 -> bg-muted-light, text-gray-600 -> text-muted-foreground-light
+                    className="cancel-button flex-1 cursor-pointer rounded-full bg-muted-light border border-border-light px-6 py-3.5 text-sm md:text-base font-semibold text-muted-foreground-light transition-all duration-300 hover:bg-border-light active:bg-border-light disabled:opacity-50"
                   >
                     취소
                   </button>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex-1 cursor-pointer rounded-full bg-primary px-6 py-3.5 text-sm md:text-base font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow-lg active:translate-y-0 disabled:bg-gray-400 disabled:hover:translate-y-0 disabled:cursor-not-allowed shadow-md shadow-primary/20"
+                    // [Mod] bg-primary, text-primary-foreground (white)
+                    className="flex-1 cursor-pointer rounded-full bg-primary px-6 py-3.5 text-sm md:text-base font-semibold text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow-lg active:translate-y-0 disabled:bg-muted-foreground-light disabled:hover:translate-y-0 disabled:cursor-not-allowed shadow-md shadow-primary/20"
                   >
                     {isSubmitting ? "전송 중..." : "문의 하기"}
                   </button>
@@ -462,23 +460,27 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
       {/* Confirmation Dialog */}
       {showConfirmDialog && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-6 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-sm rounded-xl border border-border-light bg-white p-6 shadow-2xl">
-            <h3 className="mb-3 text-lg font-bold text-gray-900">
+          {/* [Mod] bg-white -> bg-card-light */}
+          <div className="w-full max-w-sm rounded-xl border border-border-light bg-card-light p-6 shadow-2xl">
+            {/* [Mod] text-gray-900 -> text-foreground-light */}
+            <h3 className="mb-3 text-lg font-bold text-foreground-light">
               안내
             </h3>
-            <p className="mb-6 text-sm leading-relaxed text-gray-600">
+            {/* [Mod] text-gray-600 -> text-muted-foreground-light */}
+            <p className="mb-6 text-sm leading-relaxed text-muted-foreground-light">
               작성 중인 내용이 있습니다. 정말 닫으시겠습니까?
             </p>
             <div className="flex flex-col gap-3 md:flex-row">
               <button
                 onClick={() => setShowConfirmDialog(false)}
-                className="flex-1 cursor-pointer rounded-lg bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-200"
+                // [Mod] bg-gray-100 -> bg-muted-light, text-gray-700 -> text-foreground-light
+                className="flex-1 cursor-pointer rounded-lg bg-muted-light px-4 py-3 text-sm font-semibold text-foreground-light transition-colors hover:bg-border-light"
               >
                 취소
               </button>
               <button
                 onClick={handleConfirmClose}
-                className="flex-1 cursor-pointer rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
+                className="flex-1 cursor-pointer rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-hover"
               >
                 닫기
               </button>

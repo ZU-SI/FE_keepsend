@@ -1,0 +1,201 @@
+/* ============================================
+   SCSS Variables & Configuration
+   ============================================ */
+
+// Dark theme colors
+$background: #0a0f1a;
+$foreground: #ffffff;
+
+// Light theme colors
+$background-light: #f8fafc;
+$foreground-light: #0f172a;
+
+// Card colors
+$card: #111827;
+$card-foreground: #ffffff;
+$card-light: #ffffff;
+$card-light-foreground: #0f172a;
+
+$popover: #111827;
+$popover-foreground: #ffffff;
+
+// Primary & Secondary colors
+$primary: #3b82f6;
+$primary-foreground: #ffffff;
+$primary-hover: #2563eb;
+
+$secondary: #1e3a8a;
+$secondary-foreground: #ffffff;
+
+// Muted colors
+$muted: #1e293b;
+$muted-foreground: #94a3b8;
+$muted-light: #f1f5f9;
+$muted-foreground-light: #64748b;
+
+// Accent colors
+$accent: #06b6d4;
+$accent-foreground: #ffffff;
+
+// Destructive
+$destructive: #ef4444;
+$destructive-foreground: #ffffff;
+
+// Borders
+$border: #1e293b;
+$border-light: #e2e8f0;
+
+// Input
+$input: #334155;
+
+// Ring (focus)
+$ring: #3b82f6;
+
+// Base colors
+$black: #000000;
+$white: #fafafa;
+
+// Gray scale
+$gray-50: #f8fafc;
+$gray-100: #f1f5f9;
+$gray-200: #e2e8f0;
+$gray-300: #cbd5e1;
+$gray-400: #94a3b8;
+$gray-500: #64748b;
+$gray-600: #475569;
+$gray-700: #334155;
+$gray-800: #1e293b;
+$gray-900: #0f172a;
+
+$slate-800: #1e293b;
+$cyan-400: #22d3ee;
+$cyan-500: #06b6d4;
+$cyan-600: #0891b2;
+
+// Purple colors
+$purple-50: #faf5ff;
+$purple-100: #f3e8ff;
+$purple-500: #8b5cf6;
+$purple-600: #7c3aed;
+
+/* --------------------------------------------
+   [NEW] SEMANTIC COLORS (Status & Logistics)
+   -------------------------------------------- */
+
+// Success (배송 완료, 정상 가동 - Emerald)
+$success: #10b981;
+$success-foreground: #ffffff;
+$success-light: #d1fae5; // 뱃지 배경용
+
+// Warning (지연, 트래픽 혼잡 - Amber)
+$warning: #f59e0b;
+$warning-foreground: #ffffff;
+$warning-light: #fef3c7; // 뱃지 배경용
+
+// Info (정보, 진행중 - Primary Alias)
+$info: #3b82f6;
+$info-foreground: #ffffff;
+$info-light: #dbeafe;
+
+/* --------------------------------------------
+   [NEW] CHART COLORS (Data Visualization)
+   -------------------------------------------- */
+
+// Chart Series (Dark/Light 모드 공용 보정값)
+$chart-1: #3b82f6; // Blue
+$chart-2: #22d3ee; // Cyan (High Contrast)
+$chart-3: #f472b6; // Pink (Comparison)
+$chart-4: #34d399; // Emerald (Positive Trend)
+$chart-5: #fbbf24; // Amber (Warning Trend)
+
+// Chart Specific for Dark Backgrounds
+$chart-dark-blue: #60a5fa; // Lighter Blue for visibility on #0a0f1a
+$chart-dark-cyan: #67e8f9; // Lighter Cyan
+
+// Gradients
+$gradient-cyan: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+$gradient-light: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+
+/* ============================================
+   BORDER RADIUS
+   ============================================ */
+$radius: 0.625rem;
+$radius-sm: calc($radius - 4px);
+$radius-md: calc($radius - 2px);
+$radius-lg: $radius;
+$radius-xl: calc($radius + 4px);
+$border-radius-full: 9999px;
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+$font-sans: 'suite', 'suit', 'rajdhani', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+$font-mono: "Geist Mono", "Geist Mono Fallback", "Courier New", monospace;
+
+$font-xs: 0.75rem;
+$font-sm: 0.875rem;
+$font-md: 1rem;
+$font-lg: 1.125rem;
+$font-xl: 1.25rem;
+$font-2xl: 1.5rem;
+$font-3xl: 1.875rem;
+$font-4xl: 2.25rem;
+$font-5xl: 3rem;
+
+$weight-light: 300;
+$weight-regular: 400;
+$weight-medium: 500;
+$weight-semibold: 600;
+$weight-bold: 700;
+
+/* ============================================
+   SPACING
+   ============================================ */
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.25rem;
+$spacing-xl: 1.5rem;
+$spacing-2xl: 2rem;
+$spacing-3xl: 2.25rem;
+$spacing-4xl: 2.5rem;
+
+/* ============================================
+   TRANSITIONS & ANIMATIONS
+   ============================================ */
+$transition-default: 0.3s ease;
+
+/* ============================================
+   BREAKPOINTS
+   ============================================ */
+$breakpoint-md: 768px;
+
+/* ============================================
+   Z-INDEX
+   ============================================ */
+$z-navigation: 50;
+
+/* ============================================
+   MIXINS
+   ============================================ */
+@mixin desktop {
+  @media (min-width: $breakpoint-md) {
+    @content;
+  }
+}
+
+@mixin card-hover {
+  transition: all $transition-default;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@mixin gradient-text {
+  background: $gradient-cyan;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}

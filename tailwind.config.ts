@@ -46,7 +46,7 @@ module.exports = {
         // Muted colors
         muted: {
           DEFAULT: "#1e293b", // $muted
-          foreground: "#94a3b8", // $muted-foreground
+          foreground: "#e2e8f0", // $muted-foreground
           light: "#f1f5f9", // $muted-light
           "foreground-light": "#64748b", // $muted-foreground-light
         },
@@ -112,6 +112,37 @@ module.exports = {
           500: "#8b5cf6",
           600: "#7c3aed",
         },
+
+        // Status Colors
+        success: {
+          DEFAULT: "#10b981", // Emerald-500: 배송 완료, 정상 가동 (Dark/Light 모두 가독성 우수)
+          foreground: "#ffffff",
+          light: "#d1fae5",   // Emerald-100: 배경용 (Light 모드 뱃지 등)
+        },
+        warning: {
+          DEFAULT: "#f59e0b", // Amber-500: 지연, 트래픽 혼잡 (Red와 확실히 구분됨)
+          foreground: "#ffffff",
+          light: "#fef3c7",   // Amber-100
+        },
+        info: {
+          DEFAULT: "#3b82f6", // Primary와 동일하지만, '정보'라는 의미론적 사용을 위해 별칭 추가
+          foreground: "#ffffff",
+          light: "#dbeafe",
+        },
+
+        // [New] Data Visualization Colors (차트/그래프 전용)
+        // 배경색(#0a0f1a) 위에서 명확히 보이는 고채도/고명도 컬러로 보정
+        chart: {
+          1: "#3b82f6", // Blue-500 (기존 Primary)
+          2: "#22d3ee", // Cyan-400 (기존 Accent보다 밝음 -> Dark모드 차트용)
+          3: "#f472b6", // Pink-400 (AI/예측 데이터 비교군용 - 신규 추가)
+          4: "#34d399", // Emerald-400 (성공 데이터 그래프용)
+          5: "#fbbf24", // Amber-400 (경고 데이터 그래프용)
+
+          // 다크모드 전용 보정 (기존 Secondary #1e3a8a는 차트에서 안보임 -> #60a5fa로 대체 권장)
+          "dark-blue": "#60a5fa",
+          "dark-cyan": "#67e8f9",
+        }
       },
 
       // Border Radius - Tailwind 기본값 + custom 추가

@@ -48,6 +48,7 @@ export default function GlobalHeader() {
           const scrollDiff = currentScrollY - lastScrollY.current;
 
           if (Math.abs(scrollDiff) > SCROLL_THRESHOLD) {
+            // 스크롤을 내릴 때 숨김 (단, 최상단 100px 이내는 유지)
             if (scrollDiff > 0 && currentScrollY > 100) {
               setIsHidden(true);
             } else {
@@ -63,31 +64,36 @@ export default function GlobalHeader() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [pathname]);
 
+  // 공통 링크 스타일
+  const linkBaseClass = "text-sm  font-medium transition-colors duration-200 hover:text-accent";
+  const linkActiveClass = "text-accent font-bold";
+  const linkInactiveClass = "text-white";
+
   return (
     <nav
-      className="header"
+      className={`fixed top-0 left-0 right-0 z-navigation border-b border-border/40 bg-background/80 backdrop-blur-md transition-transform duration-300 ease-in-out`}
       style={{
         transform: isHidden ? "translateY(-100%)" : "translateY(0)",
-        transition: "transform 0.3s ease-in-out",
       }}
     >
-      <div className="header__container">
-        <Link href="/" className="header__logo">
+      <div className="mx-auto flex h-16 max-w-container items-center justify-between px-4 md:px-8">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2">
           <TypoLogo />
         </Link>
 
-        <div className="header__menu">
+        {/* Desktop Menu */}
+        <div className="hidden items-center gap-8 md:flex">
           <button
             type="button"
             onClick={handleMenuClick("#service-intro")}
-            className={`header__link ${
-              activePrimary === "service" ? "header__link--active" : ""
+            className={`${linkBaseClass} ${
+              activePrimary === "service" ? linkActiveClass : linkInactiveClass
             }`}
           >
             물류 서비스
@@ -95,8 +101,8 @@ export default function GlobalHeader() {
           <button
             type="button"
             onClick={handleMenuClick("#solution-intro")}
-            className={`header__link ${
-              activePrimary === "solution" ? "header__link--active" : ""
+            className={`${linkBaseClass} ${
+              activePrimary === "solution" ? linkActiveClass : linkInactiveClass
             }`}
           >
             IT 솔루션
@@ -104,30 +110,32 @@ export default function GlobalHeader() {
           <button
             type="button"
             onClick={handleMenuClick("news")}
-            className={`header__link ${
-              pathname === "/news" ? "header__link--active" : ""
+            className={`${linkBaseClass} ${
+              pathname === "/news" ? linkActiveClass : linkInactiveClass
             }`}
           >
             소식
           </button>
         </div>
 
-        <div className="header__cta">
+        {/* Desktop CTA */}
+        <div className="hidden md:block">
           <button
-            className="btn btn--primary btn--md"
+            className="rounded-full bg-primary px-6 py-2 text-sm font-medium text-white transition-all hover:bg-primary-hover hover:shadow-button-hover"
             onClick={handleContactClick}
           >
             견적 문의
           </button>
         </div>
 
+        {/* Mobile Hamburger */}
         <button
-          className="header__hamburger"
+          className="p-2 text-foreground md:hidden"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="메뉴 열기"
         >
           <svg
-            className="header__hamburger-icon"
+            className="h-6 w-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -136,42 +144,53 @@ export default function GlobalHeader() {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
+              d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
             />
           </svg>
         </button>
       </div>
 
+      {/* Mobile Menu Dropdown */}
       {isMenuOpen && (
-        <div className="header__mobile">
-          <button
-            type="button"
-            onClick={handleMenuClick("#service-intro")}
-            className="header__mobile-link"
-          >
-            물류 서비스
-          </button>
-          <button
-            type="button"
-            onClick={handleMenuClick("#solution-intro")}
-            className="header__mobile-link"
-          >
-            IT 솔루션
-          </button>
-          <button
-            type="button"
-            onClick={handleMenuClick("news")}
-            className="header__mobile-link"
-          >
-            소식
-          </button>
-          <button
-            type="button"
-            onClick={handleContactClick}
-            className="btn btn--primary btn--md btn--full"
-          >
-            견적 문의
-          </button>
+        <div className="absolute left-0 top-16 w-full border-b border-border bg-background px-4 py-6 shadow-lg md:hidden">
+          <div className="flex flex-col gap-4">
+            <button
+              type="button"
+              onClick={handleMenuClick("#service-intro")}
+              className={`text-left text-lg font-medium ${
+                activePrimary === "service" ? "text-primary" : "text-foreground"
+              }`}
+            >
+              물류 서비스
+            </button>
+            <button
+              type="button"
+              onClick={handleMenuClick("#solution-intro")}
+              className={`text-left text-lg font-medium ${
+                activePrimary === "solution" ? "text-primary" : "text-foreground"
+              }`}
+            >
+              IT 솔루션
+            </button>
+            <button
+              type="button"
+              onClick={handleMenuClick("news")}
+              className={`text-left text-lg font-medium ${
+                pathname === "/news" ? "text-primary" : "text-foreground"
+              }`}
+            >
+              소식
+            </button>
+            <div className="pt-4">
+              <button
+                type="button"
+                onClick={handleContactClick}
+                className="w-full rounded-lg bg-primary py-3 text-center font-bold text-white transition-colors hover:bg-primary-hover"
+              >
+                견적 문의
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </nav>

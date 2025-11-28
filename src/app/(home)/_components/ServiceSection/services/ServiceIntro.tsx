@@ -6,35 +6,28 @@ import { useRef } from "react";
 export default function ServiceIntro() {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 변경됨: ["start end", "end start"]
-  // start end: 섹션의 머리(start)가 뷰포트의 끝(end)에 닿을 때 (등장 시작)
-  // end start: 섹션의 바닥(end)이 뷰포트의 시작(start)에 닿을 때 (완전히 사라짐)
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
   });
 
-  // 1. 배경색 변환 로직 (Pivot Point: 화면 중앙)
-  // [0 ~ 0.4]: Dark 유지 (등장해서 화면 중앙에 올 때까지)
-  // [0.4 ~ 0.6]: Dark -> Light 변환 (완전히 자리를 잡았을 때)
-  // [0.6 ~ 1.0]: Light 유지 (위로 올라갈 때)
+  // 1. 배경색 변환 로직
+  // [Mod] #020617 (Slate-950) -> #0a0f1a (Brand Background)
   const backgroundColor = useTransform(
     scrollYProgress,
     [0.4, 0.6],
-    ["#020617", "#f8fafc"]
+    ["#0a0f1a", "#f8fafc"]
   );
 
-  // 2. 텍스트 색상 변환 (배경과 동일한 타이밍)
+  // 2. 텍스트 색상 변환
+  // [Mod] #f8fafc -> #ffffff (Brand Foreground), #0f172a (Brand Foreground Light)
   const textColor = useTransform(
     scrollYProgress,
     [0.4, 0.6],
-    ["#f8fafc", "#0f172a"]
+    ["#ffffff", "#0f172a"]
   );
 
-  // 3. 조명(Glow) 효과: 배경이 밝아지는 시점(0.4)에 맞춰 사라짐
   const glowOpacity = useTransform(scrollYProgress, [0.3, 0.5], [0.5, 0]);
-
-  // 4. 하단 라인: 텍스트가 다 읽히고 배경이 밝아진 뒤(0.6)부터 그려짐
   const lineScale = useTransform(scrollYProgress, [0.6, 0.8], [0, 1]);
 
   return (
@@ -43,16 +36,15 @@ export default function ServiceIntro() {
       style={{ backgroundColor }}
       className="relative w-full min-h-[50vh] flex flex-col items-center justify-center overflow-hidden py-24 transition-colors duration-200 ease-linear"
     >
-      {/* Background Glow (Dark Mode Only) */}
+      {/* Background Glow */}
       <motion.div
         style={{ opacity: glowOpacity }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[30vh] bg-cyan-600 blur-[120px] rounded-full pointer-events-none"
+        // [Mod] bg-cyan-600 -> bg-accent
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[30vh] bg-accent blur-[120px] rounded-full pointer-events-none"
       />
 
       {/* Text Container */}
       <div className="relative z-10 flex flex-col items-center text-center gap-6 md:gap-8 px-4 mb-12">
-
-        {/* 각 텍스트 라인: 등장 시점(range)을 조금씩 뒤로 미룸 */}
         <ScrollRevealLine progress={scrollYProgress} range={[0.2, 0.4]} textColor={textColor}>
           입고부터 회수까지<br className="md:hidden" /> 모든 경로를 설계하고
         </ScrollRevealLine>
@@ -64,13 +56,13 @@ export default function ServiceIntro() {
         <ScrollRevealLine progress={scrollYProgress} range={[0.4, 0.6]} textColor={textColor} isAccent>
           B2B 전문 물류 서비스
         </ScrollRevealLine>
-
       </div>
 
       {/* Connecting Line */}
       <motion.div
         style={{ scaleY: lineScale, originY: 0 }}
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[2px] h-24 md:h-32 bg-gradient-to-b from-cyan-400 to-blue-600"
+        // [Mod] bg-gradient... -> bg-gradient-cyan (Config Defined)
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[2px] h-24 md:h-32 bg-gradient-cyan"
       />
     </motion.section>
   );
@@ -102,7 +94,7 @@ function ScrollRevealLine({ children, progress, range, textColor, isAccent = fal
         text-2xl md:text-3xl lg:text-4xl font-bold
         leading-snug md:leading-normal
         ${isAccent
-          ? "bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 bg-clip-text text-transparent pb-2"
+          ? "bg-gradient-cyan bg-clip-text text-transparent pb-2"
           : ""
         }
       `}

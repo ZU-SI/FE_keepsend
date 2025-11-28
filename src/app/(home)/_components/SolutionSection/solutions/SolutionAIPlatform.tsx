@@ -1,4 +1,4 @@
-'use client'; // Framer Motion은 클라이언트 컴포넌트에서 동작합니다.
+'use client';
 
 import { motion, Variants } from 'framer-motion';
 import Image from 'next/image';
@@ -25,9 +25,8 @@ const aiFeatures = [
 ];
 
 
-// Animation Variants 정의
 const fadeInUp = {
-  hidden: { opacity: 0, y: 30 }, // 아래에서 시작 (위에서 떨어지게 하려면 y: -30)
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
@@ -39,7 +38,7 @@ const staggerContainer = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.2 // 자식 요소들이 0.2초 간격으로 순차 실행
+      staggerChildren: 0.2
     }
   }
 };
@@ -47,7 +46,7 @@ const staggerContainer = {
 export default function SolutionAIPlatform() {
   return (
     <section className="s-section__content overflow-hidden">
-        {/* Header Section: 순차적 등장 (Stagger) */}
+        {/* Header Section */}
         <motion.div
             className="s-section__header"
             variants={staggerContainer}
@@ -75,18 +74,19 @@ export default function SolutionAIPlatform() {
                 key={idx}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, amount: 0.3 }} // 요소의 30%가 보일 때 실행
+                viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8 }}
-                variants={fadeInUp} // 전체 Row가 부드럽게 등장
+                variants={fadeInUp}
                 className={`flex flex-col gap-8 items-center
                   lg:flex-row lg:gap-16
                   ${isLeft ? 'lg:flex-row-reverse' : ''}
                 `}
               >
-                {/* ai-feature__content */}
+                {/* Content */}
                 <div className="flex-1 order-1">
-                  <motion.div variants={staggerContainer}> {/* 내부 컨텐츠도 순차 등장 */}
-                      <motion.span variants={fadeInUp} className="inline-block rounded-sm bg-foreground-light px-3 py-1 text-xs font-semibold uppercase tracking-wider text-background-light mb-4">
+                  <motion.div variants={staggerContainer}>
+                      {/* [Mod] bg-foreground-light -> bg-primary (브랜드 컬러 강조) */}
+                      <motion.span variants={fadeInUp} className="inline-block rounded-sm bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary mb-4 border border-primary/20">
                         {feature.tag}
                       </motion.span>
 
@@ -102,7 +102,8 @@ export default function SolutionAIPlatform() {
                         {feature.tags.map((tag, tagIdx) => (
                           <span
                             key={tagIdx}
-                            className="rounded-sm border border-border-light bg-background-light px-3 py-1 text-sm font-medium text-foreground-light transition-all duration-300 hover:bg-foreground-light hover:text-background-light"
+                            // [Mod] hover colors: primary brand matching
+                            className="rounded-sm border border-border-light bg-card-light px-3 py-1 text-sm font-medium text-muted-foreground-light transition-all duration-300 hover:border-primary hover:text-primary hover:bg-primary/5"
                           >
                             {tag}
                           </span>
@@ -111,13 +112,14 @@ export default function SolutionAIPlatform() {
                   </motion.div>
                 </div>
 
-                {/* ai-feature__image */}
+                {/* Image */}
                 <motion.div
                     className="flex-1 w-full order-2"
-                    variants={fadeInUp} // 이미지도 부드럽게 등장
+                    variants={fadeInUp}
                 >
                 <div
-                  className="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200 shadow-lg aspect-[4/3]"
+                  // [Mod] Gray Gradient -> Cool Tone Gradient (Brand Fit)
+                  className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-50 via-blue-50/50 to-slate-100 shadow-lg aspect-[4/3] border border-border-light"
                 >
                   <motion.div
                       initial={{ scale: 1.1 }}

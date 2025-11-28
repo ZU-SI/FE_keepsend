@@ -10,6 +10,7 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 const settlementFeatures = [
+  // ... (데이터 동일)
   {
     title: "자동 정산",
     description: "플랫폼별 거래 데이터를 자동 수집하고 정확하게 계산합니다.",
@@ -33,7 +34,7 @@ const settlementFeatures = [
 ];
 
 const fadeInUp = {
-  hidden: { opacity: 0, y: 30 }, // 아래에서 시작 (위에서 떨어지게 하려면 y: -30)
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
@@ -45,7 +46,7 @@ const staggerContainer = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.2 // 자식 요소들이 0.2초 간격으로 순차 실행
+      staggerChildren: 0.2
     }
   }
 };
@@ -86,10 +87,10 @@ export default function SolutionSettlement() {
             </motion.p>
         </motion.div>
 
-      {/* Container: Flex column mobile, Row desktop */}
+      {/* Container */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center w-full">
 
-        {/* Slider Section (Order 2 on mobile, 1 on desktop) */}
+        {/* Slider Section */}
         <div className="flex-1 w-full order-2 lg:order-1">
           <Swiper
             modules={[Autoplay, Pagination]}
@@ -107,12 +108,12 @@ export default function SolutionSettlement() {
               swiperRef.current = swiper;
             }}
             onSlideChange={handleSlideChange}
-            // h-[30vh] mobile, h-[40vh] desktop
             className="h-[30vh] rounded-xl lg:h-[50vh] "
           >
             {settlementFeatures.map((item, idx) => (
               <SwiperSlide key={idx}>
-                <div className="relative h-full overflow-hidden rounded-xl ">
+                {/* [Mod] bg-gray-100 -> bg-muted-light (Placeholder) */}
+                <div className="relative h-full overflow-hidden rounded-xl bg-muted-light">
                   <Image width={1200} height={800} src={item.image} alt={item.title} className='min-w-full min-h-full object-cover absolute top-0 left-0' />
                 </div>
               </SwiperSlide>
@@ -120,7 +121,7 @@ export default function SolutionSettlement() {
           </Swiper>
         </div>
 
-        {/* Features List Section (Order 1 on mobile, 2 on desktop) */}
+        {/* Features List Section */}
         <div className="flex flex-1 flex-col gap-2 order-1 lg:order-2">
           {settlementFeatures.map((feature, idx) => {
             const isActive = activeIndex === idx;
@@ -130,8 +131,8 @@ export default function SolutionSettlement() {
                 onClick={() => handleFeatureClick(idx)}
                 className={`flex cursor-pointer gap-4 rounded-lg p-3 transition-all duration-300
                   ${isActive
-                    ? 'flex opacity-100 bg-primary/10 border border-primary/30'
-                    : 'hidden opacity-50 lg:flex border border-transparent'
+                    ? 'flex opacity-100 bg-primary/5 border border-primary/30'
+                    : 'hidden opacity-50 lg:flex border border-transparent hover:bg-muted-light/50'
                   }
                 `}
               >
@@ -139,17 +140,19 @@ export default function SolutionSettlement() {
                 <div
                   className={`mt-[6px] h-3 w-3 min-w-[12px] rounded-full transition-all duration-300
                     ${isActive
-                      ? 'bg-primary shadow-[0_0_20px_rgba(var(--primary),0.5)]'
-                      : 'bg-gray-600'
+                      ? 'bg-primary shadow-[0_0_10px_rgba(59,130,246,0.4)]'
+                      : 'bg-border-light' // [Mod] bg-gray-600 -> bg-border-light (Inactive state fixed)
                     }
                   `}
                 />
 
                 <div className="flex-1">
-                  <h4 className="mb-2 text-lg font-semibold text-foreground">
+                  {/* [Mod] text-foreground -> text-foreground-light (Light Theme fixed) */}
+                  <h4 className={`mb-2 text-lg font-semibold transition-colors ${isActive ? 'text-primary' : 'text-foreground-light'}`}>
                     {feature.title}
                   </h4>
-                  <p className="text-sm leading-relaxed text-muted-foreground">
+                  {/* [Mod] text-muted-foreground -> text-muted-foreground-light */}
+                  <p className="text-sm leading-relaxed text-white">
                     {feature.description}
                   </p>
                 </div>

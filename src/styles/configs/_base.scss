@@ -1,0 +1,109 @@
+@use "./vars" as v;
+
+/* ============================================
+   RESET & BASE STYLES
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border-color: v.$border;
+  outline-color: rgba(v.$accent, 0.5);
+}
+
+html {
+  scroll-behavior: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: v.$background;
+  color: v.$foreground;
+  font-family: v.$font-sans;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+button, a {
+  font-family: 'suite';
+  letter-spacing: 1px;
+  line-height: 1;
+  cursor: pointer;
+  outline: none;
+  background: inherit;
+  border: 0;
+  width: fit-content;
+  height: fit-content;
+}
+
+/* ============================================
+   SCROLL UTILITIES
+   ============================================ */
+.snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* ============================================
+   GRADIENT & VISUAL EFFECTS
+   ============================================ */
+.gradient-text {
+  @include v.gradient-text;
+}
+
+.glow {
+  &-blue { box-shadow: 0 0 30px rgba(v.$accent, 0.3); }
+  &-accent { box-shadow: 0 0 20px rgba(v.$accent, 0.2); }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate {
+  &-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.bg {
+  &-background { background-color: v.$background; }
+  &-card { background-color: v.$card; }
+  &-primary { background-color: v.$primary; }
+  &-secondary { background-color: v.$secondary; }
+  &-accent { background-color: v.$accent; }
+  &-muted { background-color: v.$muted; }
+}
+
+.text {
+  &-foreground { color: v.$foreground; }
+  &-muted { color: v.$muted-foreground; }
+  &-primary { color: v.$primary; }
+  &-accent { color: v.$accent; }
+}
+
+.border {
+  border: 1px solid v.$border;
+  &-border { border-color: v.$border; }
+}
+
+.rounded {
+  &-sm { border-radius: v.$radius-sm; }
+  &-md { border-radius: v.$radius-md; }
+  &-lg { border-radius: v.$radius-lg; }
+  &-xl { border-radius: v.$radius-xl; }
+}

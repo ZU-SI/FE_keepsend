@@ -7,11 +7,12 @@ import { useRef, useState } from 'react';
 interface Problem {
   title: string;
   description: string;
-  keyword: string; // 인포그래픽용 짧은 키워드
+  keyword: string;
   relatedTalks: string[];
 }
 
 const problemsData: Problem[] = [
+  // ... (Data remains same) ...
   {
     title: "통합 관리 시스템",
     keyword: "관리 포인트 고충",
@@ -39,12 +40,11 @@ const problemsData: Problem[] = [
 ];
 
 
-/** * 말풍선 컴포넌트 */
 function ChatBubble({ text, positionIdx }: { text: string; positionIdx: number }) {
   const positions = [
     { top: '15%', left: '20%' },
-    { bottom: '10%', right: '10%' }, // 약간 아래
-    { bottom: '20%', left: '10%' }, // 우측 상단
+    { bottom: '10%', right: '10%' },
+    { bottom: '20%', left: '10%' },
   ];
 
   const pos = positions[positionIdx % positions.length];
@@ -58,44 +58,42 @@ function ChatBubble({ text, positionIdx }: { text: string; positionIdx: number }
       className="absolute z-20 max-w-[160px] md:max-w-[200px] rounded-lg"
       style={{...pos}}
     >
-      <div className="relative bg-white border border-slate-200 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] rounded-2xl rounded-tl-sm px-4 py-3">
-        <p className="text-xs md:text-sm text-slate-600 font-medium leading-snug break-keep">
+      {/* [Mod] border-slate-200 -> border-border-light */}
+      <div className="relative bg-white border border-border-light shadow-md rounded-2xl rounded-tl-sm px-4 py-3">
+        {/* [Mod] text-slate-600 -> text-muted-foreground-light */}
+        <p className="text-xs md:text-sm text-muted-foreground-light font-medium leading-snug break-keep">
           "{text}"
         </p>
-        <div className="absolute -top-[1px] -left-[1px] w-4 h-4 bg-white border-t border-l border-slate-200 transform -rotate-45 origin-top-left"></div>
+        <div className="absolute -top-[1px] -left-[1px] w-4 h-4 bg-white border-t border-l border-border-light transform -rotate-45 origin-top-left"></div>
       </div>
     </motion.div>
   );
 }
 
-/**
- * 솔루션 카드 (Cell)
- * - [수정 1] 태블릿(md)에서는 호버 효과 제거 (CSS Group Hover 및 lg: prefix 사용)
- * - [수정 2] 태블릿(md) 레이아웃 최적화 (Padding, Font Size 축소)
- */
 function SolutionCell({
   problem,
   index,
-  activeState // 'idle' | 'talking' | 'solved'
+  activeState
 }: {
   problem: Problem;
   index: number;
   activeState: 'idle' | 'talking' | 'solved';
 }) {
 
-  // 말풍선 노출 조건: talking 상태이거나, solved 상태(배경에 깔아둠, 데스크탑 호버시 노출됨)
   const showBubbles = activeState === 'talking' || activeState === 'solved';
 
   return (
     <div className="relative w-full h-full md:aspect-[16/10] md:max-h-[calc(30vh_-_20px)]">
 
-      {/* 1. Placeholder (Always Visible Background) */}
+      {/* 1. Placeholder */}
       {
         activeState !== 'solved' &&
-        <div className="absolute inset-0 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50 flex flex-col justify-between p-5 md:p-6 lg:p-8">
+        // [Mod] bg-slate-50/50 -> bg-muted-light/50, border-slate-200 -> border-border-light
+        <div className="absolute inset-0 border-2 border-dashed border-border-light rounded-xl bg-muted-light/50 flex flex-col justify-between p-5 md:p-6 lg:p-8">
         <div className="flex justify-between items-start">
-           <span className="font-mono text-2xl md:text-3xl font-bold text-slate-200">0{index + 1}</span>
-           <div className="w-2 h-2 bg-slate-200 rounded-full"></div>
+           {/* [Mod] text-slate-200 -> text-muted-foreground/20 */}
+           <span className="font-mono text-2xl md:text-3xl font-bold text-muted-foreground/20">0{index + 1}</span>
+           <div className="w-2 h-2 bg-muted-foreground/20 rounded-full"></div>
         </div>
       </div>
       }
@@ -111,43 +109,42 @@ function SolutionCell({
         )}
       </AnimatePresence>
 
-      {/* 3. Solution Card (Solved State - Mask Reveal) */}
+      {/* 3. Solution Card */}
       <motion.div
         initial={{ clipPath: "inset(100% 0% 0% 0%)" }}
         animate={{
           clipPath: activeState === 'solved' ? "inset(0% 0% 0% 0%)" : "inset(100% 0% 0% 0%)",
         }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        // [수정 핵심]
-        // 1. opacity-100: 기본 불투명
-        // 2. lg:hover:opacity-5: 데스크탑(lg)에서만 호버 시 투명해짐 (말풍선 보임)
-        // 3. 태블릿(md) 이하는 hover 효과 없음 (opacity 유지)
-        className="absolute inset-0 z-30 bg-white border border-slate-200 rounded-lg flex flex-col overflow-hidden
+        // [Mod] border-slate-200 -> border-border-light
+        className="absolute inset-0 z-30 bg-white border border-border-light rounded-lg flex flex-col overflow-hidden
                    transition-opacity duration-300 opacity-100 lg:hover:opacity-5
                    p-5 md:p-6 lg:p-8 group cursor-default lg:cursor-pointer"
       >
-        {/* Decorative Top Bar */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-cyan-500"></div>
+        {/* Decorative Top Bar - [Mod] bg-cyan-500 -> bg-accent */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-accent"></div>
 
         {/* Header */}
         <div className="flex justify-between items-start mb-auto gap-2">
           <div className='flex flex-col items-start'>
-            <span className="inline-block px-1.5 py-1 bg-cyan-50 text-cyan-600 font-mono text-[10px] md:text-[11px] lg:text-xs font-bold tracking-wider rounded mb-1.5 md:mb-2">
+            {/* [Mod] bg-cyan-50 -> bg-accent/10, text-cyan-600 -> text-accent-dark */}
+            <span className="inline-block px-1.5 py-1 bg-accent/10 text-accent font-mono text-[10px] md:text-[11px] lg:text-xs font-bold tracking-wider rounded mb-1.5 md:mb-2">
               {problem.keyword}
             </span>
-            {/* [수정] 태블릿 폰트 사이즈 조정 (text-xl) */}
-            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-slate-900 group-hover:text-cyan-600 transition-colors break-keep">
+            {/* [Mod] text-slate-900 -> text-foreground-light */}
+            <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-foreground-light group-hover:text-accent transition-colors break-keep">
               {problem.title}
             </h3>
           </div>
-          <span className="font-mono text-base md:text-lg lg:text-xl text-slate-300 font-bold group-hover:text-cyan-200 transition-colors shrink-0">
+          {/* [Mod] text-slate-300 -> text-muted-foreground-light */}
+          <span className="font-mono text-base md:text-lg lg:text-xl text-muted-foreground-light font-bold group-hover:text-accent/50 transition-colors shrink-0">
             0{index + 1}
           </span>
         </div>
 
         {/* Content */}
-        {/* [수정] 태블릿 폰트 및 마진 조정 */}
-        <p className="hidden md:block text-slate-500 text-xs md:text-sm lg:text-base leading-relaxed mt-3 md:mt-2 lg:mt-0 break-keep">
+        {/* [Mod] text-slate-500 -> text-muted-foreground-light */}
+        <p className="hidden md:block text-muted-foreground-light text-xs md:text-sm lg:text-base leading-relaxed mt-3 md:mt-2 lg:mt-0 break-keep">
           {problem.description}
         </p>
       </motion.div>
@@ -155,12 +152,10 @@ function SolutionCell({
   );
 }
 
-// --- Main Component ---
 export default function ServiceB2bMotion() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [currentStep, setCurrentStep] = useState(0);
 
-  // 스크롤 로직
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
@@ -188,18 +183,17 @@ export default function ServiceB2bMotion() {
                물류 사업의 고충 솔루션
              </span>
              <h2 className="s-section__title">
-               현장의 문제,<br className="md:hidden"/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600">시스템으로 전환하다</span>
+               현장의 문제,<br className="md:hidden"/>
+               {/* [Mod] bg-gradient -> bg-gradient-cyan */}
+               <span className="text-transparent bg-clip-text bg-gradient-cyan">시스템으로 전환하다</span>
              </h2>
           </motion.div>
 
         {/* Grid Content Area */}
-        {/* h-[60vh] 고정으로 그리드 영역 확보 */}
         <div className="relative w-full h-[60vh]">
           <div className="size-full grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             {problemsData.map((problem, idx) => {
-              // 상태 결정 로직
               let activeState: 'idle' | 'talking' | 'solved' = 'idle';
-
               const talkTrigger = idx * 2 + 1;
               const solveTrigger = idx * 2 + 2;
 

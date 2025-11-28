@@ -30,7 +30,6 @@ function MapContent({
       center={new navermaps.LatLng(mapCenter.lat, mapCenter.lng)}
       defaultZoom={mapZoom}
       zoom={mapZoom}
-      style={{ width: '100%', height: '100%' }}
       zoomControl={true}
       zoomControlOptions={{
         position: navermaps.Position.TOP_RIGHT,

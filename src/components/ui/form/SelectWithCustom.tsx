@@ -3,9 +3,9 @@ import TextField from './TextField';
 
 interface SelectWithCustomProps {
   value: string;
-  customValue: string;
+  customValue?: string;
   onSelectChange: (value: string) => void;
-  onCustomChange: (value: string) => void;
+  onCustomChange?: (value: string) => void;
   options: string[];
   placeholder?: string;
   variant?: 'default' | 'light';
@@ -33,8 +33,8 @@ export default function SelectWithCustom({
       />
       {showCustomInput && (
         <TextField
-          value={customValue}
-          onChange={onCustomChange}
+          value={customValue ?? ""}
+          onChange={v => onCustomChange?.(v)}
           placeholder="입력"
           variant={variant}
         />

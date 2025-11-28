@@ -148,7 +148,7 @@ export default function SolutionSettlement() {
 
                 <div className="flex-1">
                   {/* [Mod] text-foreground -> text-foreground-light (Light Theme fixed) */}
-                  <h4 className={`mb-2 text-lg font-semibold transition-colors ${isActive ? 'text-primary' : 'text-foreground-light'}`}>
+                  <h4 className={`mb-2 text-lg font-semibold transition-colors ${isActive ? 'text-primary' : 'text-background-light'}`}>
                     {feature.title}
                   </h4>
                   {/* [Mod] text-muted-foreground -> text-muted-foreground-light */}

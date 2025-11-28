@@ -15,7 +15,7 @@ export default function Textarea({
   rows = 4,
   variant = 'default',
 }: TextareaProps) {
-  const classNames = `texarea textarea--${variant}`;
+  const classNames = `textarea textarea--${variant}`;
 
   return (
     <textarea
